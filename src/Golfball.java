@@ -1,32 +1,32 @@
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
+//import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Circle;
 
 public class Golfball {
 
-	private Rectangle ballShape;
+	private Circle ballShape;
 	private Texture ballImage;
-	
 	
 	public Golfball() {
 		
 		Pixmap pixmap = new Pixmap( 64, 64, Format.RGBA8888 );
-		pixmap.setColor( 0, 1, 0, 0.75f );
+		pixmap.setColor(Color.RED);
 		pixmap.fillCircle( 32, 32, 32 );
 		
 		ballImage = new Texture(pixmap);
 		
-		ballShape = new Rectangle();
-		ballShape.x = 800 / 2 - 64 / 2;
-		ballShape.y = 20;
-		ballShape.width = 64;
-		ballShape.height = 64;
+		ballShape = new Circle();
+		ballShape.x = 200;
+		ballShape.y = 200;
+		ballShape.radius = 32;
 		
 	}
 	
-	public Rectangle getRectangle() {
+	public Circle getCircle() {
 		return ballShape;
 	}
 	
