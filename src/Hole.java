@@ -19,8 +19,8 @@ public class Hole {
 		holeImage = new Texture(pixmap);
 		
 		holeShape = new Circle();
-		holeShape.x = 200;
-		holeShape.y = 200;
+		holeShape.x = 450;
+		holeShape.y = 900;
 		holeShape.radius = 64;
 		
 	}

@@ -15,13 +15,13 @@ public class Golf extends Game{
 
 	//private Rectangle board;
 	private OrthographicCamera camera;
-	private ShapeRenderer shapes;
 
 	private int score = 0;
 
 	private SpriteBatch batch;
 	private Golfball ball;
 	private Board board;
+	private Hole hole;
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
@@ -30,10 +30,10 @@ public class Golf extends Game{
 	public void create() {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1000, 1000);
-		shapes = new ShapeRenderer();
 		batch = new SpriteBatch();
 		ball = new Golfball();
 		board = new Board();
+		hole = new Hole();
 
 	}
 
@@ -49,28 +49,26 @@ public class Golf extends Game{
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();	
 		batch.draw(board.getSprite(), board.getRectangle().x, board.getRectangle().y);
-		batch.draw(ball.getSprite(), ball.getRectangle().x, ball.getRectangle().y);
-
+		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
+		batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
+		if(ball.getCircle().overlaps(hole.getCircle())) {
+			score ++;
+			System.out.println(score);
+		}
 		
-      /*  shapes.setProjectionMatrix(camera.combined);
-        shapes.begin(ShapeType.Filled);
-        shapes.setColor(Color.GREEN);
-        shapes.rect(150,0,200,400);
-        shapes.setColor(Color.BLACK);
-        shapes.circle(250, 350, 5);
-        shapes.end();*/
+
         if(Gdx.input.isKeyPressed(Keys.LEFT))
-        	ball.getRectangle().x -= 200 * Gdx.graphics.getDeltaTime();
+        	ball.getCircle().x -= 200 * Gdx.graphics.getDeltaTime();
         if(Gdx.input.isKeyPressed(Keys.RIGHT))
-        	ball.getRectangle().x += 200 * Gdx.graphics.getDeltaTime();
+        	ball.getCircle().x += 200 * Gdx.graphics.getDeltaTime();
         if(Gdx.input.isKeyPressed(Keys.UP))
-        	ball.getRectangle().y += 200 * Gdx.graphics.getDeltaTime();
+        	ball.getCircle().y += 200 * Gdx.graphics.getDeltaTime();
         if(Gdx.input.isKeyPressed(Keys.DOWN))
-        	ball.getRectangle().y -= 200 * Gdx.graphics.getDeltaTime();
+        	ball.getCircle().y -= 200 * Gdx.graphics.getDeltaTime();
         batch.end();
 	}
 	public void dispose() {
-		shapes.dispose();
+
 		batch.dispose();
 
 	}

@@ -3,11 +3,12 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Golfball {
 
-	private Rectangle ballShape;
+	private Circle ballShape;
 	private Texture ballImage;
 	
 	
@@ -19,15 +20,14 @@ public class Golfball {
 		
 		ballImage = new Texture(pixmap);
 		
-		ballShape = new Rectangle();
+		ballShape = new Circle();
 		ballShape.x = 200;
 		ballShape.y = 200;
-		ballShape.width = 64;
-		ballShape.height = 64;
-		
+		ballShape.radius = 64;
+
 	}
 	
-	public Rectangle getRectangle() {
+	public Circle getCircle() {
 		return ballShape;
 	}
 	
