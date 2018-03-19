@@ -57,6 +57,7 @@ public class Golf extends Game{
         	ball.getCircle().y += 200 * Gdx.graphics.getDeltaTime();
         if(Gdx.input.isKeyPressed(Keys.DOWN))
         	ball.getCircle().y -= 200 * Gdx.graphics.getDeltaTime();
+        
         batch.end();
 	}
 	public void dispose() {
@@ -64,4 +65,5 @@ public class Golf extends Game{
 		batch.dispose();
 
 	}
+
 }
