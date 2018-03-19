@@ -1,37 +1,36 @@
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 
 public class Board {
-	private Rectangle boardShape;
-	private Texture boardImage;
 	
+	private Model boardModel;
+	private ModelInstance boardInstance;
+	private ModelBuilder modelBuilder;
 	
-	public Board() {
+	public Board(float width, float height, float depth) {
+	
+		modelBuilder = new ModelBuilder();
 		
-		Pixmap pixmap = new Pixmap( 700, 1000, Format.RGBA8888 );
-		pixmap.setColor(Color.GREEN );
-		pixmap.fillRectangle( 100, 0, 700,1000 );
-		
-		boardImage = new Texture(pixmap);
-		
-		boardShape = new Rectangle();
-		boardShape.x = 100;
-		boardShape.y = 0;
-		boardShape.width = 700 ;
-		boardShape.height = 1000;
-		
+		boardModel = modelBuilder.createBox(width, height, depth, 
+	            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+	            Usage.Position | Usage.Normal);
+		boardInstance = new ModelInstance(boardModel);
+	
+	}	
+	
+	public Model getBoardModel() {
+		return boardModel;
 	}
 	
-	public Rectangle getRectangle() {
-		return boardShape;
+	public ModelInstance getBoardInstance() {
+		return boardInstance;
 	}
 	
-	public Texture getSprite() {
-		return boardImage;
-	}
 }
 
 

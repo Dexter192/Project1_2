@@ -5,35 +5,58 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 
 public class Golf extends Game{
 
-	//private Rectangle board;
-	private OrthographicCamera camera;
+	private PerspectiveCamera camera;
 
-	private int score = 0;
-
-	private SpriteBatch batch;
-	private Golfball ball;
 	private Board board;
-	private Hole hole;
+	private Golfball golfball;
+	
+	private ModelBatch modelBatch;
+    private Environment environment;
+    private CameraInputController camController;
+    
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
 	 */
 	@Override
 	public void create() {
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1000, 1000);
-		batch = new SpriteBatch();
-		ball = new Golfball();
-		board = new Board();
-		hole = new Hole();
-
+		environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+		
+		
+		modelBatch = new ModelBatch();
+		
+		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.position.set(10f, 10f, 10f);
+		camera.lookAt(0,0,0);
+		camera.near = 1f;
+		camera.far = 300f;
+		camera.update();
+        camController = new CameraInputController(camera);
+        Gdx.input.setInputProcessor(camController);
+        
+        board = new Board(10f, 1f, 20f);
+        
+        golfball = new Golfball(1);
 	}
 
 	/**
@@ -42,31 +65,24 @@ public class Golf extends Game{
 	 */
 	@Override
 	public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();	
-		batch.draw(board.getSprite(), board.getRectangle().x, board.getRectangle().y);
-		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
-		if(!ball.getCircle().overlaps(hole.getCircle())) {
-			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
-		}
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        if(Gdx.input.isKeyPressed(Keys.LEFT))
-        	ball.getCircle().x -= 200 * Gdx.graphics.getDeltaTime();
-        if(Gdx.input.isKeyPressed(Keys.RIGHT))
-        	ball.getCircle().x += 200 * Gdx.graphics.getDeltaTime();
-        if(Gdx.input.isKeyPressed(Keys.UP))
-        	ball.getCircle().y += 200 * Gdx.graphics.getDeltaTime();
-        if(Gdx.input.isKeyPressed(Keys.DOWN))
-        	ball.getCircle().y -= 200 * Gdx.graphics.getDeltaTime();
-        batch.end();
+        camController.update();
+        modelBatch.begin(camera);
+        modelBatch.render(board.getBoardInstance());
+        modelBatch.render(golfball.getBallInstance());
+
+        golfball.update();
+        	
+        modelBatch.end();
 	}
 	
 	public void dispose() {
 
-		batch.dispose();
-
+		modelBatch.dispose();
+		golfball.getBallModel().dispose();
+		board.getBoardModel().dispose();
+		
 	}
 }
