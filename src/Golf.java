@@ -54,8 +54,9 @@ public class Golf extends Game{
 		if(ball.getCircle().overlaps(hole.getCircle())) {
 			score ++;
 			System.out.println(score);
+			
 		}
-		
+		System.out.println("delete me");
 
         if(Gdx.input.isKeyPressed(Keys.LEFT))
         	ball.getCircle().x -= 200 * Gdx.graphics.getDeltaTime();
