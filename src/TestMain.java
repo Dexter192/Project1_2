@@ -17,7 +17,6 @@ public class TestMain {
 		cfg.useGL30 = true;
 		cfg.resizable = false;
 		
-		
 		new LwjglApplication(new Golf(), cfg);
 	}
 }
