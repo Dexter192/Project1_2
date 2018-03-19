@@ -37,7 +37,9 @@ public class Golf extends Game{
 		batch.draw(ball.getSprite(), ball.getRectangle().x, ball.getRectangle().y);
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) ball.getRectangle().x -= 200 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) ball.getRectangle().y += 200 * Gdx.graphics.getDeltaTime();
+		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) ball.getRectangle().x += 200 * Gdx.graphics.getDeltaTime();
+		if(Gdx.input.isKeyPressed(Input.Keys.UP)) ball.getRectangle().y += 200 * Gdx.graphics.getDeltaTime();
+		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) ball.getRectangle().y -= 200 * Gdx.graphics.getDeltaTime();
 		   
 		batch.end();
 	}
