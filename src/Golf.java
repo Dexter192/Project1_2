@@ -1,16 +1,26 @@
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+
 
 public class Golf extends Game{
 
+	//private Rectangle board;
 	private OrthographicCamera camera;
+
+	private int score = 0;
+
 	private SpriteBatch batch;
 	private Golfball ball;
-	
+	private Board board;
+	private Hole hole;
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
@@ -18,9 +28,12 @@ public class Golf extends Game{
 	@Override
 	public void create() {
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1920, 1080);
+		camera.setToOrtho(false, 1000, 1000);
 		batch = new SpriteBatch();
 		ball = new Golfball();
+		board = new Board();
+		hole = new Hole();
+
 	}
 
 	/**
@@ -29,18 +42,34 @@ public class Golf extends Game{
 	 */
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		camera.update();
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.update();
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		batch.draw(ball.getSprite(), ball.getRectangle().x, ball.getRectangle().y);
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) ball.getRectangle().x -= 200 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) ball.getRectangle().x += 200 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) ball.getRectangle().y += 200 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) ball.getRectangle().y -= 200 * Gdx.graphics.getDeltaTime();
-		   
-		batch.end();
+		batch.begin();	
+		batch.draw(board.getSprite(), board.getRectangle().x, board.getRectangle().y);
+		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
+		batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
+		if(ball.getCircle().overlaps(hole.getCircle())) {
+			score ++;
+			System.out.println(score);
+			
+		}
+		System.out.println("delete me");
+
+        if(Gdx.input.isKeyPressed(Keys.LEFT))
+        	ball.getCircle().x -= 200 * Gdx.graphics.getDeltaTime();
+        if(Gdx.input.isKeyPressed(Keys.RIGHT))
+        	ball.getCircle().x += 200 * Gdx.graphics.getDeltaTime();
+        if(Gdx.input.isKeyPressed(Keys.UP))
+        	ball.getCircle().y += 200 * Gdx.graphics.getDeltaTime();
+        if(Gdx.input.isKeyPressed(Keys.DOWN))
+        	ball.getCircle().y -= 200 * Gdx.graphics.getDeltaTime();
+        batch.end();
+	}
+	public void dispose() {
+
+		batch.dispose();
+
 	}
 }
