@@ -50,13 +50,9 @@ public class Golf extends Game{
 		batch.begin();	
 		batch.draw(board.getSprite(), board.getRectangle().x, board.getRectangle().y);
 		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
-		batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
-		if(ball.getCircle().overlaps(hole.getCircle())) {
-			score ++;
-			System.out.println(score);
-			
-		}
-		System.out.println("delete me");
+		if(!ball.getCircle().overlaps(hole.getCircle()))
+			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
+		
 
         if(Gdx.input.isKeyPressed(Keys.LEFT))
         	ball.getCircle().x -= 200 * Gdx.graphics.getDeltaTime();
