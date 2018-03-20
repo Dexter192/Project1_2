@@ -21,7 +21,7 @@ public class Hole {
 		holeShape = new Circle();
 		holeShape.x = 450;
 		holeShape.y = 900;
-		holeShape.radius = 64;
+		holeShape.radius = 32;
 		
 	}
 	
