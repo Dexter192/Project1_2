@@ -16,11 +16,13 @@ public class Golf extends Game{
 	private OrthographicCamera camera;
 
 	private int score = 0;
-
+	private float g = (float) 9.81;
 	private SpriteBatch batch;
 	private Golfball ball;
 	private Board board;
 	private Hole hole;
+	private float velocityX = 0;
+	private float velocityY = 0;
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
@@ -52,21 +54,62 @@ public class Golf extends Game{
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
 		}
-
-        if(Gdx.input.isKeyPressed(Keys.LEFT))
-        	ball.getCircle().x -= 200 * Gdx.graphics.getDeltaTime();
+		if(ball.getCircle().x < 200) {
+			velocityX = velocityX * (-1);
+			ball.getCircle().x = 200;
+		}
+		if(ball.getCircle().x > 732) {
+			velocityX = velocityX * (-1);
+			ball.getCircle().x = 732;
+		}
+		if(ball.getCircle().y < 32) {
+			velocityY = velocityY * (-1);
+			ball.getCircle().y = 32;
+		}
+		if(ball.getCircle().y > 964) {
+			velocityY = velocityY * (-1);
+			ball.getCircle().y = 964;
+		}
+		
+		if(Gdx.input.isKeyPressed(Keys.LEFT))
+        	velocityX = 50;
         if(Gdx.input.isKeyPressed(Keys.RIGHT))
-        	ball.getCircle().x += 200 * Gdx.graphics.getDeltaTime();
+        	velocityX = -50;
         if(Gdx.input.isKeyPressed(Keys.UP))
-        	ball.getCircle().y += 200 * Gdx.graphics.getDeltaTime();
+        	velocityY = -50;
         if(Gdx.input.isKeyPressed(Keys.DOWN))
-        	ball.getCircle().y -= 200 * Gdx.graphics.getDeltaTime();
+        	velocityY = 50;
+        
+      if(velocityX != 0 || velocityY != 0) {
+    	if(velocityX != 0)
+    	  velocityX +=  Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
+    	if(velocityY != 0) 
+        velocityY += Gdx.graphics.getDeltaTime() * (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
+       //System.out.println(Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass()));
+        if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
+        if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
+    	ball.getCircle().y -= velocityY * Gdx.graphics.getDeltaTime();
+        ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
+        System.out.println("velocityX " + velocityX + " velocityY " + velocityY);
+      }
         batch.end();
 	}
-	
 	public void dispose() {
 
 		batch.dispose();
 
 	}
+
+	public double fy (float x, float y, float velocityX, float velocityY) {
+		return  -(board.getFriction() * ball.getMass() * g * (velocityX + velocityY) / (Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY))));
+	}
+	public double fx (float x, float y, float velocityX, float velocityY) {
+		//assuming only friction plays a role at first 
+		double a = board.getFriction() * ball.getMass() * g * (velocityX + velocityY);
+		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
+		//System.out.println( " a " + a + " b " + b);
+		return -(a/b);
+	}
+
+
 }

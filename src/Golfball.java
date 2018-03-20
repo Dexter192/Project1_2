@@ -10,7 +10,7 @@ public class Golfball {
 
 	private Circle ballShape;
 	private Texture ballImage;
-	
+	private float mass;
 	public Golfball() {
 		
 		Pixmap pixmap = new Pixmap( 64, 64, Format.RGBA8888 );
@@ -23,7 +23,10 @@ public class Golfball {
 		ballShape.x = 200;
 		ballShape.y = 200;
 		ballShape.radius = 32;
-		
+		mass = 1;
+	}
+	public float getMass() {
+		return mass;
 	}
 	
 	public Circle getCircle() {
