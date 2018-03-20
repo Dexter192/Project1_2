@@ -1,21 +1,16 @@
+package GameEngine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Circle;
 
 public class Golf extends Game{
 
 	//private Rectangle board;
 	private OrthographicCamera camera;
 
-	private int score = 0;
 	private float g = (float) 9.81;
 	private SpriteBatch batch;
 	private Golfball ball;

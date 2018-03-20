@@ -1,5 +1,10 @@
+package MainMenu;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
+import GameEngine.Golf;
+
 
 public class TestMain {
 
@@ -16,7 +21,6 @@ public class TestMain {
 		cfg.height = 1080;
 		cfg.useGL30 = true;
 		cfg.resizable = false;
-		
 		new LwjglApplication(new Golf(), cfg);
 	}
 }
