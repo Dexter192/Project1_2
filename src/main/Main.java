@@ -1,12 +1,12 @@
-package MainMenu;
+package main;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import GameEngine.Golf;
+import gameEngine.GameScreen;
 
 
-public class TestMain {
+public class Main {
 
 	public static void main(String[] args) {
 		/* I have not really worked with Libgdx before but I think this is a good way
@@ -21,6 +21,6 @@ public class TestMain {
 		cfg.height = 1080;
 		cfg.useGL30 = true;
 		cfg.resizable = false;
-		new LwjglApplication(new Golf(), cfg);
+		new LwjglApplication(new MainGame(), cfg);
 	}
 }

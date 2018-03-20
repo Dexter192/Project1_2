@@ -1,12 +1,14 @@
-package GameEngine;
-import com.badlogic.gdx.Game;
+package gameEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Golf extends Game{
+import menu.AbstractScreen;
+
+
+public class GameScreen extends AbstractScreen {
 
 	//private Rectangle board;
 	private OrthographicCamera camera;
@@ -22,23 +24,22 @@ public class Golf extends Game{
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
 	 */
-	@Override
 	public void create() {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1000, 1000);
 		batch = new SpriteBatch();
 		ball = new Golfball();
 		board = new Board();
-		hole = new Hole();
-
+		hole = new Hole();		
 	}
 
 	/**
-	 * This method updates the game. So every drawing, collision detection 
-	 * etc. should be called here
+	 * This method still updates the game. So every drawing, collision detection 
+	 * etc. should be called here (This does not mean, that everything should be checked here :D )
+	 * Create a collision detector class for example and just call that one with the required parameters
 	 */
 	@Override
-	public void render() {
+	public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
@@ -106,5 +107,19 @@ public class Golf extends Game{
 		return -(a/b);
 	}
 
+	@Override
+	public void buildStage() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 1000, 1000);
+		batch = new SpriteBatch();
+		ball = new Golfball();
+		board = new Board();
+		hole = new Hole();			
+	}
 
+	@Override public void show() {}
+	@Override public void resize(int width, int height) {}
+	@Override public void pause() {}
+	@Override public void resume() {}
+	@Override public void hide() {}	
 }
