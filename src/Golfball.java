@@ -1,36 +1,60 @@
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-//import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Sphere;
 
 public class Golfball {
 
-	private Circle ballShape;
-	private Texture ballImage;
+	private Model ballModel;
+	private ModelInstance ballInstance;
+	private ModelBuilder modelBuilder;
+	private Sphere golfball;
+	private Vector3 position;
 	
-	public Golfball() {
+	private final long attributes = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal;
+
+	public Golfball(float radius) {
+		position = new Vector3(0,0.15f,0);
+		golfball = new Sphere(position, 10f);
+
+		modelBuilder = new ModelBuilder();
 		
-		Pixmap pixmap = new Pixmap( 64, 64, Format.RGBA8888 );
-		pixmap.setColor(Color.RED);
-		pixmap.fillCircle( 32, 32, 32 );
-		
-		ballImage = new Texture(pixmap);
-		
-		ballShape = new Circle();
-		ballShape.x = 200;
-		ballShape.y = 200;
-		ballShape.radius = 32;
-		
+		ballModel = modelBuilder.createSphere(radius*2, radius*2, radius*2,
+                50,50,
+                new Material(),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+
+		ballInstance = new ModelInstance(ballModel);
 	}
 	
-	public Circle getCircle() {
-		return ballShape;
+	public Model getBallModel() {
+		return ballModel;
 	}
 	
-	public Texture getSprite() {
-		return ballImage;
+	public ModelInstance getBallInstance() {
+		return ballInstance;
 	}
+	
+	public void update() {
+		   if(Gdx.input.isKeyPressed(Keys.DOWN)) {
+			   position.x = 0.4f;
+		   }
+		   if(Gdx.input.isKeyPressed(Keys.UP)) {
+			   position.x = -0.4f;
+		   }
+		   if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+			   position.z = 0.4f;
+		   }
+		   if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			   position.z = -0.4f;
+		   }
+		   ballInstance.transform.translate(position);
+		   position = position.scl(0.9f);
+	}
+	
 }
