@@ -69,7 +69,7 @@ public class AABB // Axis Aligned Bounding Boxes.
 	}
 	
 	
-	public boolean intersectingSB(BoundingSphere other)
+	public boolean intersectingBS(BoundingSphere other)
 	{
 		boolean aladeenHere = false;
 		float distance1 = other.getCentre().dst(this.getHigh());
