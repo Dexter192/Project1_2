@@ -10,16 +10,12 @@ public class Board {
 	private Texture boardImage;
 	private float frictionConstant;
 	
-	public float getFriction() {
-		return frictionConstant;
-	}
-	
 	public Board() {
 		
 		Pixmap pixmap = new Pixmap( 700, 1000, Format.RGBA8888 );
 		
 		pixmap.setColor(Color.GREEN);
-		pixmap.fillRectangle( 100, 0, 700,1000 );
+		pixmap.fillRectangle(100, 0, 700, 1000);
 		
 		boardImage = new Texture(pixmap);
 		
@@ -39,9 +35,9 @@ public class Board {
 		return boardImage;
 	}
 
-
-
-
+	public float getFriction() {
+		return frictionConstant;
+	}
 }
 
 

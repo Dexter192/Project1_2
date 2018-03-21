@@ -20,8 +20,8 @@ public class Golfball {
 		ballImage = new Texture(pixmap);
 		
 		ballShape = new Circle();
-		ballShape.x = 200;
-		ballShape.y = 200;
+		ballShape.x = 100;
+		ballShape.y = 100;
 		ballShape.radius = 32;
 		mass = 1;
 	}

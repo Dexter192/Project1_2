@@ -38,8 +38,15 @@ public class MainMenuScreen extends AbstractScreen {
 		btnExit.setPosition(getWidth() / 2, 60.f, Align.center);
 		addActor(btnExit);
 		
+		ImageButton btnPlay3D = ButtonFactory.createButton(txtrExit);
+		btnPlay3D.setPosition(getWidth() / 2, 30.f, Align.center);
+		addActor(btnPlay3D);
+		
+		
 		// Setting listeners
 		btnPlay.addListener( ButtonFactory.createListener(ScreenEnum.GAME_SCREEN));
+		
+		btnPlay3D.addListener(ButtonFactory.createListener(ScreenEnum.GAME_SCREEN_3D));
 		
 		btnExit.addListener(
 				new InputListener() {
