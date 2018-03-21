@@ -7,24 +7,17 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Sphere;
-
-import graphicObjects.Friction;
 
 public class Golfball {
 
 	private Model ballModel;
 	private ModelInstance ballInstance;
 	private ModelBuilder modelBuilder;
-	private Sphere golfball;
 	private Vector3 directionVector;
 	
-	private final long attributes = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal;
-
 	public Golfball(float radius) {
-		directionVector = new Vector3(0,0.15f,0);
-		golfball = new Sphere(directionVector, 10f);
-
+		directionVector = new Vector3(0,0,0);
+		
 		modelBuilder = new ModelBuilder();
 		
 		ballModel = modelBuilder.createSphere(radius*2, radius*2, radius*2,
@@ -33,6 +26,9 @@ public class Golfball {
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
 		ballInstance = new ModelInstance(ballModel);
+		ballInstance.transform.translate(new Vector3(0,(float) (0.1+radius),0));
+		
+
 	}
 	
 	public Model getBallModel() {
@@ -58,7 +54,7 @@ public class Golfball {
 		   }
 		   ballInstance.transform.translate(directionVector);
 		   
-		   directionVector.scl(Friction.getFriction(9.81f, 10, 1, directionVector));
+		   directionVector.scl(0.9f);
 	}
 	
 }
