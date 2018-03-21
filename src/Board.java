@@ -10,11 +10,12 @@ public class Board {
 	private double frictionConstant;
 	
 	public Board() {
-		
+		float green = 0; 
 		Pixmap pixmap = new Pixmap( 700, 1000, Format.RGBA8888 );
-		pixmap.setColor(Color.GREEN );
-		pixmap.fillRectangle( 100, 0, 700,1000 );
 		
+		//pixmap.setColor(new Color(5, green, 5,5) );
+		pixmap.fillRectangle( 100, 0, 700,1000 );
+		System.out.println("b");
 		boardImage = new Texture(pixmap);
 		frictionConstant = 2;
 		boardShape = new Rectangle();
@@ -34,6 +35,8 @@ public class Board {
 	public Texture getSprite() {
 		return boardImage;
 	}
+
+
 }
 
 
