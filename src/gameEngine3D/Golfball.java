@@ -38,7 +38,9 @@ public class Golfball {
 	public ModelInstance getBallInstance() {
 		return ballInstance;
 	}
-	
+	public Vector3 getVector() {
+		return directionVector;
+	}
 	public void update() {
 		   if(Gdx.input.isKeyPressed(Keys.DOWN)) {
 			   directionVector.x = 0.4f;

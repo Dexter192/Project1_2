@@ -10,14 +10,14 @@ public class Board {
 	private float frictionConstant;
 	private Physics physics;
 	public Board() {
-		float[] a = {0,0};
+		float[] a = {0.02f,0};
 		float[] b = {0.02f,0};
 		physics = new Physics(a,b);
-		
-		Pixmap pixmap = new Pixmap( 700, 1000, Format.RGBA8888 );
+		Pixmap pixmap = new Pixmap(700, 1000, Format.RGBA8888 );
 		float green = 60;
 		int y = 0;
 		for(int i = 0; i < 100; i ++ ) {
+			
 			green = 10 + (0.01f *physics.getHeight(i, 0)) ;	
 			System.out.println("green : " + green);
 			pixmap.setColor(0, green, 0,1);
@@ -33,6 +33,7 @@ public class Board {
 		boardShape.height = 1000;
 		frictionConstant = 10;
 	}
+
 	public float getHeight(double x, double y) {
 		return physics.getHeight(x, y);
 	}

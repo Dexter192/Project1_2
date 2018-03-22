@@ -47,7 +47,7 @@ public class GameScreen3D extends AbstractScreen{
         Gdx.input.setInputProcessor(camController);
         
         board = new Board(50f, 0.2f, 20f);
-    
+        
         for(int i = 2; i < 10; i++) {
             Obstacle box = new ObstacleBox(i,0,-i,1f,1f,1f);
             obstacleList.add(box);
