@@ -1,4 +1,5 @@
 package gameEngine;
+import com.badlogic.gdx.graphics.Color;
 //import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,19 +11,31 @@ public class Board {
 	private float frictionConstant;
 	private Physics physics;
 	public Board() {
-		float[] a = {1,-4,4};
-		float[] b = {0};
+		float[] a = {1, 4, -4};
+		float[] b = {2, 7, -6};
 		physics = new Physics(a,b);
 		
 		Pixmap pixmap = new Pixmap( 700, 1000, Format.RGBA8888 );
 		float green = 60;
 		int y = 0;
+		int x = 100;
 		for(int i = 0; i < 100; i ++ ) {
-			green = 10 + (0.1f *physics.getHeight(i, 0)) ;	
-			System.out.println("green : " + green);
-			pixmap.setColor(0, green, 0,1);
-			pixmap.fillRectangle(100,y, 700, 1000);
+			for(int j = 0; j < 70; j ++ ) {
+				float height = physics.getHeight(i, j);
+				if(height < 0) {
+					pixmap.setColor(Color.BLUE);
+					pixmap.fillRectangle(x, y, 700, 1000);
+				}
+				else{
+					green = 10 + (0.01f *height) ;	
+					System.out.println("green : " + green);
+					pixmap.setColor(0, green, 0,1);
+					pixmap.fillRectangle(x, y, 700, 1000);
+				}
+				x += 20;
+			}
 			y += 10;
+			x = 100;
 		}
 		boardImage = new Texture(pixmap);
 		
