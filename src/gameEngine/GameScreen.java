@@ -51,19 +51,20 @@ public class GameScreen extends AbstractScreen {
         camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		System.out.println("Size       "+ board.getTerrain().size());
 
-		for(int i = 0; i < board.getTerrain().size(); i++) {
-			Terrain t = board.getTerrain().get(i);
-			System.out.println(t.toString());
-//				t.getPosition().y++;
-//				System.out.println(t.getPosition());
+		for(Terrain t : board.getTerrain()) {
 			batch.draw(t.getSprite(), t.getPosition().x, t.getPosition().y);
 		}
+	
+		System.out.println("On Tile " + board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y, 0)) );
 		
 		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
+		}
+		else {
+			velocityX = 0;
+			velocityY = 0;
 		}
 		Vector3 ballPos = camera.unproject(new Vector3(ball.getCircle().x, ball.getCircle().y, 0));
 		if(board.getHeight(ballPos.x,ballPos.y ) < 0) {
