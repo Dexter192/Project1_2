@@ -121,7 +121,7 @@ public class GameScreen extends AbstractScreen {
 	}
 	public void setVelocities(float x, float y) {
 		   // double distance = Math.sqrt(Math.pow((x - ball.getCircle().x), 2) + Math.pow(y - ball.getCircle().y, 2));
-		    System.out.println("x " + x + " y " + y);
+		   // System.out.println("x " + x + " y " + y);
 		    System.out.println("ball : x " + ball.getCircle().x + " y " + ball.getCircle().y);
 		    velocityX = (0.1f) *(ball.getCircle().x-x);
 		    velocityY = (0.1f)*(ball.getCircle().y -y) ;
