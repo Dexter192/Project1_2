@@ -56,8 +56,6 @@ public class GameScreen extends AbstractScreen {
 			batch.draw(t.getSprite(), t.getPosition().x, t.getPosition().y);
 		}
 	
-		System.out.println("On Tile " + board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y, 0)) );
-		
 		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);

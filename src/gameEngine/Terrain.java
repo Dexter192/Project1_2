@@ -11,14 +11,14 @@ public class Terrain {
 	private Vector3 coordinates;
 	private Rectangle terrainShape;
 	private Texture terrainImage;
-	private float frictionConstant;
+	private float frictionConstant = 1;
 	private int height, width;
 	
 	public Terrain(Vector3 coordinates, int height, int width) {
 		this.coordinates = coordinates;
 		this.height = height;
 		this.width = width;
-		System.out.println("Height " + coordinates);
+		
 		Pixmap pixmap = new Pixmap( width, height, Format.RGBA8888 );
 		pixmap.setColor(0, coordinates.z, 0,1);
 		pixmap.fillRectangle(0, 0, width, height);
