@@ -25,7 +25,7 @@ public class ObstacleBox extends Obstacle {
 	@Override
 	public void buildModel(Model model) {
 		super.model = modelBuilder.createBox(width, height, depth, 
-	            new Material(ColorAttribute.createDiffuse(Color.YELLOW)),
+	            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
 	            Usage.Position | Usage.Normal);	
 	}
 }

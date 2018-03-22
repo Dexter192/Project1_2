@@ -28,19 +28,9 @@ public class GameScreen extends AbstractScreen {
 	private ArrayList<AABB2D> obstacleList = new ArrayList<AABB2D>();
 	private ArrayList<AABB2D> groundList = new ArrayList<AABB2D>();
 //	private ArrayList[] = {waterList, obstacleList};
-	/**
-	 * Implement the game initialization here. That should be stuff like the 
-	 * course builder, the menu screen or and maybe the physics engine 
-	 */
-	public void create() {
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1000, 1000);
-		batch = new SpriteBatch();
-		ball = new Golfball();
-		board = new Board();
-		hole = new Hole();		
-	}
 
+
+	
 	/**
 	 * This method still updates the game. So every drawing, collision detection 
 	 * etc. should be called here (This does not mean, that everything should be checked here :D )
@@ -52,13 +42,30 @@ public class GameScreen extends AbstractScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();	
-		batch.draw(board.getSprite(), board.getRectangle().x, board.getRectangle().y);
+		batch.begin();
+		//System.out.println("Size       "+ board.getTerrain().size());
+
+		for(int i = 0; i < board.getTerrain().size(); i++) {
+			Terrain t = board.getTerrain().get(i);
+		//	System.out.println(t.toString());
+//				t.getPosition().y++;
+//				System.out.println(t.getPosition());
+			batch.draw(t.getSprite(), t.getPosition().x, t.getPosition().y);
+		}
+		
 		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
 		}
+
 		else Gdx.app.exit();
+
+		Vector3 ballPos = camera.unproject(new Vector3(ball.getCircle().x, ball.getCircle().y, 0));
+		if(board.getHeight(ballPos.x,ballPos.y ) < 0) {
+			velocityX = 0; velocityY = 0;
+		}
+//		System.out.println(ballPos);
+
 		collisionWithWalls();
 		if(Gdx.input.isKeyPressed(Keys.SPACE)) {
         	if(velocityX > 0) velocityX += 10;
@@ -70,13 +77,14 @@ public class GameScreen extends AbstractScreen {
     	  changeVelocity();
     	  moveBall();
       }
-        batch.end();
-	}
+      batch.end();
+    }
 	public void moveBall() {
 		  ball.getCircle().y -= velocityY * Gdx.graphics.getDeltaTime();
           ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
 	}
 	public void changeVelocity() {
+
     	if(velocityX != 0)
       	  velocityX +=  Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
       	if(velocityY != 0) 
@@ -84,41 +92,46 @@ public class GameScreen extends AbstractScreen {
         if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
         if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
         System.out.println("Velocity x :" + velocityX + " Velocity Y :" + velocityY);
+
+
+
 	}
 	public void dispose() {
 		batch.dispose();
 	}
 	public void collisionWithWalls() {
-		if(ball.getCircle().x < 200) {
-			velocityX = velocityX * (-1);
-			ball.getCircle().x = 200;
-		}
-		if(ball.getCircle().x > 732) {
-			velocityX = velocityX * (-1);
-			ball.getCircle().x = 732;
-		}
-		if(ball.getCircle().y < 32) {
-			velocityY = velocityY * (-1);
-			ball.getCircle().y = 32;
-		}
-		if(ball.getCircle().y > 964) {
-			velocityY = velocityY * (-1);
-			ball.getCircle().y = 964;
-		}
 
+		if(ball.getCircle().x < 100) {
+			velocityX = velocityX * (-1);
+			ball.getCircle().x = 100;
+		}
+		if(ball.getCircle().x > 885) {
+			velocityX = velocityX * (-1);
+			ball.getCircle().x = 885 ;
+		}
+		if(ball.getCircle().y < 0) {
+			velocityY = velocityY * (-1);
+			ball.getCircle().y = 0;
+		}
+		if(ball.getCircle().y > 885) {
+			velocityY = velocityY * (-1);
+			ball.getCircle().y = 885;
+		}
+		
 	}
 	public double fy (float x, float y, float velocityX, float velocityY) {
 		float gravity = -g * ball.getMass() * board.getHeight(x,y) ;
 		System.out.println("gravity : " + gravity);
-		double a = board.getFriction()  * g * velocityY ;
+		double a = 10 * g * velocityY ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
-		System.out.println( " fx " + (gravity - (a/b)));
+//		System.out.println( " fx " + (gravity - (a/b)));
 		return (gravity - (a/b)) ;
 	}
+
 	public double fx (float x, float y, float velocityX, float velocityY) {
 		float gravity = -g * ball.getMass() * board.getHeight(x,y) ;
 		System.out.println("gravity : " + gravity);
-		double a = board.getFriction() * g * velocityX ;
+		double a = 10 * g * velocityX ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
 		System.out.println( " fx " + (gravity - (a/b)));
 		return (gravity - (a/b)) ;
@@ -132,11 +145,12 @@ public class GameScreen extends AbstractScreen {
 		    velocityY = (ball.getCircle().y -y) ;
 		    System.out.println("VelocityX set to " + velocityX + " velocity y " + velocityY);
 		}
-	/**
+/*
 	public void setVelocities(float clickPositionX, float clickPositionY) {
 	    velocityX = ball.getCircle().x + ball.getCircle().radius - clickPositionX;
 	    velocityY = ball.getCircle().y + ball.getCircle().radius - clickPositionY;		
 	}
+
 	*/
 
 	@Override
@@ -150,6 +164,7 @@ public class GameScreen extends AbstractScreen {
 
 		Gdx.input.setInputProcessor(new InputListener(this, camera));
 	}
+
 	
 	public Vector3 getVelocity() {
 		return new Vector3(velocityX, velocityY, 0);
