@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.InputProcessor;
 import menu.AbstractScreen;
 
@@ -20,6 +21,7 @@ public class GameScreen extends AbstractScreen {
 	private Hole hole;
 	private float velocityX = 0;
 	private float velocityY = 0;
+
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
@@ -86,7 +88,7 @@ public class GameScreen extends AbstractScreen {
         if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
     	ball.getCircle().y -= velocityY * Gdx.graphics.getDeltaTime();
         ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
-        System.out.println("velocityX " + velocityX + " velocityY " + velocityY);
+//        System.out.println("velocityX " + velocityX + " velocityY " + velocityY);
       }
         batch.end();
 	}
@@ -106,22 +108,11 @@ public class GameScreen extends AbstractScreen {
 		//System.out.println( " a " + a + " b " + b);
 		return -(a/b);
 	}
-	public void setVelocities(int x, int y) {
-		   // double distance = Math.sqrt(Math.pow((x - ball.getCircle().x), 2) + Math.pow(y - ball.getCircle().y, 2));
-		    System.out.println("x " + x + " y " + y);
-		    System.out.println("ball : x " + ball.getCircle().x + " y " + ball.getCircle().y);
-			x = 2000 - x;
-			y = 1000 - y;
-		    velocityX = (-1) *(x - (2000-ball.getCircle().x)) / 1;
-		    velocityY = (-1)* (y - (1000- ball.getCircle().y)) / 1;
-		    System.out.println("VelocityX set to " + velocityX + " velocity y " + velocityY);
-		    double factor = 100 / Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-		    velocityX *= factor;
-			velocityY *= -factor;
-
-			System.out.println("VelocityX set to " + velocityX + " velocity y " + velocityY);
-
-		}
+	public void setVelocities(float clickPositionX, float clickPositionY) {
+	    velocityX = ball.getCircle().x + ball.getCircle().radius - clickPositionX;
+	    velocityY = ball.getCircle().y + ball.getCircle().radius - clickPositionY;		
+	}
+	
 	@Override
 	public void buildStage() {
 		camera = new OrthographicCamera();
@@ -130,54 +121,11 @@ public class GameScreen extends AbstractScreen {
 		ball = new Golfball();
 		board = new Board();
 		hole = new Hole();
-		  Gdx.input.setInputProcessor(new InputProcessor() {
-	            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-	        		setVelocities(screenX, screenY);
-	        		return false;
-	        	}
-
-				@Override
-				public boolean keyDown(int keycode) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean keyUp(int keycode) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean keyTyped(char character) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean touchDragged(int screenX, int screenY, int pointer) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean mouseMoved(int screenX, int screenY) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean scrolled(int amount) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-	            });  
+		Gdx.input.setInputProcessor(new InputListener(this, camera));
+	}
+	
+	public Vector3 getVelocity() {
+		return new Vector3(velocityX, velocityY, 0);
 	}
 
 	@Override public void show() {}
