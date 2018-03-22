@@ -11,9 +11,13 @@ public class Board {
 	private int height = 50, width = 50;
 	
 	public Board() {
+
 		float[] a = {1,0};
 		float[] b = {-1,0};
 		physics = new Physics(a,b);
+
+
+		//frictionConstant = 10;
 
 		for(int i = 100; i <= 900; i+=height){
 			for(int j = 0;j <= 900; j+=width) {
@@ -21,7 +25,12 @@ public class Board {
 				terrainList.add(terrain);
 			}
 	    }
+
 	}
+	
+	/*public float getHeight(float x, float y) {
+		
+	}*/
 	public float getHeight(double x, double y) {
 		return physics.getHeight(x, y);
 	}

@@ -11,11 +11,11 @@ import com.badlogic.gdx.math.Vector3;
 import menu.AbstractScreen;
 
 
+
 public class GameScreen extends AbstractScreen {
 
 	//private Rectangle board;
 	private OrthographicCamera camera;
-
 	private float g = (float) 9.81;
 	private SpriteBatch batch;
 	private Golfball ball;
@@ -23,21 +23,9 @@ public class GameScreen extends AbstractScreen {
 	private Hole hole;
 	private float velocityX = 0;
 	private float velocityY = 0;
-	private ArrayList<AABB2D> waterList = new ArrayList<AABB2D>();
-	private ArrayList<AABB2D> obstacleList = new ArrayList<AABB2D>();
-	private ArrayList<AABB2D> groundList = new ArrayList<AABB2D>();
-//	private ArrayList[] = {waterList, obstacleList};
 
-	@Override
-	public void buildStage() {
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1000, 1000);
-		batch = new SpriteBatch();
-		ball = new Golfball();
-		board = new Board();
-		hole = new Hole();
-		Gdx.input.setInputProcessor(new InputListener(this, camera));
-	}
+
+
 	
 	/**
 	 * This method still updates the game. So every drawing, collision detection 
@@ -53,6 +41,7 @@ public class GameScreen extends AbstractScreen {
 		batch.begin();
 
 		for(Terrain t : board.getTerrain()) {
+
 			batch.draw(t.getSprite(), t.getPosition().x, t.getPosition().y);
 		}
 	
@@ -60,6 +49,7 @@ public class GameScreen extends AbstractScreen {
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
 		}
+
 		else {
 			velocityX = 0;
 			velocityY = 0;
@@ -69,16 +59,14 @@ public class GameScreen extends AbstractScreen {
 			velocityX = 0; velocityY = 0;
 		}
 //		System.out.println(ballPos);
+
 		collisionWithWalls();
-		if(Gdx.input.isKeyPressed(Keys.LEFT))
-        	velocityX = 50;
-        if(Gdx.input.isKeyPressed(Keys.RIGHT))
-        	velocityX = -50;
-        if(Gdx.input.isKeyPressed(Keys.UP))
-        	velocityY = -50;
-        if(Gdx.input.isKeyPressed(Keys.DOWN))
-        	velocityY = 50;
-        
+		if(Gdx.input.isKeyPressed(Keys.SPACE)) {
+        	if(velocityX > 0) velocityX += 10;
+        	else velocityX -= 10;
+			if(velocityY > 0) velocityY += 10;
+			else velocityY -=10;
+		}
       if(velocityX != 0 || velocityY != 0) {
     	  changeVelocity();
     	  moveBall();
@@ -90,19 +78,24 @@ public class GameScreen extends AbstractScreen {
           ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
 	}
 	public void changeVelocity() {
+
     	if(velocityX != 0)
       	  velocityX +=  Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
       	if(velocityY != 0) 
           velocityY += Gdx.graphics.getDeltaTime() * (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
-         if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
-         if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
+        if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
+        if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
+        System.out.println("Velocity x :" + velocityX + " Velocity Y :" + velocityY);
+
+
 
 	}
 	public void dispose() {
 		batch.dispose();
 	}
 	public void collisionWithWalls() {
-				if(ball.getCircle().x < 100) {
+
+		if(ball.getCircle().x < 100) {
 			velocityX = velocityX * (-1);
 			ball.getCircle().x = 100;
 		}
@@ -121,31 +114,55 @@ public class GameScreen extends AbstractScreen {
 		
 	}
 	public double fy (float x, float y, float velocityX, float velocityY) {
-		double gravity = -9.81 * ball.getMass() * board.getHeight(y,x) ;
+		float gravity = -g * ball.getMass() * board.getHeight(x,y) ;
 		System.out.println("gravity : " + gravity);
-		double a = board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y,0)).getFrictionConstant() * ball.getMass() * g * (velocityY + velocityX);
-		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
-		//System.out.println( " fx " + (gravity - (a/b)));
-		return (gravity - (a/b)) ;
-	}
-	public double fx (float x, float y, float velocityX, float velocityY) {
-		//assuming only friction plays a role at first 
-		double gravity = -g * ball.getMass() * board.getHeight(x,y) ;
-		System.out.println("gravity : " + gravity);
-		double a = board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y,0)).getFrictionConstant() * ball.getMass() * g * (velocityX + velocityY);
+		double a = 10 * g * velocityY ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
 //		System.out.println( " fx " + (gravity - (a/b)));
 		return (gravity - (a/b)) ;
 	}
+
+	public double fx (float x, float y, float velocityX, float velocityY) {
+		float gravity = -g * ball.getMass() * board.getHeight(x,y) ;
+		System.out.println("gravity : " + gravity);
+		double a = 10 * g * velocityX ;
+		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
+		System.out.println( " fx " + (gravity - (a/b)));
+		return (gravity - (a/b)) ;
+	}
+
+	public void setVelocities(float x, float y) {
+		   // double distance = Math.sqrt(Math.pow((x - ball.getCircle().x), 2) + Math.pow(y - ball.getCircle().y, 2));
+		   // System.out.println("x " + x + " y " + y);
+		    System.out.println("ball : x " + ball.getCircle().x + " y " + ball.getCircle().y);
+		    velocityX = (ball.getCircle().x-x);
+		    velocityY = (ball.getCircle().y -y) ;
+		    System.out.println("VelocityX set to " + velocityX + " velocity y " + velocityY);
+		}
+/*
 	public void setVelocities(float clickPositionX, float clickPositionY) {
 	    velocityX = ball.getCircle().x + ball.getCircle().radius - clickPositionX;
 	    velocityY = ball.getCircle().y + ball.getCircle().radius - clickPositionY;		
 	}
-	
-	
+
+	*/
+
+	@Override
+	public void buildStage() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 1000, 1000);
+		batch = new SpriteBatch();
+		ball = new Golfball();
+		board = new Board();
+		hole = new Hole();
+
+		Gdx.input.setInputProcessor(new InputListener(this, camera));
+	}
+
 	
 	public Vector3 getVelocity() {
 		return new Vector3(velocityX, velocityY, 0);
+
 	}
 
 	@Override public void show() {}
