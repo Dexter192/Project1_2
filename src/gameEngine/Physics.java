@@ -17,7 +17,7 @@ public class Physics {
 		for(int j = 0; j < array2.length; j++) {
 			height += array1[j]*(Math.pow(y, array2.length-1-j));
 		}
-		System.out.println(height);
+		System.out.println("height: " + height);
 		return height;
 	}
 }

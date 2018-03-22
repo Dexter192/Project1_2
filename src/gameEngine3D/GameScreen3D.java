@@ -48,10 +48,13 @@ public class GameScreen3D extends AbstractScreen{
         
         board = new Board(50f, 0.2f, 20f);
     
-        for(int i = 2; i < 10; i++) {
-            Obstacle box = new ObstacleBox(i,0,-i,1f,1f,1f);
-            obstacleList.add(box);
+        for(int i = 0; i < 100; i+=10) {
+            for(int j = 0; j < 100; j+=10) {
+                Obstacle box = new ObstacleBox(i,i/10,j,10f,1f,10f);
+                obstacleList.add(box);
+            }        	
         }
+        
         
         
         golfball = new Golfball(1);	
@@ -68,16 +71,12 @@ public class GameScreen3D extends AbstractScreen{
 
         camController.update();
         modelBatch.begin(camera);
-        modelBatch.render(board.getBoardInstance());
+//        modelBatch.render(board.getBoardInstance());
         modelBatch.render(golfball.getBallInstance());
 
         for(Obstacle o : obstacleList) {
         	modelBatch.render(o.getInstance());
-        	if(collisionDetector.detectCollision(golfball, o)) {
-        		golfball.bounceOff();
-        	}
-        }
-        
+        }        
         golfball.update();
         
         modelBatch.end();
