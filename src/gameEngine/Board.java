@@ -10,8 +10,8 @@ public class Board {
 	private float frictionConstant;
 	private Physics physics;
 	public Board() {
-		float[] a = {1,-4,4};
-		float[] b = {2,7,6};
+		float[] a = {0,0};
+		float[] b = {0.02f,0};
 		physics = new Physics(a,b);
 		
 		Pixmap pixmap = new Pixmap( 700, 1000, Format.RGBA8888 );
@@ -31,7 +31,7 @@ public class Board {
 		boardShape.y = 0;
 		boardShape.width = 700 ;
 		boardShape.height = 1000;
-		frictionConstant = 1;
+		frictionConstant = 10;
 	}
 	public float getHeight(double x, double y) {
 		return physics.getHeight(x, y);
