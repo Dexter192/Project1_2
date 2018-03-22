@@ -1,5 +1,7 @@
 package menu;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
@@ -30,7 +32,7 @@ public class ScreenManager {
 	}
 	
 	// Show in the game the screen which enum type is received
-	public void showScreen(ScreenEnum screenEnum) {
+	public void showScreen(ScreenEnum screenEnum) throws IOException {
 		
 		// Get current screen to dispose it
 		Screen currentScreen = game.getScreen();

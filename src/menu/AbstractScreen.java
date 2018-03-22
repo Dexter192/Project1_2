@@ -1,5 +1,7 @@
 package menu;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,8 +27,9 @@ public abstract class AbstractScreen extends Stage implements Screen {
 	
 	/** 
 	 * Override this method to set a screen setting 
+	 * @throws IOException 
 	 */
-	public abstract void buildStage();
+	public abstract void buildStage() throws IOException;
 
 	/**
 	 * Renders the screen

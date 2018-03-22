@@ -1,5 +1,7 @@
 package menu;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -32,7 +34,12 @@ public class ButtonFactory {
 		return new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				ScreenManager.getInstance().showScreen(screen);
+				try {
+					ScreenManager.getInstance().showScreen(screen);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				return false;
 			}
 		};

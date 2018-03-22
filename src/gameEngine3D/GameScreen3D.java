@@ -52,8 +52,7 @@ public class GameScreen3D extends AbstractScreen{
         for(int i = 2; i < 10; i++) {
             Obstacle box = new ObstacleBox(i,0,-i,1f,1f,1f);
             obstacleList.add(box);
-=======
-    
+
         for(int i = 0; i < 100; i+=10) {
             for(int j = 0; j < 100; j+=10) {
                 Obstacle box = new ObstacleBox(i,i/10,j,10f,1f,10f);

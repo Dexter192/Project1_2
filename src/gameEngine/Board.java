@@ -13,7 +13,7 @@ public class Board {
 	
 	public Board() {
 
-		float[] a = {0.2f,0};
+		float[] a = {5f,0};
 		float[] b = {-2,0};
 		physics = new Physics(a,b);
 		highestHeight = getHighestHeight();
