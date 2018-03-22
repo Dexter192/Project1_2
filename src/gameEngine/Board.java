@@ -20,11 +20,20 @@ public class Board {
 		
 		for(int i = 100; i <= 850; i+=height){
 			for(int j = 0;j <= 1000; j+=width) {
-				Terrain terrain = new Terrain(new Vector3(i,j, getHeight(i,j)), width, height, highestHeight);
-				terrainList.add(terrain);
+				if(i >= 150 && i <= 350 && j >= 650 && j <= 750) {
+					Terrain terrain = new Terrain(new Vector3(i,j, -1f), width, height, highestHeight);
+					terrainList.add(terrain);					
+				}
+				else if(i >= 200 && i <= 300 && j >= 600 && j <= 800) {
+					Terrain terrain = new Terrain(new Vector3(i,j, -1f), width, height, highestHeight);
+					terrainList.add(terrain);					
+				}
+				else {
+					Terrain terrain = new Terrain(new Vector3(i,j, getHeight(i,j)), width, height, highestHeight);
+					terrainList.add(terrain);					
+				}
 			}
 	    }
-
 	}
 
 	public float getHighestHeight() {
@@ -55,7 +64,7 @@ public class Board {
 			   t.getPosition().y <= position.y &&
 			   t.getPosition().y + t.getHeight() >= position.y) {
 				tileOn = t;
-				System.out.println(tileOn.getPosition().z);
+//				System.out.println(tileOn.getPosition().z);
 				break;
 			}
 		}

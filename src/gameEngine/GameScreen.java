@@ -23,7 +23,20 @@ public class GameScreen extends AbstractScreen {
 	private Hole hole;
 	private float velocityX = 0;
 	private float velocityY = 0;
+	private int strokes;
 
+	@Override
+	public void buildStage() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 1000, 1000);
+		batch = new SpriteBatch();
+		ball = new Golfball();
+		board = new Board();
+		hole = new Hole();
+		strokes = 0;
+
+		Gdx.input.setInputProcessor(new InputListener(this, camera));
+	}
 
 
 	
@@ -43,7 +56,7 @@ public class GameScreen extends AbstractScreen {
 		for(Terrain t : board.getTerrain()) {
 			batch.draw(t.getSprite(), t.getPosition().x, t.getPosition().y);
 		}
-	
+			
 		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
@@ -74,9 +87,8 @@ public class GameScreen extends AbstractScreen {
     }
 	
 	public void checkIfOnWater() {
-		if(board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y, 0)) != null &&
-				board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y, 0)).getPosition().z < 0) {
-			System.out.println("On Water");
+		if(board.getTileOn(new Vector3(ball.getCircle().x + ball.getCircle().radius, ball.getCircle().y + ball.getCircle().radius, 0)) != null &&
+				board.getTileOn(new Vector3(ball.getCircle().x + ball.getCircle().radius, ball.getCircle().y + ball.getCircle().radius, 0)).getPosition().z < 0) {
 			ball.getCircle().x = ball.getPreviousPosition().x;
 			ball.getCircle().y = ball.getPreviousPosition().y;
 			velocityX = 0;
@@ -122,7 +134,7 @@ public class GameScreen extends AbstractScreen {
 	}
 	public double fy (float x, float y, float velocityX, float velocityY) {
 		float gravity = -g * ball.getMass() * board.getPhysics().getPartialDerivativeY(y) ;
-		System.out.println("gravity : " + gravity);
+//		System.out.println("gravity : " + gravity);
 		double a = 10 * g * velocityY ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
 //		System.out.println( " fx " + (gravity - (a/b)));
@@ -131,20 +143,20 @@ public class GameScreen extends AbstractScreen {
 
 	public double fx (float x, float y, float velocityX, float velocityY) {
 		float gravity = -g * ball.getMass() * board.getPhysics().getPartialDerivativeX(x) ;
-		System.out.println("gravity : " + gravity);
+//		System.out.println("gravity : " + gravity);
 		double a = 10 * g * velocityX ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
-		System.out.println( " fx " + (gravity - (a/b)));
+//		System.out.println( " fx " + (gravity - (a/b)));
 		return (-gravity - (a/b)) ;
 	}
 
 	public void setVelocities(float x, float y) {
 		   // double distance = Math.sqrt(Math.pow((x - ball.getCircle().x), 2) + Math.pow(y - ball.getCircle().y, 2));
 		   // System.out.println("x " + x + " y " + y);
-		    System.out.println("ball : x " + ball.getCircle().x + " y " + ball.getCircle().y);
+//		    System.out.println("ball : x " + ball.getCircle().x + " y " + ball.getCircle().y);
 		    velocityX = (ball.getCircle().x-x);
 		    velocityY = (ball.getCircle().y -y) ;
-		    System.out.println("VelocityX set to " + velocityX + " velocity y " + velocityY);
+//		    System.out.println("VelocityX set to " + velocityX + " velocity y " + velocityY);
 		}
 /*
 	public void setVelocities(float clickPositionX, float clickPositionY) {
@@ -153,18 +165,6 @@ public class GameScreen extends AbstractScreen {
 	}s
 
 	*/
-
-	@Override
-	public void buildStage() {
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1000, 1000);
-		batch = new SpriteBatch();
-		ball = new Golfball();
-		board = new Board();
-		hole = new Hole();
-
-		Gdx.input.setInputProcessor(new InputListener(this, camera));
-	}
 
 	
 	public Vector3 getVelocity() {
@@ -176,6 +176,11 @@ public class GameScreen extends AbstractScreen {
 		return ball;
 	}
 
+	public void hit()
+	{
+		strokes++;
+		System.out.println("Strokes: " + strokes);
+	}
 	@Override public void show() {}
 	@Override public void resize(int width, int height) {}
 	@Override public void pause() {}

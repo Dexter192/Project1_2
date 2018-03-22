@@ -12,11 +12,15 @@ import menu.AbstractScreen;
 public class SettingsScreen extends AbstractScreen {
 
     private Texture txtrBg;
+    private Skin skin;
+    
     
 	public SettingsScreen() {
 		super();
 		txtrBg    = new Texture(Gdx.files.internal("img/main_menu_bg.png"));
-		SettingsSkin settingsSkin = new SettingsSkin();
+
+		System.out.println(Gdx.files.internal("arcade/arcade-ui.json"));
+		skin = new Skin(Gdx.files.internal("arcade/arcade-ui.json"));
 	}
     
 	@Override
@@ -24,7 +28,7 @@ public class SettingsScreen extends AbstractScreen {
 		Image bg = new Image(txtrBg);
 		addActor(bg);
 		
-		TextField velocity = new TextField("Test", new Skin());
+		TextField velocity = new TextField("Test", skin);
 		addActor(velocity);
 	}
 }

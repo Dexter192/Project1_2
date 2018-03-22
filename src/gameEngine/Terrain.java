@@ -20,15 +20,14 @@ public class Terrain {
 		this.height = height;
 		this.width = width;
 		
-		if(height < 0) {
-			frictionConstant = 100000;
-		}
-		
 		Pixmap pixmap = new Pixmap( width, height, Format.RGBA8888 );
-		System.out.println("Z " + coordinates.z);
+//		System.out.println("Z " + coordinates.z);
 		float green = (float) Math.abs(Math.sin(coordinates.z/hh));
-		System.out.println("greeeeeen" +green);
 		pixmap.setColor(0, green, 0,1);
+		
+		if(coordinates.z < 0) {
+			pixmap.setColor(Color.BLUE);
+		}
 		pixmap.fillRectangle(0, 0, width, height);
 	
 		terrainImage = new Texture(pixmap);

@@ -21,7 +21,7 @@ public class Physics {
 		for(int i = 0; i < array.length; i++) {
 			ans += array[i]*(Math.pow(y, array.length-1-i));	
 		}
-		System.out.println("ANSY" + ans);
+//		System.out.println("ANSY" + ans);
 		return ans;
 	}
 	public float getPartialDerivativeX(float x) {
@@ -30,7 +30,7 @@ public class Physics {
 		for(int i = 0; i < array.length; i++) {
 			ans += array1[i]*(Math.pow(x, array.length-1-i));	
 		}
-		System.out.println("ANSX" + ans);
+//		System.out.println("ANSX" + ans);
 		return ans;
 	}
 	public float getHeight(double x, double y) {
