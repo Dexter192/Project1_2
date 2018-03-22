@@ -1,4 +1,6 @@
 package gameEngine;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,7 +23,10 @@ public class GameScreen extends AbstractScreen {
 	private Hole hole;
 	private float velocityX = 0;
 	private float velocityY = 0;
-
+	private ArrayList<AABB2D> waterList = new ArrayList<AABB2D>();
+	private ArrayList<AABB2D> obstacleList = new ArrayList<AABB2D>();
+	private ArrayList<AABB2D> groundList = new ArrayList<AABB2D>();
+//	private ArrayList[] = {waterList, obstacleList};
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 

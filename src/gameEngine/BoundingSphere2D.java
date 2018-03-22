@@ -1,4 +1,7 @@
 package gameEngine;
+
+import java.util.ArrayList;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class BoundingSphere2D 
@@ -6,12 +9,18 @@ public class BoundingSphere2D
 	// Properties
 	private Vector2 centre;
 	private int radius;
+	static private ArrayList<BoundingSphere2D> sphereList = new ArrayList<BoundingSphere2D>();
+	static private int counter = 0;
+	private int myNumber;
 	
 	
 	public BoundingSphere2D(int r)
 	{
 		radius = r;
 		centre = new Vector2();
+		sphereList.add(this);
+		myNumber = counter;
+		counter++;
 	}
 	
 	
@@ -19,6 +28,9 @@ public class BoundingSphere2D
 	{
 		radius = r;
 		centre = c;
+		sphereList.add(this);
+		myNumber = counter;
+		counter++;
 	}
 	
 	
@@ -26,6 +38,9 @@ public class BoundingSphere2D
 	{
 		radius = r;
 		centre = new Vector2((float) x, (float) y);
+		sphereList.add(this);
+		myNumber = counter;
+		counter++;
 	}
 	
 	
@@ -34,6 +49,12 @@ public class BoundingSphere2D
 	
 	
 	public Vector2 getCentre()	{	return centre;	}
+	
+	
+	public ArrayList<BoundingSphere2D> getSphereList()	{	return sphereList;	}
+	
+	
+	public int getMyNumber()	{	return myNumber;	}
 	
 	
 	// Intersection Methods.
