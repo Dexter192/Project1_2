@@ -107,7 +107,7 @@ public class GameScreen extends AbstractScreen {
 		System.out.println("gravity : " + gravity);
 		double a = board.getFriction() * ball.getMass() * g * (velocityY + velocityX);
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
-		System.out.println( " fx " + (gravity - (a/b)));
+		//System.out.println( " fx " + (gravity - (a/b)));
 		return (gravity - (a/b)) ;
 	}
 	public double fx (float x, float y, float velocityX, float velocityY) {
