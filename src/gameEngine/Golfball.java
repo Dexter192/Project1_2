@@ -34,6 +34,14 @@ public class Golfball {
 		return mass;
 	}
 	
+	public void setPreviousPosition(Vector3 previousPositon) {
+		this.previousPosition = previousPositon;
+	}
+	
+	public Vector3 getPreviousPosition() {
+		return previousPosition;
+	}
+	
 	public Circle getCircle() {
 		return ballShape;
 	}

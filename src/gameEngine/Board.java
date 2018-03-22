@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Board {
 
 	private Physics physics;
-	private ArrayList<Terrain> terrainList = new ArrayList<>();
+	private HashSet<Terrain> terrainList = new HashSet<>();
 	private int height = 50, width = 50;
 	
 	public Board() {
@@ -25,9 +25,24 @@ public class Board {
 	public float getHeight(double x, double y) {
 		return physics.getHeight(x, y);
 	}
-	public ArrayList<Terrain> getTerrain() {
+	public HashSet<Terrain> getTerrain() {
 		return terrainList;
 	}
+	
+	public Terrain getTileOn(Vector3 position) {
+		Terrain tileOn = null; 
+		for(Terrain t : terrainList) { 
+			if(t.getPosition().x <= position.x &&
+			   t.getPosition().x + t.getWidth() >= position.x &&
+			   t.getPosition().y <= position.y &&
+			   t.getPosition().y + t.getHeight() >= position.y) {
+				tileOn = t;
+				break;
+			}
+		}
+		return tileOn;
+	}
+	
 }
 
 

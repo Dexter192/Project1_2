@@ -42,8 +42,8 @@ public class GameScreen extends AbstractScreen {
 	/**
 	 * This method still updates the game. So every drawing, collision detection 
 	 * etc. should be called here (This does not mean, that everything should be checked here :D )
-	 * Create a collision detector class for example and just call that one with the required parameters
-	 */
+	 * Create a collision detector class for example and just call that one with the required parameters..
+	 */  
 	@Override
 	public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
