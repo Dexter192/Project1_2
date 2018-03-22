@@ -47,7 +47,9 @@ public class Board {
 		boardShape.height = 1000;
 		frictionConstant = 1;
 	}
-	
+	public float getHeight(double x, double y) {
+		return physics.getHeight(x, y);
+	}
 	public Rectangle getRectangle() {
 		return boardShape;
 	}

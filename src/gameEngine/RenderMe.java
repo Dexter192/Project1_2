@@ -14,7 +14,7 @@ public class RenderMe
 	
 	public RenderMe(AABB2D k) 
 	{	
-		Pixmap pixmap = new Pixmap( (int)(k.getHigh()).x, (int)(k.getHigh()).y, Format.RGBA8888 ); //change(size)
+		Pixmap pixmap = new Pixmap( (k.getHigh()).x, (k.getHigh()).y, Format.RGBA8888 ); //change(size)
 		
 		// Apply terrain settings.
 		if (k.terrain == 0) // Grass.
@@ -38,7 +38,7 @@ public class RenderMe
 			frictionConstant = 1;
 		}
 		
-		pixmap.fillRectangle((int)(k.getLow()).x, (int)(k.getLow()).y, (int)(k.getHigh()).x, (int)(k.getHigh()).y); //Change (fill), first two are xy start, second are xy end
+		pixmap.fillRectangle((k.getLow()).x, (k.getLow()).y, (k.getHigh()).x, (k.getHigh()).y); //Change (fill), first two are xy start, second are xy end
 		
 		boardImage = new Texture(pixmap); //colouring shit or something idk, not texture as in pattern (i think...)
 		
@@ -51,7 +51,7 @@ public class RenderMe
 	}
 	
 	
-	/*public RenderMe(BoundingSphere2D k) 
+	public RenderMe(BouncingSphere2D k) 
 	{	
 		Pixmap pixmap = new Pixmap( (k.getHigh()).x, (k.getHigh()).y, Format.RGBA8888 ); //change(size)
 		
@@ -68,7 +68,7 @@ public class RenderMe
 		boardShape.width = ((k.getHigh()).x - (k.getLow()).x);
 		boardShape.height = ((k.getHigh()).y - (k.getLow()).y);
 		
-	}*/
+	}
 	
 	public Rectangle getRectangle() {	return boardShape;	} // representing 
 	

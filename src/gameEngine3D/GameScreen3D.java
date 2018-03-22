@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
+import collisionDetector.CollisionDetector;
 import menu.AbstractScreen;
 
 public class GameScreen3D extends AbstractScreen{
@@ -22,6 +23,7 @@ public class GameScreen3D extends AbstractScreen{
 	private ModelBatch modelBatch;
     private Environment environment;
     private CameraInputController camController;
+    private CollisionDetector collisionDetector;
 
     private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
     
@@ -33,6 +35,7 @@ public class GameScreen3D extends AbstractScreen{
 		
 		
 		modelBatch = new ModelBatch();
+		collisionDetector = new CollisionDetector();
 		
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(10f, 10f, 10f);
@@ -45,8 +48,8 @@ public class GameScreen3D extends AbstractScreen{
         
         board = new Board(50f, 0.2f, 20f);
     
-        for(int i = 0; i < 10; i++) {
-            Obstacle box = new ObstacleBox(i,i,-i,1f,1f,1f);
+        for(int i = 2; i < 10; i++) {
+            Obstacle box = new ObstacleBox(i,0,-i,1f,1f,1f);
             obstacleList.add(box);
         }
         
@@ -70,10 +73,13 @@ public class GameScreen3D extends AbstractScreen{
 
         for(Obstacle o : obstacleList) {
         	modelBatch.render(o.getInstance());
+        	if(collisionDetector.detectCollision(golfball, o)) {
+        		golfball.bounceOff();
+        	}
         }
         
         golfball.update();
-        	
+        
         modelBatch.end();
 	}
 	

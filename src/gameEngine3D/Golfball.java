@@ -57,4 +57,8 @@ public class Golfball {
 		   directionVector.scl(0.9f);
 	}
 	
+	public void bounceOff() {
+		directionVector.scl(-1);
+	}
+	
 }
