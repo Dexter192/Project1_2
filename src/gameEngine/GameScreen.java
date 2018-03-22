@@ -90,12 +90,12 @@ public class GameScreen extends AbstractScreen {
           ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
 	}
 	public void changeVelocity() {
-//    	if(velocityX != 0)
-//      	  velocityX +=  Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
-//      	if(velocityY != 0) 
-//          velocityY += Gdx.graphics.getDeltaTime() * (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
-          if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
-          if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
+    	if(velocityX != 0)
+      	  velocityX +=  Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
+      	if(velocityY != 0) 
+          velocityY += Gdx.graphics.getDeltaTime() * (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
+         if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
+         if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
 
 	}
 	public void dispose() {
@@ -123,7 +123,7 @@ public class GameScreen extends AbstractScreen {
 	public double fy (float x, float y, float velocityX, float velocityY) {
 		double gravity = -9.81 * ball.getMass() * board.getHeight(y,x) ;
 		System.out.println("gravity : " + gravity);
-		double a = board.getFriction() * ball.getMass() * g * (velocityY + velocityX);
+		double a = board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y,0)).getFrictionConstant() * ball.getMass() * g * (velocityY + velocityX);
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
 		//System.out.println( " fx " + (gravity - (a/b)));
 		return (gravity - (a/b)) ;
@@ -132,7 +132,7 @@ public class GameScreen extends AbstractScreen {
 		//assuming only friction plays a role at first 
 		double gravity = -g * ball.getMass() * board.getHeight(x,y) ;
 		System.out.println("gravity : " + gravity);
-		double a = board.getFriction() * ball.getMass() * g * (velocityX + velocityY);
+		double a = board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y,0)).getFrictionConstant() * ball.getMass() * g * (velocityX + velocityY);
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
 //		System.out.println( " fx " + (gravity - (a/b)));
 		return (gravity - (a/b)) ;

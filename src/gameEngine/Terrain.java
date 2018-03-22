@@ -19,6 +19,10 @@ public class Terrain {
 		this.height = height;
 		this.width = width;
 		
+		if(height < 0) {
+			frictionConstant = 100000;
+		}
+		
 		Pixmap pixmap = new Pixmap( width, height, Format.RGBA8888 );
 		pixmap.setColor(0, coordinates.z, 0,1);
 		pixmap.fillRectangle(0, 0, width, height);
@@ -43,6 +47,10 @@ public class Terrain {
 	
 	public int getHeight() {
 		return height;
+	}
+	
+	public float getFrictionConstant() { 
+		return frictionConstant;
 	}
 	
 }
