@@ -1,4 +1,6 @@
 package gameEngine;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,6 +22,10 @@ public class GameScreen extends AbstractScreen {
 	private Hole hole;
 	private float velocityX = 0;
 	private float velocityY = 0;
+	private ArrayList<AABB2D> waterList = new ArrayList<AABB2D>();
+	private ArrayList<AABB2D> obstacleList = new ArrayList<AABB2D>();
+	private ArrayList<AABB2D> groundList = new ArrayList<AABB2D>();
+	private ArrayList[] = {waterList, obstacleList};
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
@@ -47,6 +53,11 @@ public class GameScreen extends AbstractScreen {
 		batch.begin();	
 		batch.draw(board.getSprite(), board.getRectangle().x, board.getRectangle().y);
 		batch.draw(hole.getSprite(), hole.getCircle().x, hole.getCircle().y);
+		for (int i = size; i < size; i+=2)
+		{
+			batch.draw(abcdef.getSprite(), abcdef.getRectangle().x, abcdef.getRectangle().y);
+		}
+		
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
 		}
@@ -123,15 +134,21 @@ public class GameScreen extends AbstractScreen {
 
 		}
 	@Override
-	public void buildStage() {
+	public void buildStage() 
+	{
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1000, 1000);
 		batch = new SpriteBatch();
 		ball = new Golfball();
 		board = new Board();
 		hole = new Hole();
-		  Gdx.input.setInputProcessor(new InputProcessor() {
-	            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		abc = new AABB2D(150, 400, 350, 500);
+		//abc.setObstacle();
+		abcdef = new RenderMe(abc);
+		  Gdx.input.setInputProcessor(new InputProcessor() 
+		  {
+	            public boolean touchUp(int screenX, int screenY, int pointer, int button) 
+	            {
 	        		setVelocities(screenX, screenY);
 	        		return false;
 	        	}

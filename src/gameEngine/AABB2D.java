@@ -1,4 +1,7 @@
+package gameEngine;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.*;
 
 public class AABB2D // Axis Aligned Bounding Boxes.
 {
@@ -6,6 +9,7 @@ public class AABB2D // Axis Aligned Bounding Boxes.
 	private Vector2 low;
 	private Vector2 high;
 	public int terrain;
+	
 	
 	public AABB2D()
 	{
