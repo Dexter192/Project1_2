@@ -15,7 +15,7 @@ public class Terrain {
 	private float frictionConstant = 1;
 	private int height, width;
 	
-	public Terrain(Vector3 coordinates, int height, int width) {
+	public Terrain(Vector3 coordinates, int height, int width, float hh) {
 		this.coordinates = coordinates;
 		this.height = height;
 		this.width = width;
@@ -25,10 +25,10 @@ public class Terrain {
 		}
 		
 		Pixmap pixmap = new Pixmap( width, height, Format.RGBA8888 );
-		pixmap.setColor(0, coordinates.z, 0,1);
-		if(coordinates.z < 0) {
-			pixmap.setColor(Color.BLUE);	
-		}
+		System.out.println("Z " + coordinates.z);
+		float green = (float) Math.abs(Math.sin(coordinates.z/hh));
+		System.out.println("greeeeeen" +green);
+		pixmap.setColor(0, green, 0,1);
 		pixmap.fillRectangle(0, 0, width, height);
 	
 		terrainImage = new Texture(pixmap);

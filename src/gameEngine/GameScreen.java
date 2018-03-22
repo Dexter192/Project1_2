@@ -114,14 +114,14 @@ public class GameScreen extends AbstractScreen {
 			velocityY = velocityY * (-1);
 			ball.getCircle().y = 0;
 		}
-		if(ball.getCircle().y > 885) {
+		if(ball.getCircle().y > 975) {
 			velocityY = velocityY * (-1);
-			ball.getCircle().y = 885;
+			ball.getCircle().y = 975;
 		}
 		
 	}
 	public double fy (float x, float y, float velocityX, float velocityY) {
-		float gravity = -g * ball.getMass() * board.getHeight(x,y) ;
+		float gravity = -g * ball.getMass() * board.getPhysics().getPartialDerivativeY(y) ;
 		System.out.println("gravity : " + gravity);
 		double a = 10 * g * velocityY ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
@@ -130,7 +130,7 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	public double fx (float x, float y, float velocityX, float velocityY) {
-		float gravity = -g * ball.getMass() * board.getHeight(x,y) ;
+		float gravity = -g * ball.getMass() * board.getPhysics().getPartialDerivativeX(x) ;
 		System.out.println("gravity : " + gravity);
 		double a = 10 * g * velocityX ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
