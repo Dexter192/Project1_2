@@ -1,4 +1,6 @@
 package gameEngine;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,6 +23,10 @@ public class GameScreen extends AbstractScreen {
 	private Hole hole;
 	private float velocityX = 0;
 	private float velocityY = 0;
+	private ArrayList<AABB2D> waterList = new ArrayList<AABB2D>();
+	private ArrayList<AABB2D> obstacleList = new ArrayList<AABB2D>();
+	private ArrayList<AABB2D> groundList = new ArrayList<AABB2D>();
+//	private ArrayList[] = {waterList, obstacleList};
 	/**
 	 * Implement the game initialization here. That should be stuff like the 
 	 * course builder, the menu screen or and maybe the physics engine 
@@ -101,6 +107,28 @@ public class GameScreen extends AbstractScreen {
 			ball.getCircle().y = 964;
 		}
 		
+		if(Gdx.input.isKeyPressed(Keys.LEFT))
+        	velocityX = 50;
+        if(Gdx.input.isKeyPressed(Keys.RIGHT))
+        	velocityX = -50;
+        if(Gdx.input.isKeyPressed(Keys.UP))
+        	velocityY = -50;
+        if(Gdx.input.isKeyPressed(Keys.DOWN))
+        	velocityY = 50;
+        
+      if(velocityX != 0 || velocityY != 0) {
+    	if(velocityX != 0)
+    	  velocityX +=  Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
+    	if(velocityY != 0) 
+        velocityY += Gdx.graphics.getDeltaTime() * (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
+       //System.out.println(Gdx.graphics.getDeltaTime() * (fx(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass()));
+        if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
+        if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
+    	ball.getCircle().y -= velocityY * Gdx.graphics.getDeltaTime();
+        ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
+//        System.out.println("velocityX " + velocityX + " velocityY " + velocityY);
+      }
+        batch.end();
 	}
 	public double fy (float x, float y, float velocityX, float velocityY) {
 		double gravity = -9.81 * ball.getMass() * board.getHeight(y,x) ;
@@ -119,6 +147,7 @@ public class GameScreen extends AbstractScreen {
 		System.out.println( " fx " + (gravity - (a/b)));
 		return (gravity - (a/b)) ;
 	}
+<<<<<<< HEAD
 	public void setVelocities(float x, float y) {
 		   // double distance = Math.sqrt(Math.pow((x - ball.getCircle().x), 2) + Math.pow(y - ball.getCircle().y, 2));
 		   // System.out.println("x " + x + " y " + y);
@@ -128,6 +157,13 @@ public class GameScreen extends AbstractScreen {
 		    System.out.println("VelocityX set to " + velocityX + " velocity y " + velocityY);
 
 		}
+=======
+	public void setVelocities(float clickPositionX, float clickPositionY) {
+	    velocityX = ball.getCircle().x + ball.getCircle().radius - clickPositionX;
+	    velocityY = ball.getCircle().y + ball.getCircle().radius - clickPositionY;		
+	}
+	
+>>>>>>> branch 'master' of https://github.com/DanielKaestner/Project1_2.git
 	@Override
 	public void buildStage() {
 		camera = new OrthographicCamera();
@@ -136,6 +172,7 @@ public class GameScreen extends AbstractScreen {
 		ball = new Golfball();
 		board = new Board();
 		hole = new Hole();
+<<<<<<< HEAD
 		  Gdx.input.setInputProcessor(new InputProcessor() {
 	            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 	        		Vector3 clickPosition = camera.unproject(new Vector3(screenX, screenY, 0));
@@ -185,6 +222,13 @@ public class GameScreen extends AbstractScreen {
 					return false;
 				}
 	            });  
+=======
+		Gdx.input.setInputProcessor(new InputListener(this, camera));
+	}
+	
+	public Vector3 getVelocity() {
+		return new Vector3(velocityX, velocityY, 0);
+>>>>>>> branch 'master' of https://github.com/DanielKaestner/Project1_2.git
 	}
 
 	@Override public void show() {}
