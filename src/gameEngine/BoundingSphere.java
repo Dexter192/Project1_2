@@ -1,30 +1,31 @@
-import com.badlogic.gdx.math.Vector2;
+package gameEngine;
+import com.badlogic.gdx.math.Vector3;
 
-public class BoundingSphere2D 
+public class BoundingSphere 
 {
 	// Properties
-	private Vector2 centre;
+	private Vector3 centre;
 	private int radius;
 	
 	
-	public BoundingSphere2D(int r)
+	public BoundingSphere(int r)
 	{
 		radius = r;
-		centre = new Vector2();
+		centre = new Vector3();
 	}
 	
 	
-	public BoundingSphere2D(int r, Vector2 c)
+	public BoundingSphere(int r, Vector3 c)
 	{
 		radius = r;
 		centre = c;
 	}
 	
 	
-	public BoundingSphere2D(int r, int x, int y)
+	public BoundingSphere(int r, int x, int y, int z)
 	{
 		radius = r;
-		centre = new Vector2((float) x, (float) y);
+		centre = new Vector3((float) x, (float) y, (float) z);
 	}
 	
 	
@@ -32,11 +33,11 @@ public class BoundingSphere2D
 	public int getRadius()	{	return radius;	}
 	
 	
-	public Vector2 getCentre()	{	return centre;	}
+	public Vector3 getCentre()	{	return centre;	}
 	
 	
 	// Intersection Methods.
-	public boolean intersectingBS(BoundingSphere2D other)
+	public boolean intersectingBS(BoundingSphere other)
 	{
 		int radiusTotal = this.getRadius() + other.getRadius();
 		float centreDistance = this.getCentre().dst(other.getCentre());
@@ -46,7 +47,7 @@ public class BoundingSphere2D
 	}
 	
 	
-	public boolean intersectingAABB(AABB2D other)
+	public boolean intersectingAABB(AABB other)
 	{
 		boolean aladeenHere = false;
 		float distance1 = this.getCentre().dst(other.getHigh());

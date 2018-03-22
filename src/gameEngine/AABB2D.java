@@ -1,3 +1,4 @@
+package gameEngine;
 import com.badlogic.gdx.math.Vector2;
 
 public class AABB2D // Axis Aligned Bounding Boxes.
