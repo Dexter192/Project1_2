@@ -17,7 +17,7 @@ public class Board {
 		physics = new Physics(a,b);
 
 
-		//frictionConstant = 10;
+		//frictionConstant = 10;s
 
 		for(int i = 100; i <= 900; i+=height){
 			for(int j = 0;j <= 900; j+=width) {

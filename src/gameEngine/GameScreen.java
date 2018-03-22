@@ -143,7 +143,7 @@ public class GameScreen extends AbstractScreen {
 	public void setVelocities(float clickPositionX, float clickPositionY) {
 	    velocityX = ball.getCircle().x + ball.getCircle().radius - clickPositionX;
 	    velocityY = ball.getCircle().y + ball.getCircle().radius - clickPositionY;		
-	}
+	}s
 
 	*/
 
