@@ -9,8 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 import menu.AbstractScreen;
-import menu.ScreenEnum;
-import menu.ScreenManager;
+
 
 
 public class GameScreen extends AbstractScreen {
@@ -24,10 +23,7 @@ public class GameScreen extends AbstractScreen {
 	private Hole hole;
 	private float velocityX = 0;
 	private float velocityY = 0;
-	private ArrayList<AABB2D> waterList = new ArrayList<AABB2D>();
-	private ArrayList<AABB2D> obstacleList = new ArrayList<AABB2D>();
-	private ArrayList<AABB2D> groundList = new ArrayList<AABB2D>();
-//	private ArrayList[] = {waterList, obstacleList};
+
 
 
 	

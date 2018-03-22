@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 //import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector3;
 
 public class Golfball {
 
@@ -12,6 +13,7 @@ public class Golfball {
 	private Texture ballImage;
 	private float mass;
 	private int radius = 12;
+	private Vector3 previousPosition;
 	
 	public Golfball() {
 		
@@ -25,6 +27,7 @@ public class Golfball {
 		ballShape.radius = radius;
 		ballShape.x = 100;
 		ballShape.y = 100;
+		previousPosition = new Vector3(ballShape.x, ballShape.y,0);
 		mass = 1;
 	}
 	public float getMass() {
