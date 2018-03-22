@@ -27,12 +27,13 @@ public class Board {
 	    }
 
 	}
+	
 	/*public float getHeight(float x, float y) {
 		
 	}*/
-	/*public float getHeight(double x, double y) {
+	public float getHeight(double x, double y) {
 		return physics.getHeight(x, y);
-	}*/
+	}
 	public ArrayList<Terrain> getTerrain() {
 		return terrainList;
 	}

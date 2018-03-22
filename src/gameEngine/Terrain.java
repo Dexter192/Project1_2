@@ -8,19 +8,19 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Terrain {
 	
-	private Vector3 co;
+	private Vector3 coordinates;
 	private Rectangle terrainShape;
 	private Texture terrainImage;
-	private float frictionConstant;
+	private float frictionConstant = 1;
 	private int height, width;
 	
-	public Terrain(Vector3 co, int height, int width) {
-		this.co = co;
+	public Terrain(Vector3 coordinates, int height, int width) {
+		this.coordinates = coordinates;
 		this.height = height;
 		this.width = width;
-//		System.out.println(co.z);
+		
 		Pixmap pixmap = new Pixmap( width, height, Format.RGBA8888 );
-		pixmap.setColor(0, co.z, 0,1);
+		pixmap.setColor(0, coordinates.z, 0,1);
 		pixmap.fillRectangle(0, 0, width, height);
 	
 		terrainImage = new Texture(pixmap);
@@ -30,10 +30,19 @@ public class Terrain {
 		return terrainImage;
 	}
 	public Vector3 getPosition() {
-		return co;
+		return coordinates;
 	}
 	
 	public String toString() {
-		return co + ", " + width;
+		return coordinates + ", " + width;
 	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
 }
