@@ -39,9 +39,8 @@ public class GameScreen extends AbstractScreen {
         camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-
+		checkIfOnWater();
 		for(Terrain t : board.getTerrain()) {
-
 			batch.draw(t.getSprite(), t.getPosition().x, t.getPosition().y);
 		}
 	
@@ -49,7 +48,6 @@ public class GameScreen extends AbstractScreen {
 		if(!ball.getCircle().overlaps(hole.getCircle())) {
 			batch.draw(ball.getSprite(), ball.getCircle().x, ball.getCircle().y);
 		}
-
 		else {
 			velocityX = 0;
 			velocityY = 0;
@@ -67,12 +65,25 @@ public class GameScreen extends AbstractScreen {
 			if(velocityY > 0) velocityY += 10;
 			else velocityY -=10;
 		}
+		
       if(velocityX != 0 || velocityY != 0) {
     	  changeVelocity();
     	  moveBall();
       }
       batch.end();
     }
+	
+	public void checkIfOnWater() {
+		if(board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y, 0)) != null &&
+				board.getTileOn(new Vector3(ball.getCircle().x, ball.getCircle().y, 0)).getPosition().z < 0) {
+			System.out.println("On Water");
+			ball.getCircle().x = ball.getPreviousPosition().x;
+			ball.getCircle().y = ball.getPreviousPosition().y;
+			velocityX = 0;
+			velocityY = 0;
+		}
+	}
+	
 	public void moveBall() {
 		  ball.getCircle().y -= velocityY * Gdx.graphics.getDeltaTime();
           ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
@@ -85,10 +96,6 @@ public class GameScreen extends AbstractScreen {
           velocityY += Gdx.graphics.getDeltaTime() * (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
         if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
         if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
-        System.out.println("Velocity x :" + velocityX + " Velocity Y :" + velocityY);
-
-
-
 	}
 	public void dispose() {
 		batch.dispose();
@@ -119,7 +126,7 @@ public class GameScreen extends AbstractScreen {
 		double a = 10 * g * velocityY ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
 //		System.out.println( " fx " + (gravity - (a/b)));
-		return (gravity - (a/b)) ;
+		return (-gravity - (a/b)) ;
 	}
 
 	public double fx (float x, float y, float velocityX, float velocityY) {
@@ -128,7 +135,7 @@ public class GameScreen extends AbstractScreen {
 		double a = 10 * g * velocityX ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
 		System.out.println( " fx " + (gravity - (a/b)));
-		return (gravity - (a/b)) ;
+		return (-gravity - (a/b)) ;
 	}
 
 	public void setVelocities(float x, float y) {
@@ -163,6 +170,10 @@ public class GameScreen extends AbstractScreen {
 	public Vector3 getVelocity() {
 		return new Vector3(velocityX, velocityY, 0);
 
+	}
+	
+	public Golfball getGolfball() {
+		return ball;
 	}
 
 	@Override public void show() {}

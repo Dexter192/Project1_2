@@ -1,7 +1,5 @@
 package gameEngine;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 import com.badlogic.gdx.math.Vector3;
 public class Board {
@@ -12,8 +10,8 @@ public class Board {
 	
 	public Board() {
 
-		float[] a = {1,0};
-		float[] b = {-1,0};
+		float[] a = {1,-100};
+		float[] b = {-1,-100};
 		physics = new Physics(a,b);
 
 
@@ -46,6 +44,7 @@ public class Board {
 			   t.getPosition().y <= position.y &&
 			   t.getPosition().y + t.getHeight() >= position.y) {
 				tileOn = t;
+				System.out.println(tileOn.getPosition().z);
 				break;
 			}
 		}

@@ -4,6 +4,7 @@ import CourseBuilder.CourseBuilder;
 import CourseBuilder.ObstacleSelector;
 import gameEngine.GameScreen;
 import gameEngine3D.GameScreen3D;
+import settings.SettingsScreen;
 
 public enum ScreenEnum {	
 	
@@ -22,6 +23,12 @@ public enum ScreenEnum {
 	COURSE_BUILDER{
 		public AbstractScreen getScreen() {
 			return new CourseBuilder();
+		}
+	},
+	
+	SETTINGS_SCREEN{
+		public AbstractScreen getScreen() {
+			return new SettingsScreen();
 		}
 	},
 	

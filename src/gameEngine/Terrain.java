@@ -1,5 +1,6 @@
 package gameEngine;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,6 +26,9 @@ public class Terrain {
 		
 		Pixmap pixmap = new Pixmap( width, height, Format.RGBA8888 );
 		pixmap.setColor(0, coordinates.z, 0,1);
+		if(coordinates.z < 0) {
+			pixmap.setColor(Color.BLUE);	
+		}
 		pixmap.fillRectangle(0, 0, width, height);
 	
 		terrainImage = new Texture(pixmap);

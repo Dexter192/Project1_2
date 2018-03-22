@@ -17,6 +17,8 @@ public class InputListener implements InputProcessor{
 	
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		Vector3 clickPosition = camera.unproject(new Vector3(screenX, screenY, 0));
+		Golfball ball = gameScreen.getGolfball();
+		ball.setPreviousPosition(new Vector3(ball.getCircle().x, ball.getCircle().y, 0));
 		if(!initialize && gameScreen.getVelocity().isZero())gameScreen.setVelocities(clickPosition.x, clickPosition.y);
 		initialize = false;
 		return false;

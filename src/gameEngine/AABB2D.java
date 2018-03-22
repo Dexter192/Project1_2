@@ -1,22 +1,5 @@
 package gameEngine;
 import com.badlogic.gdx.math.Vector2;
-
-<<<<<<< HEAD
-public class AABB2D // Axis Aligned Bounding Boxes.
-{
-	// Properties.
-	private Vector2 low;
-	private Vector2 high;
-	public int terrain;
-=======
-<<<<<<< HEAD
-public class AABB2D // Axis Aligned Bounding Boxes.
-{
-	// Properties.
-	private Vector2 low;
-	private Vector2 high;
-	public int terrain;
-=======
 import java.util.*;
 
 public class AABB2D // Axis Aligned Bounding Boxes.
@@ -26,7 +9,6 @@ public class AABB2D // Axis Aligned Bounding Boxes.
 	private Vector2 high;
 	public int terrain;
 	
->>>>>>> branch 'master' of https://github.com/DanielKaestner/Project1_2.git
 	
 	public AABB2D()
 	{

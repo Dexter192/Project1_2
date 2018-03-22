@@ -25,8 +25,8 @@ public class Golfball {
 		
 		ballShape = new Circle();
 		ballShape.radius = radius;
-		ballShape.x = 100;
-		ballShape.y = 100;
+		ballShape.x = 200;
+		ballShape.y = 200;
 		previousPosition = new Vector3(ballShape.x, ballShape.y,0);
 		mass = 1;
 	}
