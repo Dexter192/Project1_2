@@ -8,6 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.utils.Align;
 
+/**
+ * 
+ * This is the class representing the MainScreen. It inherits the Abstract Screen
+ * 
+ * @author Daniel
+ *
+ */
 public class MainMenuScreen extends AbstractScreen {
 	
 	private Texture txtrBg;

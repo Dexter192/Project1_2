@@ -8,6 +8,13 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 
+
+/**
+ * A class representing the Golfball as a 3D sphere.
+ * 
+ * @author Daniel
+ *
+ */
 public class Golfball {
 
 	private Model ballModel;
@@ -31,16 +38,28 @@ public class Golfball {
 
 	}
 	
+	/**
+	 * 
+	 * @return The Model of the ball
+	 */
 	public Model getBallModel() {
 		return ballModel;
 	}
 	
+	/**
+	 * 
+	 * @return The ModelInstance of the ball
+	 */
 	public ModelInstance getBallInstance() {
 		return ballInstance;
 	}
 	public Vector3 getVector() {
 		return directionVector;
 	}
+	
+	/**
+	 * Updates the ball. Primarily its position.
+	 */
 	public void update() {
 		   if(Gdx.input.isKeyPressed(Keys.DOWN)) {
 			   directionVector.x = 0.4f;
@@ -54,11 +73,16 @@ public class Golfball {
 		   if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			   directionVector.z = -0.4f;
 		   }
+		   //Transform the ballposition by the directionvector
 		   ballInstance.transform.translate(directionVector);
 		   
 		   directionVector.scl(0.9f);
 	}
 	
+	/**
+	 * TODO:
+	 * Implement propper bouncing of
+	 */
 	public void bounceOff() {
 		directionVector.scl(-1);
 	}
