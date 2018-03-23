@@ -53,7 +53,7 @@ public class BoundingSphere
 		float distance1 = this.getCentre().dst(other.getHigh());
 		float distance2 = this.getCentre().dst(other.getLow());
 		
-		System.out.println("distance1 has the value: " + distance1 + ", and distance2 has the value:" + distance2 + ".");
+//		System.out.println("distance1 has the value: " + distance1 + ", and distance2 has the value:" + distance2 + ".");
 		
 		if(distance1 < this.getRadius() || distance2 < this.getRadius())
 			aladeenHere = true;

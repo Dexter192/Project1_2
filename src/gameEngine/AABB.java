@@ -62,7 +62,7 @@ public class AABB // Axis Aligned Bounding Boxes.
 			checking.z = distance1.z;
 		else checking.z = distance2.z;
 		
-		System.out.println("checking has the values: " + checking.x + ", " + checking.y + ", " + checking.z + ".");
+//		System.out.println("checking has the values: " + checking.x + ", " + checking.y + ", " + checking.z + ".");
 		
 		if(checking.x < 0 || checking.y < 0 || checking.z < 0)
 			aladeenHere = true;
@@ -76,7 +76,7 @@ public class AABB // Axis Aligned Bounding Boxes.
 		float distance1 = other.getCentre().dst(this.getHigh());
 		float distance2 = other.getCentre().dst(this.getLow());
 		
-		System.out.println("distance1 has the value: " + distance1 + ", and distance2 has the value:" + distance2 + ".");
+//		System.out.println("distance1 has the value: " + distance1 + ", and distance2 has the value:" + distance2 + ".");
 		
 		if(distance1 < other.getRadius() || distance2 < other.getRadius())
 			aladeenHere = true;

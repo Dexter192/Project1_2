@@ -20,8 +20,8 @@ public class Hole {
 		holeImage = new Texture(pixmap);
 		
 		holeShape = new Circle();
-		holeShape.x = 450;
-		holeShape.y = 900;
+		holeShape.x = 800;
+		holeShape.y = 850;
 		holeShape.radius = 32;
 		
 	}

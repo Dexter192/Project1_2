@@ -24,9 +24,9 @@ public class Terrain {
 		}
 		
 		Pixmap pixmap = new Pixmap( width, height, Format.RGBA8888 );
-		System.out.println("Z " + coordinates.z);
+//		System.out.println("Z " + coordinates.z);
 		float green = (float) Math.abs(Math.sin(coordinates.z/hh));
-		System.out.println("greeeeeen" +green);
+//		System.out.println("greeeeeen" +green);
 		pixmap.setColor(0, green, 0,1);
 		pixmap.fillRectangle(0, 0, width, height);
 	

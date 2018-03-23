@@ -12,8 +12,8 @@ public class CollisionTester
 		boolean andAgain = dort.intersectingBS(bir);
 		//System.out.println("Bir and iki' intersection's existance is " + alive);
 		//System.out.println("Uc and dort's intersection's existance is " + another);
-		System.out.println("Bir and dort's intersection's existance is " + andAgain);
+//		System.out.println("Bir and dort's intersection's existance is " + andAgain);
 		andAgain = bir.intersectingAABB(dort);
-		System.out.println("Bir and dort's intersection's existance is " + andAgain);
+//		System.out.println("Bir and dort's intersection's existance is " + andAgain);
 	}
 }

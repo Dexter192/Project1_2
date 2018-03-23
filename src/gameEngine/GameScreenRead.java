@@ -47,7 +47,7 @@ public class GameScreenRead extends AbstractScreen {
 			velocityX = velocities[count][0];
 			velocityY = velocities[count][1];
 			count ++;
-			System.out.println("HHHHIIIII");
+//			System.out.println("HHHHIIIII");
 			}
 			else {
 				count = 0; 
@@ -105,7 +105,7 @@ public class GameScreenRead extends AbstractScreen {
           velocityY += Gdx.graphics.getDeltaTime() * (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY)/ball.getMass());
         if(velocityX < 0.1 && velocityX >-0.1) velocityX = 0;
         if(velocityY < 0.1 && velocityY > -0.1) velocityY = 0;
-        System.out.println("Velocity x :" + velocityX + " Velocity Y :" + velocityY);
+//        System.out.println("Velocity x :" + velocityX + " Velocity Y :" + velocityY);
 	}
 	public void dispose() {
 		batch.dispose();
@@ -132,19 +132,19 @@ public class GameScreenRead extends AbstractScreen {
 	}
 	public double fy (float x, float y, float velocityX, float velocityY) {
 		float gravity = -g * ball.getMass() * board.getPhysics().getPartialDerivativeY(y) ;
-		System.out.println("gravity : " + gravity);
+//		System.out.println("gravity : " + gravity);
 		double a = 10 * g * velocityY ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
-		System.out.println( " fy " + (gravity - (a/b)));
+//		System.out.println( " fy " + (gravity - (a/b)));
 		return (-gravity - (a/b)) ;
 	}
 
 	public double fx (float x, float y, float velocityX, float velocityY) {
 		float gravity = -g * ball.getMass() * board.getPhysics().getPartialDerivativeX(x) ;
-		System.out.println("gravity : " + gravity);
+//		System.out.println("gravity : " + gravity);
 		double a = 10 * g * velocityX ;
 		double b = Math.sqrt((velocityX*velocityX)+ (velocityY * velocityY));
-		System.out.println( " fx " + (gravity - (a/b)));
+//		System.out.println( " fx " + (gravity - (a/b)));
 		return (-gravity - (a/b)) ;
 	}
 
@@ -160,7 +160,7 @@ public class GameScreenRead extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		System.out.println("hi");
+//		System.out.println("hi");
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1000, 1000);
 		batch = new SpriteBatch();
@@ -170,7 +170,7 @@ public class GameScreenRead extends AbstractScreen {
 		try{
 			
 			FileReader reader = new FileReader("Velocity.txt");
-			System.out.println("still here");
+//			System.out.println("still here");
 			Scanner in = new Scanner(reader);
 		int i = 0; 
 		
@@ -185,10 +185,10 @@ public class GameScreenRead extends AbstractScreen {
 		in.close();
 		}
 		catch(Exception e) {
-		System.out.println("o");
+//		System.out.println("o");
 		}
 		for(int i = 0; i < max; i++) {
-			System.out.println("v" + velocities[i][0] +  " " + velocities[i][1]);
+//			System.out.println("v" + velocities[i][0] +  " " + velocities[i][1]);
 		}
 	}
 

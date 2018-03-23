@@ -20,7 +20,7 @@ public class CollisionDetector {
 		BoundingBox obstacleBoundingBox = new BoundingBox();
 		obstacle.getInstance().calculateBoundingBox(obstacleBoundingBox);
 		
-		System.out.println(ballBoundingBox + " - " + obstacleBoundingBox);
+//		System.out.println(ballBoundingBox + " - " + obstacleBoundingBox);
 		
 		if(ballBoundingBox.intersects(obstacleBoundingBox)) {
 			intersects = true;
