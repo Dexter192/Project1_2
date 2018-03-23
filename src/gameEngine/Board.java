@@ -11,8 +11,10 @@ public class Board {
 	
 	public Board() {
 
-		float[] a = {0.2f,0};
-		float[] b = {-2,0};
+		//float[] a = {0.2f,0};
+		//float[] b = {-2,0};
+		float[] a = {0.01f, 3, 1};
+		float[] b = {0.05f, 2, 1};
 		physics = new Physics(a,b);
 		highestHeight = getHighestHeight();
 
