@@ -31,13 +31,13 @@ public class ObstacleBox extends Obstacle {
 		this.width = width;
 		this.depth = depth;
 		
-		buildModel(model);
+		buildModel();
 		modelInstance = new ModelInstance(model);
 		modelInstance.transform.translate(position);
 	}
 
 	@Override
-	public void buildModel(Model model) {
+	public void buildModel() {
 		super.model = modelBuilder.createBox(width, height, depth, 
 	            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
 	            Usage.Position | Usage.Normal);	

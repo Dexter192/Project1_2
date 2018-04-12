@@ -47,7 +47,7 @@ public abstract class Obstacle {
 	 * actual shape of the model.
 	 * @param model
 	 */
-	public abstract void buildModel(Model model);
+	public abstract void buildModel();
 	
 	/**
 	 * Set the position of the ModelInstance
