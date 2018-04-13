@@ -19,17 +19,28 @@ public class VectorComputation {
         return instance;
     }
     
-    /**
-     * Computes the Eulerian distance between two points (in a 3 dimensional space)
-     * @param pointA 
-     * @param pointB
-     * @return th eulerian Distance between the points
-     */
     public float getDistance(Vector3 pointA, Vector3 pointB) {
     	double x = Math.pow(pointA.x-pointB.x, 2);
-    	double y = Math.pow(pointA.x-pointB.x, 2);
-    	double z = Math.pow(pointA.x-pointB.x, 2);
+    	double y = Math.pow(pointA.y-pointB.y, 2);
+    	double z = Math.pow(pointA.z-pointB.z, 2);
+    	    	
     	double distance = Math.sqrt(x+y+z);
+    	
+    	return (float)distance;
+    }
+    
+    /**
+     * Computes the euclidian distance between two points (in a 3 dimensional space)<br>
+     * <b>CAREFUL!</b> This method ignores the y vector (i.e. the height)
+     * @param pointA 
+     * @param pointB
+     * @return the euclidian Distance between the points
+     */
+    public float getDistanceXZ(Vector3 pointA, Vector3 pointB) {
+    	double x = Math.pow(pointA.x-pointB.x, 2);
+    	double z = Math.pow(pointA.z-pointB.z, 2);
+    	    	
+    	double distance = Math.sqrt(x+z);
     	
     	return (float)distance;
     }

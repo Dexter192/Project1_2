@@ -1,29 +1,36 @@
 package gameEngine3D;
 
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+
+import Physiks.VectorComputation;
 
 
 public class InputListener implements InputProcessor{
 	
 	GameScreen3D gameScreen3D;
-	PerspectiveCamera camera;
+	LineIndicator lineIndicator;
 	boolean initialize = true;
 	
-	public InputListener(GameScreen3D gameScreen3D, PerspectiveCamera camera) {
+	public InputListener(GameScreen3D gameScreen3D, LineIndicator lineIndicator) {
 		this.gameScreen3D = gameScreen3D;
-		this.camera = camera;
+		this.lineIndicator = lineIndicator;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		Vector3 clickPosition = camera.unproject(new Vector3(screenX, screenY, 0));
-		gameEngine3D.Golfball ball = gameScreen3D.getGolfball();
-		System.out.println(camera);
+		Vector3 mousePosition = gameScreen3D.getWorldCoords();
+		Golfball ball = gameScreen3D.getGolfball();
+		
+		Vector3 directionVector = ball.getPosition().sub(mousePosition);
+		
+		float stength = VectorComputation.getInstance().getDistance(mousePosition, ball.getPosition());
+		directionVector.nor();
+		
 		if(!initialize && ball.getVelocity().isZero()) {
-			ball.setVelocity(clickPosition);
+			directionVector.y = 0;
+			ball.setVelocity(directionVector.scl(stength));
 		}
 		initialize = false;
 		return false;

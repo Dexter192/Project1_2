@@ -37,9 +37,8 @@ public class LineIndicator {
 
 	public void updateLine(Vector3 golfballPosition, Vector3 mousePosition) {
 
-		float lineLength = VectorComputation.getInstance().getDistance(golfballPosition, mousePosition);
+		float lineLength = VectorComputation.getInstance().getDistanceXZ(golfballPosition, mousePosition);
 		Color lineColor = computeLineColor(lineLength);
-
 		// There must be a more efficient way, than disposing and redeclaring the
 		// line...
 		modelBuilder.begin();
@@ -50,6 +49,14 @@ public class LineIndicator {
 		lineInstance = new ModelInstance(lineModel);
 	}
 
+	public void setLine(Vector3 a, Vector3 b, Color color) {
+		modelBuilder.begin();
+		MeshPartBuilder builder = modelBuilder.part("line", 1, 3, new Material());
+		builder.setColor(color);
+		builder.line(a, b);
+		lineModel = modelBuilder.end();
+		lineInstance = new ModelInstance(lineModel);		
+	}
 	/**
 	 * Computes a color for the line between the ball and the cursor. This line
 	 * should become more red, if the curser is far from the ball and green, if it
@@ -61,10 +68,12 @@ public class LineIndicator {
 	 */
 	public Color computeLineColor(float lineLength) {
 		// TODO: find a proper computation for the line color. But first make the camera
-		// follow the ball, s.t. we have a consistent distance
+		// follow the ball, s.t. we have a consistent distance -- fix the hitting, then fix the color
 		Color lineColor = new Color();
-		lineColor.r = (lineLength >= 13) ? 255 : (int) lineLength * 13;
-		lineColor.g = (lineLength <= 10) ? 255 : (int) (255 - lineLength * 13);
+		lineColor.b = 0;
+		lineColor.g = (lineLength >= 255) ? 255 : (int)255-lineLength; 
+		lineColor.r = 255-lineColor.g;
+		
 		return lineColor;
 
 	}
@@ -73,6 +82,10 @@ public class LineIndicator {
 		return lineInstance;
 	}
 
+	public Model getModel() {
+		return lineModel;
+	}
+	
 	public void dispose() {
 		lineModel.dispose();
 	}

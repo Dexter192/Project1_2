@@ -3,7 +3,6 @@ package gameEngine3D;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 
@@ -42,4 +41,5 @@ public class ObstacleBox extends Obstacle {
 	            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
 	            Usage.Position | Usage.Normal);	
 	}
+	
 }

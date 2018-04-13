@@ -60,21 +60,15 @@ public class Golfball {
 	 * Updates the ball. Primarily its position.
 	 */
 	public void update() {
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			directionVector.x = 0.4f;
-		}
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			directionVector.x = -0.4f;
-		}
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			directionVector.z = 0.4f;
-		}
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			directionVector.z = -0.4f;
-		}
-
 		ignoreMinimalVelocity();
 
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			ballInstance.transform.translate(new Vector3(0,0,1));
+		}
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			ballInstance.transform.translate(new Vector3(0,0,-1));
+		}
+		
 		// Transform the ballposition by the directionvector
 		ballInstance.transform.translate(directionVector);
 		directionVector.scl(0.9f);
@@ -96,13 +90,14 @@ public class Golfball {
 		return directionVector;
 	}
 
-	public void setVelocity(Vector3 clickPosition) {
-		System.out.println(clickPosition);
-		System.out.println(getPosition());
-		this.directionVector = getPosition().sub(clickPosition);
-		directionVector.scl(0.1f);
+	public void setVelocity(Vector3 directionVector) {
+		this.directionVector = directionVector;
 	}
 
+	public void setPosiition(Vector3 position) {
+		
+	}
+	
 	public Vector3 getPosition() {
 		return ballInstance.transform.getTranslation(new Vector3());
 	}

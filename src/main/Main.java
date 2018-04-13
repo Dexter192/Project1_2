@@ -3,8 +3,6 @@ package main;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import gameEngine.GameScreen;
-
 
 public class Main {
 
