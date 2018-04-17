@@ -89,6 +89,7 @@ public class GameScreen3D extends AbstractScreen {
 			axis[1] = new LineIndicator();
 			axis[2] = new LineIndicator();
 		}
+		
 	}
 
 	int j = 0;
@@ -117,6 +118,7 @@ public class GameScreen3D extends AbstractScreen {
 		int i = 0;
 		for (Obstacle o : obstacleList) {
 			modelBatch.render(o.getInstance());
+			//
 		}
 
 		modelBatch.render(collisionBox.getInstance());
