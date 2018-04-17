@@ -35,7 +35,7 @@ public class CollisionDetector {
 	 * @return
 	 */
 	public Vector3 handleCollision() {
-		
+		return null;
 	}
 
 }
