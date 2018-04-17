@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 /**
  * This is an abstract class containing the basic functionality every obstacle should have.
@@ -21,6 +22,7 @@ public abstract class Obstacle {
 	protected ModelInstance modelInstance;
 	protected ModelBuilder modelBuilder;
 	protected Vector3 position;
+	protected BoundingBox boundingBox;
 	
 	
 	/**
@@ -63,6 +65,13 @@ public abstract class Obstacle {
 	 */
 	public Model getModel() {
 		return model;
+	}
+	
+	public BoundingBox getBoundingBox() {
+		if(boundingBox == null) {
+			modelInstance.calculateBoundingBox(boundingBox);
+		}
+		return boundingBox;
 	}
 	
 	/**
