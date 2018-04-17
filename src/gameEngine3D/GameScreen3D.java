@@ -44,6 +44,8 @@ public class GameScreen3D extends AbstractScreen {
 	public LineIndicator indicatorLine;
 	public LineIndicator[] axis = new LineIndicator[3];
 
+	private Obstacle collisionBox;
+	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 
 	@Override
@@ -66,12 +68,11 @@ public class GameScreen3D extends AbstractScreen {
 		camController = new CameraInputController(camera);
 
 		// initialize obstacles
-		for (int i = -100; i < 100; i += 10) {
-			for (int j = -100; j < 100; j += 10) {
-				Obstacle box = new ObstacleBox(i, 0, j, 10f, 1f, 10f);
+				Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
 				obstacleList.add(box);
-			}
-		}
+		
+		collisionBox = new ObstacleBox(10, 10, 10, 10f, 10f, 10f);
+		
 		// initialize golfball
 		golfball = new Golfball(1);
 		// inizialize hit indicator line
@@ -118,7 +119,7 @@ public class GameScreen3D extends AbstractScreen {
 			modelBatch.render(o.getInstance());
 		}
 
-		System.out.println(golfball.getPosition() + " " + golfball.getVelocity());
+		modelBatch.render(collisionBox.getInstance());
 
 		if (showAxis) {
 			axis[0].setLine(new Vector3(100, 0, 0), new Vector3(-100, 0, 0), Color.RED);
@@ -148,10 +149,10 @@ public class GameScreen3D extends AbstractScreen {
 		// TODO: we might have to do this manually --> ask in project meeting, prehaps
 		// ask pietro
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), -5f);
+			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), -2f);
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), 5f);
+			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), 2f);
 		}
 		camera.lookAt(golfball.getPosition());
 		camera.translate(golfball.getVelocity());

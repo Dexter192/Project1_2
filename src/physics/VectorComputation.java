@@ -1,4 +1,4 @@
-package Physiks;
+package physics;
 
 import com.badlogic.gdx.math.Vector3;
 

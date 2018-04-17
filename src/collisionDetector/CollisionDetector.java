@@ -20,12 +20,22 @@ public class CollisionDetector {
 		BoundingBox obstacleBoundingBox = new BoundingBox();
 		obstacle.getInstance().calculateBoundingBox(obstacleBoundingBox);
 
-		System.out.println(ballBoundingBox + " - " + obstacleBoundingBox);
-
+		System.out.println(obstacleBoundingBox + " " + ballBoundingBox);
+		
+		
 		if (ballBoundingBox.intersects(obstacleBoundingBox)) {
 			intersects = true;
 		}
 		return intersects;
+	}
+	
+	
+	/**
+	 * This method handles the collision between the two objects and returns the new direction vector
+	 * @return
+	 */
+	public Vector3 handleCollision() {
+		
 	}
 
 }

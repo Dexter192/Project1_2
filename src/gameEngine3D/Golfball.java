@@ -32,7 +32,7 @@ public class Golfball {
 						| VertexAttributes.Usage.TextureCoordinates);
 
 		ballInstance = new ModelInstance(ballModel);
-		ballInstance.transform.translate(new Vector3(0, (float) (0.1 + radius), 0));
+		ballInstance.transform.translate(new Vector3(0, (float) (radius*2), 0));
 
 	}
 
