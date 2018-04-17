@@ -11,23 +11,29 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * A factory method for creating Image-buttons and assign them to a screen
+ * 
  * @author Daniel
  *
  */
 public class ButtonFactory {
-	
+
 	/**
-	 * Create an Imagebutton 
-	 * @param texture the texture of the Button
+	 * Create an Imagebutton
+	 * 
+	 * @param texture
+	 *            the texture of the Button
 	 * @return returns the Image-Button
 	 */
 	public static ImageButton createButton(Texture texture) {
-		return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture) ) );
+		return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture)));
 	}
-	
+
 	/**
-	 * The method creates an input listener for the Image-button and links it to the screen
-	 * @param screen the Screen on which the button is displayed
+	 * The method creates an input listener for the Image-button and links it to the
+	 * screen
+	 * 
+	 * @param screen
+	 *            the Screen on which the button is displayed
 	 * @return returns the inputlistener for the created button
 	 */
 	public static InputListener createListener(final ScreenEnum screen) {
