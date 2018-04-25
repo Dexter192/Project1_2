@@ -1,7 +1,9 @@
 package gameEngine3D;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -22,7 +24,7 @@ public abstract class Obstacle {
 	protected ModelInstance modelInstance;
 	protected ModelBuilder modelBuilder;
 	protected Vector3 position;
-	protected BoundingBox boundingBox;
+	protected BoundingBox boundingBox = null;
 	
 	
 	/**
@@ -51,6 +53,10 @@ public abstract class Obstacle {
 	 */
 	public abstract void buildModel();
 	
+	public void setColor(Color color) {
+		modelInstance.materials.get(0).set(ColorAttribute.createDiffuse(color));
+	}
+	
 	/**
 	 * Set the position of the ModelInstance
 	 * @param position the position of the ModelInstance
@@ -69,7 +75,13 @@ public abstract class Obstacle {
 	
 	public BoundingBox getBoundingBox() {
 		if(boundingBox == null) {
-			modelInstance.calculateBoundingBox(boundingBox);
+			boundingBox = new BoundingBox();
+			boundingBox = modelInstance.calculateBoundingBox(boundingBox);
+			Vector3 min = new Vector3();
+			Vector3 max = new Vector3();
+			min = boundingBox.getMin(min);
+			max = boundingBox.getMax(max);
+			boundingBox.set(min.add(position), max.add(position));
 		}
 		return boundingBox;
 	}

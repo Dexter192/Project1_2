@@ -68,10 +68,13 @@ public class GameScreen3D extends AbstractScreen {
 		camController = new CameraInputController(camera);
 
 		// initialize obstacles
-				Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
-				obstacleList.add(box);
+		Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
+		obstacleList.add(box);
+							
+		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
 		
-		collisionBox = new ObstacleBox(10, 10, 10, 10f, 10f, 10f);
 		
 		// initialize golfball
 		golfball = new Golfball(1);
@@ -91,8 +94,6 @@ public class GameScreen3D extends AbstractScreen {
 		}
 		
 	}
-
-	int j = 0;
 
 	/**
 	 * This method updates the game. So every drawing, collision detection etc.
@@ -115,12 +116,7 @@ public class GameScreen3D extends AbstractScreen {
 		}
 
 		modelBatch.render(indicatorLine.getInstance());
-		int i = 0;
-		for (Obstacle o : obstacleList) {
-			modelBatch.render(o.getInstance());
-			//
-		}
-
+		
 		modelBatch.render(collisionBox.getInstance());
 
 		if (showAxis) {
@@ -136,6 +132,11 @@ public class GameScreen3D extends AbstractScreen {
 
 		Vector3 mousePosition = getWorldCoords();
 		indicatorLine.updateLine(golfball.getPosition(), mousePosition);
+	
+		for (Obstacle o : obstacleList) {
+			modelBatch.render(o.getInstance());
+			collisionDetector.detectCollision(golfball, o);
+		}		
 	}
 
 	public void dispose() {

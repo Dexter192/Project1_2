@@ -1,5 +1,7 @@
 package gameEngine3D;
 
+import javax.swing.text.Position;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 /**
  * A class representing the Golfball as a 3D sphere.
@@ -21,8 +24,12 @@ public class Golfball {
 	private ModelInstance ballInstance;
 	private ModelBuilder modelBuilder;
 	private Vector3 directionVector;
+	private BoundingBox boundingBox;
+	private Vector3 position;
+	private float radius;
 
 	public Golfball(float radius) {
+		this.radius = radius;
 		directionVector = new Vector3(0, 0, 0);
 
 		modelBuilder = new ModelBuilder();
@@ -31,8 +38,11 @@ public class Golfball {
 				VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
 						| VertexAttributes.Usage.TextureCoordinates);
 
+		position = new Vector3(0, radius * 2, 0);
+
 		ballInstance = new ModelInstance(ballModel);
-		ballInstance.transform.translate(new Vector3(0, (float) (radius*2), 0));
+		ballInstance.transform.translate(position);
+		getBoundingBox();
 
 	}
 
@@ -63,15 +73,23 @@ public class Golfball {
 		ignoreMinimalVelocity();
 
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			ballInstance.transform.translate(new Vector3(0,0,1));
+			ballInstance.transform.translate(new Vector3(0, 0, 1));
 		}
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			ballInstance.transform.translate(new Vector3(0,0,-1));
+			ballInstance.transform.translate(new Vector3(0, 0, -1));
 		}
-		
+
 		// Transform the ballposition by the directionvector
-		ballInstance.transform.translate(directionVector);
-		directionVector.scl(0.9f);
+		position.add(directionVector);
+
+		// ballInstance.transform.translate(directionVector);
+		ballInstance.transform.setTranslation(position);
+
+		Vector3 min = new Vector3(-radius, -radius, -radius);
+		Vector3 max = new Vector3( radius,  radius,  radius);
+		boundingBox = boundingBox.set(min.add(position), max.add(position));
+
+		directionVector.scl(0.95f);
 	}
 
 	private void ignoreMinimalVelocity() {
@@ -95,9 +113,9 @@ public class Golfball {
 	}
 
 	public void setPosiition(Vector3 position) {
-		
+		this.position = position;
 	}
-	
+
 	public Vector3 getPosition() {
 		return ballInstance.transform.getTranslation(new Vector3());
 	}
@@ -105,8 +123,22 @@ public class Golfball {
 	/**
 	 * TODO: Implement propper bouncing of
 	 */
-	public void bounceOff() {
-		directionVector.scl(-1);
+	public void bounceOff(Vector3 axis) {
+		directionVector.scl(axis);
 	}
 
+	public float getRadius() {
+		return radius;
+	}
+	
+	public BoundingBox getBoundingBox() {
+		if (boundingBox == null) {
+			boundingBox = new BoundingBox();
+			boundingBox = ballInstance.calculateBoundingBox(boundingBox);
+			Vector3 min = new Vector3();
+			Vector3 max = new Vector3();
+			boundingBox.set(min.add(position), max.add(position));
+		}
+		return boundingBox;
+	}
 }

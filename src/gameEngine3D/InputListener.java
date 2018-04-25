@@ -27,7 +27,7 @@ public class InputListener implements InputProcessor {
 
 		Vector3 directionVector = ball.getPosition().sub(mousePosition);
 
-		float stength = VectorComputation.getInstance().getDistance(mousePosition, ball.getPosition()) / 5;
+		float stength = VectorComputation.getInstance().getDistance(mousePosition, ball.getPosition()) / 10;
 		directionVector.nor();
 
 		if (!initialize && ball.getVelocity().isZero()) {
