@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import gameEngine3D.Obstacle;
+import Obstacles.Obstacle;
 import menu.AbstractScreen;
 
 public class CourseBuilder extends AbstractScreen {

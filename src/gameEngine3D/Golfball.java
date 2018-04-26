@@ -1,9 +1,5 @@
 package gameEngine3D;
 
-import javax.swing.text.Position;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -71,14 +67,6 @@ public class Golfball {
 	 */
 	public void update() {
 		ignoreMinimalVelocity();
-
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			ballInstance.transform.translate(new Vector3(0, 0, 1));
-		}
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			ballInstance.transform.translate(new Vector3(0, 0, -1));
-		}
-
 		// Transform the ballposition by the directionvector
 		position.add(directionVector);
 
@@ -112,12 +100,20 @@ public class Golfball {
 		this.directionVector = directionVector;
 	}
 
+	public void addVelocity(Vector3 directionVector) {
+		this.directionVector.add(directionVector);
+	}
+	
 	public void setPosiition(Vector3 position) {
 		this.position = position;
 	}
 
 	public Vector3 getPosition() {
 		return ballInstance.transform.getTranslation(new Vector3());
+	}
+	
+	public void setPosition(Vector3 newPosition) {
+		this.position = newPosition;
 	}
 
 	/**

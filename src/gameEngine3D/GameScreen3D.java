@@ -19,6 +19,9 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
+import Obstacles.Hole;
+import Obstacles.Obstacle;
+import Obstacles.ObstacleBox;
 import collisionDetector.CollisionDetector;
 import menu.AbstractScreen;
 
@@ -36,6 +39,7 @@ public class GameScreen3D extends AbstractScreen {
 	private boolean showAxis = true;
 
 	private Golfball golfball;
+	private Hole hole;
 	private ModelBatch modelBatch;
 	private Environment environment;
 	private CameraInputController camController;
@@ -44,7 +48,6 @@ public class GameScreen3D extends AbstractScreen {
 	public LineIndicator indicatorLine;
 	public LineIndicator[] axis = new LineIndicator[3];
 
-	private Obstacle collisionBox;
 	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 
@@ -67,17 +70,14 @@ public class GameScreen3D extends AbstractScreen {
 		camera.update();
 		camController = new CameraInputController(camera);
 
-		// initialize obstacles
-		Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
-		obstacleList.add(box);
-							
-		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
-		
+		initObstacles();
 		
 		// initialize golfball
 		golfball = new Golfball(1);
+		
+		hole = new Hole(-10, 0.01f, -10, golfball.getRadius()*2);
+		obstacleList.add(hole);
+		
 		// inizialize hit indicator line
 		indicatorLine = new LineIndicator();
 
@@ -117,8 +117,12 @@ public class GameScreen3D extends AbstractScreen {
 
 		modelBatch.render(indicatorLine.getInstance());
 		
-		modelBatch.render(collisionBox.getInstance());
-
+		for(Obstacle o : obstacleList) {			
+			modelBatch.render(o.getInstance());
+		}
+		
+		modelBatch.render(hole.getInstance());
+		
 		if (showAxis) {
 			axis[0].setLine(new Vector3(100, 0, 0), new Vector3(-100, 0, 0), Color.RED);
 			axis[1].setLine(new Vector3(0, 100, 0), new Vector3(0, -100, 0), Color.BLUE);
@@ -157,9 +161,25 @@ public class GameScreen3D extends AbstractScreen {
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), 2f);
 		}
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			camera.translate(new Vector3(0,-1,0));
+		}
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			camera.translate(new Vector3(0,1,0));
+		}
+		
 		camera.lookAt(golfball.getPosition());
 		camera.translate(golfball.getVelocity());
 		camera.update();
+	}
+	
+	private void initObstacles() {
+		Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
+		obstacleList.add(box);
+							
+		Obstacle collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
 	}
 
 	@Override
