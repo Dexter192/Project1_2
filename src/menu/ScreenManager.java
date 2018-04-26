@@ -1,5 +1,7 @@
 package menu;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
@@ -49,8 +51,9 @@ public class ScreenManager {
 	 * 
 	 * @param screenEnum
 	 *            the screen which should be displayed
+	 * @throws IOException 
 	 */
-	public void showScreen(ScreenEnum screenEnum) {
+	public void showScreen(ScreenEnum screenEnum) throws IOException {
 
 		// Get current screen to dispose it
 		Screen currentScreen = game.getScreen();

@@ -68,6 +68,7 @@ public class GameScreen3D extends AbstractScreen {
 		camera.near = 1f;
 		camera.far = 300f;
 		camera.update();
+
 		camController = new CameraInputController(camera);
 
 		initObstacles();
@@ -92,7 +93,6 @@ public class GameScreen3D extends AbstractScreen {
 			axis[1] = new LineIndicator();
 			axis[2] = new LineIndicator();
 		}
-		
 	}
 
 	/**

@@ -18,6 +18,7 @@ public class Board {
 		float[] a = { 0.01f, 3, 1 };
 		float[] b = { 0.05f, 2, 1 };
 		physics = new Physics(a, b);
+
 		highestHeight = getHighestHeight();
 
 		// frictionConstant = 10

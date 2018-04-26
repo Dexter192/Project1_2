@@ -3,6 +3,7 @@ package menu;
 import CourseBuilder.CourseBuilder;
 import CourseBuilder.ObstacleSelector;
 import gameEngine.GameScreen;
+import gameEngine.GameScreenRead;
 import gameEngine3D.GameScreen3D;
 import settings.SettingsScreen;
 
@@ -16,7 +17,7 @@ public enum ScreenEnum {
 
 	GAME_SCREEN_3D {
 		public AbstractScreen getScreen() {
-			return new GameScreen3D();
+			return new GameScreenRead();
 		}
 	},
 
