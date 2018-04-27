@@ -103,7 +103,7 @@ public class GameScreen extends AbstractScreen {
 		ball.getCircle().y -= velocityY * Gdx.graphics.getDeltaTime();
 		ball.getCircle().x -= velocityX * Gdx.graphics.getDeltaTime();
 	}
-
+// TODO: check if this is correct, since i believe it oscillates due to wrong method calls
 	public void changeVelocity() {
 
 		if (velocityX != 0)
@@ -112,10 +112,8 @@ public class GameScreen extends AbstractScreen {
 		if (velocityY != 0)
 			velocityY += Gdx.graphics.getDeltaTime()
 					* (fy(ball.getCircle().x, ball.getCircle().y, velocityX, velocityY) / ball.getMass());
-		if (velocityX < 0.1 && velocityX > -0.1)
-			velocityX = 0;
-		if (velocityY < 0.1 && velocityY > -0.1)
-			velocityY = 0;
+		if (Math.abs(velocityX)< 0.1)velocityX = 0;
+		if (Math.abs(velocityY)< 0.1)velocityY = 0;
 	}
 
 	public void dispose() {

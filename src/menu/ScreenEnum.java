@@ -17,7 +17,7 @@ public enum ScreenEnum {
 
 	GAME_SCREEN_3D {
 		public AbstractScreen getScreen() {
-			return new GameScreenRead();
+			return new GameScreen3D();
 		}
 	},
 
