@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import gameEngine.Physics;
+
 /**
  * A class representing the Golfball as a 3D sphere.
  * 
@@ -17,16 +19,18 @@ import com.badlogic.gdx.math.collision.BoundingBox;
  *
  */
 public class Golfball {
-
+	private final float g = 9.81f;
 	private Model ballModel;
 	private ModelInstance ballInstance;
 	private ModelBuilder modelBuilder;
 	private Vector3 directionVector;
 	private BoundingBox boundingBox;
+	private boolean moveWithKeys = true;
 	private Vector3 position;
 	private float radius;
-	private final boolean moveWithKeys = true;
-
+	private float mass;
+	private Physics physics;
+	private float friction;
 	public Golfball(float radius) {
 		this.radius = radius;
 		directionVector = new Vector3(0, 0, 0);
