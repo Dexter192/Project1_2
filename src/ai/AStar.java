@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.lwjgl.Sys;
+
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
@@ -11,6 +13,8 @@ import Obstacles.Hole;
 import Obstacles.Obstacle;
 import collisionDetector.CollisionDetector;
 import gameEngine3D.GameScreen3D;
+import gameEngine3D.Golfball;
+import physics.VectorComputation;
 
 public class AStar {
 
@@ -25,45 +29,59 @@ public class AStar {
 	
 	//Objekte müssen Nodes haben!
 
-	private GameScreen3D gamescreen;
+	private HashSet<AStarTile> openList;
+	private HashSet<AStarTile> closedList;
+	private AStarTile lastTile;
+	
+	
 	private BoundingBox courseDimensions;
-	private Vector3 holeDimensions;
+	private Vector3 holePosition;
 	private Vector3 ballPosition;
-	private HashSet<Vector3> exploredAreas;
-	private HashSet<Vector3> expandableAreas;
 	private CollisionDetector collisionDetector;
 	private Set<Obstacle> obstacleList;
 	private boolean hasFoundPath = false;
+	private float stepSize; 
+	private Golfball golfBall;
 
 	/*
 	 * Currently this should be able to find the hole in the entire course.
 	 * Identifying the shortest path to it will be a different thing though.
 	 */
 
-	public AStar(GameScreen3D gamescreen) {
-		this.gamescreen = gamescreen;
+	public AStar(GameScreen3D gamescreen, float stepSize) {
+		this.golfBall = gamescreen.getGolfball();
+		this.stepSize = stepSize;
 		courseDimensions = gamescreen.getCouserDimensions();
-		holeDimensions = gamescreen.getHole().getBoundingBox().getDimensions(new Vector3());
+		holePosition = gamescreen.getHole().getBoundingBox().getCenter(new Vector3());
 		ballPosition = gamescreen.getGolfball().getPosition();
 		collisionDetector = new CollisionDetector();
-		expandableAreas = new HashSet<>();
-		expandableAreas.add(ballPosition);
-		exploredAreas = new HashSet<>();
+		openList = new HashSet<>();
+		closedList = new HashSet<>();
 		obstacleList = gamescreen.getAllObstacles();
 	}
 
 	public void findPathToHole() {
-		System.out.println("Hole: " + gamescreen.getHole().getBoundingBox());
 
-		while (!hasFoundPath && !expandableAreas.isEmpty()) {
-			Iterator<Vector3> itr = expandableAreas.iterator();
-			expandArea(itr.next());
+		AStarTile start = new AStarTile(ballPosition, holePosition);
+		openList.add(start);
+		
+		while (!hasFoundPath && !openList.isEmpty()) {
+			AStarTile cheapestElement = findCheapestElement();
+			expandArea(cheapestElement);
 		}
 		if (hasFoundPath)
 			System.out.println("Found Path!");
 		// TODO: iterate through all expandable areas center positions, check if there
 		// is a an overlap otherwise expand the area and shift it in the explored area
 		// set
+	}
+	
+	public void setToNextPosition() {
+		if(lastTile == null) {
+			return;
+		}
+			golfBall.setPosiition(lastTile.getPosition());
+			lastTile = lastTile.getParent();
 	}
 
 	/**
@@ -72,37 +90,41 @@ public class AStar {
 	 * 
 	 * @param expandablePosition
 	 */
-	private void expandArea(Vector3 expandablePosition) {
+	private void expandArea(AStarTile expandTile) {
+		Vector3 expandPosition = expandTile.getPosition();
 		// TODO: see, if we still are in the feasible region
-		Vector3[] unexploredPositions = new Vector3[26];
-		for (int i = 0; i < unexploredPositions.length; i++)
-			unexploredPositions[i] = new Vector3();
+
+		System.out.println("RemainingDist: " + VectorComputation.getInstance().getDistance(holePosition, expandTile.getPosition()));
+		
+		HashSet<AStarTile> neighbours = new HashSet<>(); 
 		// Build a "Box" around the current position by computing the center positions
 		// of the touching boxes
 		// The for loop is for the y positions. We build a square below the position of
 		// 9 tiles, one above and one at the same y level with 8 tiles
-		int counter = 0;
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1; y++) {
 				for (int z = -1; z <= 1; z++) {
 					if (x == 0 && y == 0 && z == 0)
 						continue;
-					unexploredPositions[counter].x = expandablePosition.x + x * holeDimensions.x;
-					unexploredPositions[counter].y = expandablePosition.y + y * holeDimensions.y;
-					unexploredPositions[counter].z = expandablePosition.z + z * holeDimensions.z;
-					counter++;
+					Vector3 newPosition = new Vector3();
+					newPosition.x = expandPosition.x + x * stepSize;
+					newPosition.y = expandPosition.y + y * stepSize;
+					newPosition.z = expandPosition.z + z * stepSize;
+					AStarTile temp = new AStarTile(expandTile, newPosition, holePosition);
+					neighbours.add(temp);
 				}
 			}
 		}
 
 		// Prehas split this 'monster' into multiple methods to make it more clear and
 		// readable
-		for (Vector3 v : unexploredPositions) {
+		for (AStarTile v : neighbours) {
 			// If the current postition is already in one of the two sets just to the next
 			// position.
-			if (exploredAreas == null || exploredAreas.contains(v) || expandableAreas.contains(v))
+			if (isInOpenList(v) || isInClosedList(v))
 				continue;
-			BoundingBox boundingBox = buildBoundingBoxAroundPosition(v);
+			
+			BoundingBox boundingBox = buildBoundingBoxAroundPosition(v.getPosition());
 			// Check, if we are still int the bounds of the course dimenstions
 			if (collisionDetector.determineIntersection(boundingBox, courseDimensions)) {
 				// Only add positions, which dont intersect with an obstacle.
@@ -111,22 +133,24 @@ public class AStar {
 					// If we intersect with the hole we found a solution!
 					if (o instanceof Hole && collisionDetector.determineIntersection(boundingBox, o.getBoundingBox())) {
 						hasFoundPath = true;
+						lastTile = v;
 						// System.out.println("A* Intersection position is at: " + boundingBox + "\nThe
 						// hole position at: " + o.getBoundingBox().toString());
 					}
-					if (!collisionDetector.determineIntersection(boundingBox, o.getBoundingBox())) {
+					if (collisionDetector.determineIntersection(boundingBox, o.getBoundingBox())) {
 						intersectsWithObstacle = true;
 						break;
 					}
 				}
 				if (!intersectsWithObstacle)
-					expandableAreas.add(v);
+//					System.out.println("Add: " + boundingBox);
+					openList.add(v);
 			}
 
 		}
 
-		exploredAreas.add(expandablePosition);
-		expandableAreas.remove(expandablePosition);
+		closedList.add(expandTile);
+		openList.remove(expandTile);
 	}
 
 	/**
@@ -141,11 +165,39 @@ public class AStar {
 	 *         position from the parameter
 	 */
 	private BoundingBox buildBoundingBoxAroundPosition(Vector3 position) {
-		Vector3 holeRadius = new Vector3(holeDimensions.x / 2, holeDimensions.y / 2, holeDimensions.z / 2);
 		// Vectro3.sub/add did not work....
-		Vector3 min = new Vector3(position.x - holeRadius.x, position.y - holeRadius.y, position.z - holeRadius.z);
-		Vector3 max = new Vector3(position.x + holeRadius.x, position.y + holeRadius.y, position.z + holeRadius.z);
+		Vector3 min = new Vector3(position.x - stepSize/2, position.y - stepSize/2, position.z - stepSize/2);
+		Vector3 max = new Vector3(position.x + stepSize/2, position.y + stepSize/2, position.z + stepSize/2);
 		return new BoundingBox(min, max);
 	}
+	
+	private AStarTile findCheapestElement() {
+		AStarTile cheapestTile = null;
+		float minCost = Integer.MAX_VALUE;
+		for(AStarTile a : openList) {
+			if(a.getTotalCost() < minCost) { 
+				cheapestTile = a;
+				minCost = a.getTotalCost();
+			}
+		}
+		return cheapestTile;
+	}
 
+	public boolean isInOpenList(AStarTile comparableTile) {
+		for(AStarTile a : openList) {
+			if(a.getPosition().equals(comparableTile)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isInClosedList(AStarTile comparableTile) {
+		for(AStarTile a : closedList) {
+			if(a.getPosition().equals(comparableTile)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

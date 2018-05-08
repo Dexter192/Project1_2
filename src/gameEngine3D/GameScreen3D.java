@@ -51,7 +51,7 @@ public class GameScreen3D extends AbstractScreen {
 	public LineIndicator indicatorLine;
 	public LineIndicator[] axis = new LineIndicator[3];
 	public static BoundingBox courseDimensions;
-
+	private AStar aStar;
 	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 
@@ -103,7 +103,7 @@ public class GameScreen3D extends AbstractScreen {
 		
 		calculateCouseDimensions(obstacleList);
 
-		AStar aStar = new AStar(this);
+		aStar = new AStar(this, 2f);
 		aStar.findPathToHole();
 	}
 
@@ -151,6 +151,7 @@ public class GameScreen3D extends AbstractScreen {
 			modelBatch.render(o.getInstance());
 			collisionDetector.detectCollision(golfball, o);
 		}		
+		aStar.setToNextPosition();
 	}
 
 	/**
