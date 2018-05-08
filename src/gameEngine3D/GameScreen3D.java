@@ -17,11 +17,13 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 
 import Obstacles.Hole;
 import Obstacles.Obstacle;
 import Obstacles.ObstacleBox;
+import ai.AStar;
 import collisionDetector.CollisionDetector;
 import menu.AbstractScreen;
 
@@ -38,6 +40,7 @@ public class GameScreen3D extends AbstractScreen {
 	private PerspectiveCamera camera;
 	private boolean showAxis = true;
 
+	private Obstacle collisionBox;
 	private Golfball golfball;
 	private Hole hole;
 	private ModelBatch modelBatch;
@@ -47,6 +50,7 @@ public class GameScreen3D extends AbstractScreen {
 	private InputMultiplexer inputMultiplexer;
 	public LineIndicator indicatorLine;
 	public LineIndicator[] axis = new LineIndicator[3];
+	public static BoundingBox courseDimensions;
 
 	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
@@ -68,7 +72,6 @@ public class GameScreen3D extends AbstractScreen {
 		camera.near = 1f;
 		camera.far = 300f;
 		camera.update();
-
 		camController = new CameraInputController(camera);
 
 		initObstacles();
@@ -93,6 +96,15 @@ public class GameScreen3D extends AbstractScreen {
 			axis[1] = new LineIndicator();
 			axis[2] = new LineIndicator();
 		}
+		
+		for(Obstacle o : obstacleList) {
+			collisionDetector.detectCollision(golfball, o);
+		}
+		
+		calculateCouseDimensions(obstacleList);
+
+		AStar aStar = new AStar(this);
+		aStar.findPathToHole();
 	}
 
 	/**
@@ -115,11 +127,7 @@ public class GameScreen3D extends AbstractScreen {
 			modelBatch.render(axis[2].getInstance());
 		}
 
-		modelBatch.render(indicatorLine.getInstance());
-		
-		for(Obstacle o : obstacleList) {			
-			modelBatch.render(o.getInstance());
-		}
+		modelBatch.render(indicatorLine.getInstance());		
 		
 		modelBatch.render(hole.getInstance());
 		
@@ -137,21 +145,25 @@ public class GameScreen3D extends AbstractScreen {
 		Vector3 mousePosition = getWorldCoords();
 		indicatorLine.updateLine(golfball.getPosition(), mousePosition);
 	
+		collisionBox.rotate(new Vector3(0,0,1), 1);
+		
 		for (Obstacle o : obstacleList) {
 			modelBatch.render(o.getInstance());
 			collisionDetector.detectCollision(golfball, o);
 		}		
 	}
 
-	public void dispose() {
-		modelBatch.dispose();
-		golfball.getBallModel().dispose();
-	}
-
+	/**
+	 * Get the golfball from the current game
+	 * @return the golfball of the game
+	 */
 	public Golfball getGolfball() {
 		return golfball;
 	}
 
+	/**
+	 * Update the camera position according to the ball velocity
+	 */
 	public void updateCameraPosition() {
 		// TODO: we might have to do this manually --> ask in project meeting, prehaps
 		// ask pietro
@@ -173,13 +185,68 @@ public class GameScreen3D extends AbstractScreen {
 		camera.update();
 	}
 	
+	/**
+	 * Initialize all ostacles with position and add them to the obstacle list
+	 */
 	private void initObstacles() {
 		Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
-		obstacleList.add(box);
-							
-		Obstacle collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		obstacleList.add(box);					
+		
+		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
 		collisionBox.setColor(Color.BLUE);
 		obstacleList.add(collisionBox);
+	
+	}
+
+	/**
+	 * Calculate the bounding box of the whole couse. 
+	 * The resulting boundingbox will be used for the A*-path finding, to avoid searching areas out of the course
+	 * 
+	 * @param obstacleList The list of all obstacles in the course
+	 */
+	private void calculateCouseDimensions(Set<Obstacle> obstacleList) {
+		courseDimensions = new BoundingBox();
+		Vector3 min = golfball.getPosition();
+		Vector3 max = golfball.getPosition();
+		for(Obstacle o : obstacleList) {
+			if(max.x < o.getBoundingBox().max.x) 
+				max.x = o.getBoundingBox().max.x;
+			if(max.y < o.getBoundingBox().max.y) 
+				max.y = o.getBoundingBox().max.y;
+			if(max.z < o.getBoundingBox().max.z) 
+				max.z = o.getBoundingBox().max.z;
+			if(min.x > o.getBoundingBox().min.x) 
+				min.x = o.getBoundingBox().min.x;
+			if(min.y > o.getBoundingBox().min.y)
+				min.y = o.getBoundingBox().min.y;
+			if(min.z > o.getBoundingBox().min.z) 
+				min.z = o.getBoundingBox().min.z;			
+		}
+		courseDimensions.set(min, max);
+	}
+	
+	/**
+	 * Retrieve the bounding box spanning over the hole course
+	 * @return the boundingbox containing all elements in the course
+	 */
+	public BoundingBox getCouserDimensions() {
+		if(courseDimensions == null) {
+			calculateCouseDimensions(obstacleList);
+		}
+		return courseDimensions;
+	}
+
+	public Obstacle getHole() {
+		return hole;
+	}
+	
+	public Set<Obstacle> getAllObstacles() {
+		return obstacleList;
+	}
+	
+	public void dispose() {
+		modelBatch.dispose();
+		golfball.getBallModel().dispose();
 	}
 
 	@Override

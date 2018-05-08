@@ -44,6 +44,7 @@ public abstract class Obstacle {
 		modelBuilder = new ModelBuilder();
 		modelInstance = new ModelInstance(model);
 		modelInstance.transform.translate(position);
+//		getBoundingBox();
 	}
 	
 	/**
@@ -84,6 +85,14 @@ public abstract class Obstacle {
 			boundingBox.set(min.add(position), max.add(position));
 		}
 		return boundingBox;
+	}
+	
+	public void rotate(Vector3 axis, float degree) {
+		if(boundingBox == null) {
+			getBoundingBox();
+		}
+		modelInstance.transform.rotate(axis, degree);
+		boundingBox = modelInstance.calculateBoundingBox(boundingBox);
 	}
 	
 	/**

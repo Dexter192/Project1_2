@@ -1,7 +1,5 @@
 package menu;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,12 +23,10 @@ public abstract class AbstractScreen extends Stage implements Screen {
 		super(new StretchViewport(320.0f, 240.0f, new OrthographicCamera()));
 	}
 
-
 	/**
 	 * Override this method to set a screen setting
->>>>>>> branch 'master' of https://github.com/DanielKaestner/Project1_2.git
 	 */
-	public abstract void buildStage() throws IOException;
+	public abstract void buildStage();
 
 	/**
 	 * Renders the screen I.e. does what the render method did before in the Game

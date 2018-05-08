@@ -1,5 +1,7 @@
 package gameEngine3D;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -23,6 +25,7 @@ public class Golfball {
 	private BoundingBox boundingBox;
 	private Vector3 position;
 	private float radius;
+	private final boolean moveWithKeys = true;
 
 	public Golfball(float radius) {
 		this.radius = radius;
@@ -78,8 +81,27 @@ public class Golfball {
 		boundingBox = boundingBox.set(min.add(position), max.add(position));
 
 		directionVector.scl(0.95f);
+		
+		moveWithKeys();
 	}
 
+	private void moveWithKeys() {
+		if(moveWithKeys) {
+			if (Gdx.input.isKeyPressed(Keys.Q)) {
+				position.add(new Vector3(0.1f, 0, 0));
+			}
+			if (Gdx.input.isKeyPressed(Keys.E)) {
+				position.add(new Vector3(-0.1f, 0, 0));
+			}
+			if (Gdx.input.isKeyPressed(Keys.D)) {
+				position.add(new Vector3(0, 0, 0.1f));
+			}
+			if (Gdx.input.isKeyPressed(Keys.A)) {
+				position.add(new Vector3(0, 0, -0.1f));
+			}
+		}
+	}
+	
 	private void ignoreMinimalVelocity() {
 		if (Math.abs(directionVector.x) <= 0.01) {
 			directionVector.x = 0;
