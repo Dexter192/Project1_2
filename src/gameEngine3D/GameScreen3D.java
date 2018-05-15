@@ -24,6 +24,8 @@ import Obstacles.Obstacle;
 import Obstacles.ObstacleBox;
 import collisionDetector.CollisionDetector;
 import menu.AbstractScreen;
+import physics.DifferentialEquationSolver;
+import physics.Physics;
 
 /**
  * To make the axis a bit more clear set showaxis to true. When doing that, the
@@ -37,7 +39,8 @@ public class GameScreen3D extends AbstractScreen {
 
 	private PerspectiveCamera camera;
 	private boolean showAxis = true;
-
+	
+	private DifferentialEquationSolver ode;
 	private Golfball golfball;
 	private Hole hole;
 	private ModelBatch modelBatch;
@@ -75,7 +78,11 @@ public class GameScreen3D extends AbstractScreen {
 		
 		// initialize golfball
 		golfball = new Golfball(1);
+		float[] a = { 0.01f,0 };
+		float[] b = { 0.01f,0 };
+		Physics physics = new Physics(a, b);
 		
+		ode = new DifferentialEquationSolver(physics, golfball.getMass());
 		hole = new Hole(-10, 0.01f, -10, golfball.getRadius()*2);
 		obstacleList.add(hole);
 		
@@ -130,7 +137,7 @@ public class GameScreen3D extends AbstractScreen {
 		}
 
 		// First update, than draw or the other way around?
-		golfball.update();
+		golfball.update(ode);
 		updateCameraPosition();
 		modelBatch.end();
 
@@ -220,5 +227,9 @@ public class GameScreen3D extends AbstractScreen {
 		Vector3 worldCoords = new Vector3();
 		Intersector.intersectRayPlane(ray, plane, worldCoords);
 		return worldCoords;
+	}
+	
+	public DifferentialEquationSolver getDifferentialEquationSolver() {
+		return ode;
 	}
 }

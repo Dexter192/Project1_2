@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 
+import physics.DifferentialEquationSolver;
 import physics.VectorComputation;
 
 public class InputListener implements InputProcessor {
@@ -24,10 +25,10 @@ public class InputListener implements InputProcessor {
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		Vector3 mousePosition = gameScreen3D.getWorldCoords();
 		Golfball ball = gameScreen3D.getGolfball();
-
+		DifferentialEquationSolver ode = gameScreen3D.getDifferentialEquationSolver();
 		Vector3 directionVector = ball.getPosition().sub(mousePosition);
 
-		float stength = VectorComputation.getInstance().getDistance(mousePosition, ball.getPosition()) / 10;
+		float stength = VectorComputation.getInstance().getDistance(mousePosition, ball.getPosition())/10;
 		directionVector.nor();
 
 		if (!initialize && ball.getVelocity().isZero()) {
