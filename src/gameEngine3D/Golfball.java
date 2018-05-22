@@ -10,7 +10,8 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import gameEngine.Physics;
+import physics.DifferentialEquationSolver;
+import physics.Physics;
 
 /**
  * A class representing the Golfball as a 3D sphere.
@@ -19,22 +20,24 @@ import gameEngine.Physics;
  *
  */
 public class Golfball {
-	private final float g = 9.81f;
 	private Model ballModel;
 	private ModelInstance ballInstance;
 	private ModelBuilder modelBuilder;
-	private Vector3 directionVector;
 	private BoundingBox boundingBox;
 	private boolean moveWithKeys = true;
 	private Vector3 position;
 	private float radius;
 	private float mass;
-	private Physics physics;
-	private float friction;
+	private Vector3[] veloAccel = {new Vector3(0,0,0), new Vector3(0,0,0)};
+	// Note that veloAccel[0] is the direction vector		
 	public Golfball(float radius) {
 		this.radius = radius;
+<<<<<<< HEAD
 		directionVector = new Vector3(0, 0, 0);
 
+=======
+		mass = 10;
+>>>>>>> f76188f6af55742f5b179f6ef1f3ebb8e2406e9c
 		modelBuilder = new ModelBuilder();
 
 		ballModel = modelBuilder.createSphere(radius * 2, radius * 2, radius * 2, 50, 50, new Material(),
@@ -46,7 +49,6 @@ public class Golfball {
 		ballInstance = new ModelInstance(ballModel);
 		ballInstance.transform.translate(position);
 		getBoundingBox();
-
 	}
 
 	/**
@@ -66,18 +68,22 @@ public class Golfball {
 	}
 
 	public Vector3 getVector() {
-		return directionVector;
+		return veloAccel[0];
 	}
 
 	/**
 	 * Updates the ball. Primarily its position.
 	 */
-	public void update() {
+	public void update(DifferentialEquationSolver ode) {
 		ignoreMinimalVelocity();
 		// Transform the ballposition by the directionvector
+<<<<<<< HEAD
 		position.add(directionVector);
+=======
+		position.add(veloAccel[0]); 
+>>>>>>> f76188f6af55742f5b179f6ef1f3ebb8e2406e9c
 
-		// ballInstance.transform.translate(directionVector);
+		//ballInstance.transform.translate(veloAccel[0]);
 		ballInstance.transform.setTranslation(position);
 
 		Vector3 min = new Vector3(-radius, -radius, -radius);
@@ -86,6 +92,7 @@ public class Golfball {
 
 		directionVector.scl(0.95f);
 		
+<<<<<<< HEAD
 		moveWithKeys();
 	}
 
@@ -104,30 +111,35 @@ public class Golfball {
 				position.add(new Vector3(0, 0, -0.1f));
 			}
 		}
+=======
+		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0) 
+			veloAccel = ode.rungeKutterMethod(veloAccel, position);
+>>>>>>> f76188f6af55742f5b179f6ef1f3ebb8e2406e9c
 	}
+		
+	
+
 	
 	private void ignoreMinimalVelocity() {
-		if (Math.abs(directionVector.x) <= 0.01) {
-			directionVector.x = 0;
+		if (Math.abs(veloAccel[0].x) <= 0.01) {
+			veloAccel[0].x = 0;
 		}
-		if (Math.abs(directionVector.y) <= 0.01) {
-			directionVector.y = 0;
-		}
-		if (Math.abs(directionVector.z) <= 0.01) {
-			directionVector.z = 0;
+		if (Math.abs(veloAccel[0].z) <= 0.01) {
+			veloAccel[0].z = 0;
 		}
 	}
 
 	public Vector3 getVelocity() {
-		return directionVector;
+		return veloAccel[0];
 	}
 
 	public void setVelocity(Vector3 directionVector) {
-		this.directionVector = directionVector;
+		veloAccel[0] = directionVector;
 	}
 
 	public void addVelocity(Vector3 directionVector) {
-		this.directionVector.add(directionVector);
+		veloAccel[0].add(directionVector);
+		
 	}
 	
 	public void setPosiition(Vector3 position) {
@@ -146,7 +158,7 @@ public class Golfball {
 	 * TODO: Implement propper bouncing of
 	 */
 	public void bounceOff(Vector3 axis) {
-		directionVector.scl(axis);
+		veloAccel[0].scl(axis);
 	}
 
 	public float getRadius() {
@@ -162,5 +174,8 @@ public class Golfball {
 			boundingBox.set(min.add(position), max.add(position));
 		}
 		return boundingBox;
+	}
+	public float getMass() {
+		return mass;
 	}
 }
