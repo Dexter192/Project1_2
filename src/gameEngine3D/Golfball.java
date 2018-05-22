@@ -30,7 +30,7 @@ public class Golfball {
 	// Note that veloAccel[0] is the direction vector		
 	public Golfball(float radius) {
 		this.radius = radius;
-		mass = 10;
+		mass = 5;
 		modelBuilder = new ModelBuilder();
 
 		ballModel = modelBuilder.createSphere(radius * 2, radius * 2, radius * 2, 50, 50, new Material(),
