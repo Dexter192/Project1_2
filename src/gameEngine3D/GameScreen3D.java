@@ -60,9 +60,17 @@ public class GameScreen3D extends AbstractScreen {
 		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
+		
+		// initialize golfball
+		golfball = new Golfball(1);
+		float[] a = { 0.01f,0 };
+		float[] b = { 0.01f,0 };
+		Physics physics = new Physics(a, b);
+		
+		ode = new DifferentialEquationSolver(physics, golfball.getMass());
+		
 		modelBatch = new ModelBatch();
-		collisionDetector = new CollisionDetector();
+		collisionDetector = new CollisionDetector(ode);
 
 		// initialize camera
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -76,13 +84,7 @@ public class GameScreen3D extends AbstractScreen {
 
 		initObstacles();
 		
-		// initialize golfball
-		golfball = new Golfball(1);
-		float[] a = { 0.01f,0 };
-		float[] b = { 0.01f,0 };
-		Physics physics = new Physics(a, b);
-		
-		ode = new DifferentialEquationSolver(physics, golfball.getMass());
+
 		hole = new Hole(-10, 0.01f, -10, golfball.getRadius()*2);
 		obstacleList.add(hole);
 		

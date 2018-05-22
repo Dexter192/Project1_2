@@ -6,14 +6,15 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import Obstacles.Hole;
 import Obstacles.Obstacle;
 import gameEngine3D.Golfball;
+import physics.DifferentialEquationSolver;
 import physics.VectorComputation;
 
 public class CollisionDetector {
 
 	private static boolean inHole = false;
-	
-	public CollisionDetector() {
-
+	private DifferentialEquationSolver ode;
+	public CollisionDetector(DifferentialEquationSolver ode) {
+		this.ode = ode;
 	}
 
 	public boolean detectCollision(Golfball ball, Obstacle obstacle) {
@@ -135,6 +136,6 @@ public class CollisionDetector {
 		// TODO: Absorb force when colliding
 		ball.bounceOff(reflectionAxis);
 		ball.setPosiition(ballPosition);
-		ball.update();
+		ball.update(ode);
 	}
 }
