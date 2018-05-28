@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import gameEngine.Physics;
+import physics.VectorComputation;
 
 /**
  * A class representing the Golfball as a 3D sphere.
@@ -41,7 +42,7 @@ public class Golfball {
 				VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
 						| VertexAttributes.Usage.TextureCoordinates);
 
-		position = new Vector3(0, radius * 2, 0);
+		position = new Vector3(100, radius * 2, 100);
 
 		ballInstance = new ModelInstance(ballModel);
 		ballInstance.transform.translate(position);

@@ -32,7 +32,8 @@ public class InputListener implements InputProcessor {
 
 		if (!initialize && ball.getVelocity().isZero()) {
 			directionVector.y = 0;
-			ball.setVelocity(directionVector.scl(stength));
+//			ball.setVelocity(directionVector.scl(stength));
+			gameScreen3D.getAi().makeMove();
 		}
 		initialize = false;
 		return false;

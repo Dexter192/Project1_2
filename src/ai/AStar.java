@@ -1,10 +1,10 @@
 package ai;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-
-import org.lwjgl.Sys;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -33,47 +33,87 @@ public class AStar {
 	private HashSet<AStarTile> closedList;
 	private AStarTile lastTile;
 	
-	
+	private List<AStarTile> pathToHole;
 	private BoundingBox courseDimensions;
 	private Vector3 holePosition;
-	private Vector3 ballPosition;
+	private Vector3 startPosition;
+	private Vector3 goalPosition;
 	private CollisionDetector collisionDetector;
 	private Set<Obstacle> obstacleList;
 	private boolean hasFoundPath = false;
 	private float stepSize; 
 	private Golfball golfBall;
+	private GameScreen3D gameScreen;
+	private GeneticHitStrength geneticHitStrength;
+	
 
 	/*
 	 * Currently this should be able to find the hole in the entire course.
 	 * Identifying the shortest path to it will be a different thing though.
 	 */
 
-	public AStar(GameScreen3D gamescreen, float stepSize) {
+	public AStar(GameScreen3D gamescreen) {
 		this.golfBall = gamescreen.getGolfball();
-		this.stepSize = stepSize;
 		courseDimensions = gamescreen.getCouserDimensions();
 		holePosition = gamescreen.getHole().getBoundingBox().getCenter(new Vector3());
-		ballPosition = gamescreen.getGolfball().getPosition();
 		collisionDetector = new CollisionDetector();
 		openList = new HashSet<>();
 		closedList = new HashSet<>();
 		obstacleList = gamescreen.getAllObstacles();
+		pathToHole = new ArrayList<>();
+		gameScreen = gamescreen;
+		geneticHitStrength = new GeneticHitStrength();
+		this.stepSize = computeStepsize();
+		goalPosition = new Vector3(0,0,0);
+		startPosition = new Vector3(0,0,0);
 	}
 
-	public void findPathToHole() {
 
-		AStarTile start = new AStarTile(ballPosition, holePosition);
+	public void makeMove() {
+		if(!pathToHole.isEmpty()) {			
+			geneticHitStrength.updateStrengthPerUnit(startPosition, goalPosition, golfBall.getPosition());
+		}
+		findPathToHole();
+		List<AStarTile> straightPath = computeStraightPathFromPosition();
+		
+		startPosition = new Vector3(straightPath.get(0).getPosition());
+		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());
+		
+		Vector3 velocityVector = new Vector3(geneticHitStrength.getHitStrength(golfBall.getPosition(), goalPosition));
+		golfBall.setVelocity(velocityVector);
+	}
+	
+
+	public void findPathToHole() {
+		openList.clear();
+		closedList.clear();
+		pathToHole.clear();
+		hasFoundPath = false;
+		
+		AStarTile start = new AStarTile(gameScreen.getGolfball().getPosition(), holePosition);
 		openList.add(start);
 		
 		while (!hasFoundPath && !openList.isEmpty()) {
 			AStarTile cheapestElement = findCheapestElement();
 			expandArea(cheapestElement);
 		}
-		if (hasFoundPath)
-			System.out.println("Found Path!");
-		// TODO: iterate through all expandable areas center positions, check if there
-		// is a an overlap otherwise expand the area and shift it in the explored area
-		// set
+		if (hasFoundPath) {
+			AStarTile temp = lastTile;
+			pathToHole.add(temp);
+			while(temp.getParent() != null) {
+				temp = temp.getParent();
+				pathToHole.add(temp);
+			}
+			pathToHole = flipList(pathToHole);
+		}
+	}
+	
+	public List<AStarTile> flipList(List<AStarTile> pathToHole) {
+		List<AStarTile> flippedPathToHole = new ArrayList<>();		
+		for(int i = pathToHole.size()-1; i >= 0; i--) {
+			flippedPathToHole.add(pathToHole.get(i));
+		}
+		return flippedPathToHole;
 	}
 	
 	public void setToNextPosition() {
@@ -126,7 +166,7 @@ public class AStar {
 			
 			BoundingBox boundingBox = buildBoundingBoxAroundPosition(v.getPosition());
 			// Check, if we are still int the bounds of the course dimenstions
-			if (collisionDetector.determineIntersection(boundingBox, courseDimensions)) {
+//			if (collisionDetector.determineIntersection(boundingBox, courseDimensions)) {
 				// Only add positions, which dont intersect with an obstacle.
 				boolean intersectsWithObstacle = false;
 				for (Obstacle o : obstacleList) {
@@ -145,7 +185,7 @@ public class AStar {
 				if (!intersectsWithObstacle)
 //					System.out.println("Add: " + boundingBox);
 					openList.add(v);
-			}
+//			}
 
 		}
 
@@ -185,7 +225,7 @@ public class AStar {
 
 	public boolean isInOpenList(AStarTile comparableTile) {
 		for(AStarTile a : openList) {
-			if(a.getPosition().equals(comparableTile)) {
+			if(a.getPosition().equals(comparableTile.getPosition())) {
 				return true;
 			}
 		}
@@ -194,10 +234,54 @@ public class AStar {
 	
 	public boolean isInClosedList(AStarTile comparableTile) {
 		for(AStarTile a : closedList) {
-			if(a.getPosition().equals(comparableTile)) {
+			if(a.getPosition().equals(comparableTile.getPosition())) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private float computeStepsize() {
+		float stepSize = Integer.MAX_VALUE;
+		Set<Obstacle> obstacleList = gameScreen.getAllObstacles();
+		Iterator<Obstacle> it = obstacleList.iterator();
+	
+		while(it.hasNext()) {
+			Obstacle o = it.next();
+			float minObstacleSize = Math.min(o.getBoundingBox().getWidth(), o.getBoundingBox().getHeight());
+			minObstacleSize = Math.min(minObstacleSize, o.getBoundingBox().getDepth());
+			stepSize = Math.min(minObstacleSize, stepSize);			
+		}
+		stepSize = (float) (stepSize*0.99);
+		return stepSize;
+	}
+
+	private List<AStarTile> computeStraightPathFromPosition() {
+		List<AStarTile> straightPath = new ArrayList<>();
+		Vector3 temp = new Vector3(pathToHole.get(0).getPosition());
+		Vector3 direction = temp.sub(pathToHole.get(1).getPosition());
+
+		straightPath.add(pathToHole.get(0));
+		straightPath.add(pathToHole.get(1));
+		
+		for(int i = 1; i < pathToHole.size()-1; i++) {
+			temp = new Vector3(pathToHole.get(i).getPosition());
+			Vector3 subDirection = temp.sub(pathToHole.get(i+1).getPosition());
+			if(direction.x <= subDirection.x + 0.05 * stepSize && direction.z <= subDirection.z + 0.05 * stepSize &&
+			   direction.x >= subDirection.x - 0.05 * stepSize && direction.z >= subDirection.z - 0.05 * stepSize ) {
+				straightPath.add(pathToHole.get(i));
+			}
+			else {
+				break;
+			}
+		}
+		
+		return straightPath;
+	}
+	
+	class GeneticHit {
+		
+		
+		
 	}
 }

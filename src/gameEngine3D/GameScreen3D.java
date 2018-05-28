@@ -26,6 +26,7 @@ import Obstacles.ObstacleBox;
 import ai.AStar;
 import collisionDetector.CollisionDetector;
 import menu.AbstractScreen;
+import physics.VectorComputation;
 
 /**
  * To make the axis a bit more clear set showaxis to true. When doing that, the
@@ -52,6 +53,8 @@ public class GameScreen3D extends AbstractScreen {
 	public LineIndicator[] axis = new LineIndicator[3];
 	public static BoundingBox courseDimensions;
 	private AStar aStar;
+	private boolean findPath = true;
+	
 	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 
@@ -79,7 +82,7 @@ public class GameScreen3D extends AbstractScreen {
 		// initialize golfball
 		golfball = new Golfball(1);
 		
-		hole = new Hole(-10, 0.01f, -10, golfball.getRadius()*2);
+		hole = new Hole(20, 0.01f, 20, golfball.getRadius()*2);
 		obstacleList.add(hole);
 		
 		// inizialize hit indicator line
@@ -103,8 +106,8 @@ public class GameScreen3D extends AbstractScreen {
 		
 		calculateCouseDimensions(obstacleList);
 
-		aStar = new AStar(this, 2f);
-		aStar.findPathToHole();
+		aStar = new AStar(this);
+//		aStar.findPathToHole();
 	}
 
 	/**
@@ -119,7 +122,6 @@ public class GameScreen3D extends AbstractScreen {
 		camController.update();
 		modelBatch.begin(camera);
 		modelBatch.render(golfball.getBallInstance());
-
 		// Dis-/Enabling the axis. Makes axis a bit more clear
 		if (showAxis) {
 			modelBatch.render(axis[0].getInstance());
@@ -145,13 +147,16 @@ public class GameScreen3D extends AbstractScreen {
 		Vector3 mousePosition = getWorldCoords();
 		indicatorLine.updateLine(golfball.getPosition(), mousePosition);
 	
+		if(golfball.getVelocity().isZero()) {
+			System.out.println(VectorComputation.getInstance().getDistanceXZ(golfball.getPosition(), hole.getBoundingBox().getCenter(new Vector3())) + " " + golfball.getPosition() + " " + hole.getBoundingBox().getCenter(new Vector3()));
+		}
+		
 		collisionBox.rotate(new Vector3(0,0,1), 1);
 		
 		for (Obstacle o : obstacleList) {
-			modelBatch.render(o.getInstance());
-			collisionDetector.detectCollision(golfball, o);
+			if(o instanceof Hole)modelBatch.render(o.getInstance());
+//			collisionDetector.detectCollision(golfball, o);
 		}		
-		aStar.setToNextPosition();
 	}
 
 	/**
@@ -168,7 +173,13 @@ public class GameScreen3D extends AbstractScreen {
 	public void updateCameraPosition() {
 		// TODO: we might have to do this manually --> ask in project meeting, prehaps
 		// ask pietro
+		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			if(findPath) {
+			findPath = false;
+			modelBatch.end();
+			aStar.findPathToHole();
+			}
 			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), -2f);
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
@@ -194,6 +205,34 @@ public class GameScreen3D extends AbstractScreen {
 		obstacleList.add(box);					
 		
 		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(20, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(30, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(40, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 20, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 30, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 40, 10f, 10f, 10f);
 		collisionBox.setColor(Color.BLUE);
 		obstacleList.add(collisionBox);
 	
@@ -243,6 +282,10 @@ public class GameScreen3D extends AbstractScreen {
 	
 	public Set<Obstacle> getAllObstacles() {
 		return obstacleList;
+	}
+	
+	public AStar getAi() {
+		return aStar;
 	}
 	
 	public void dispose() {

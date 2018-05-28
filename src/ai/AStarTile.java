@@ -50,7 +50,7 @@ public class AStarTile {
 	 * made until the tile and the remaining distance to the goal
 	 */
 	private void computeCost() {
-		costToTile = parent.getCostToTile() + VectorComputation.getInstance().getDistance(position, parent.getPosition());
+		costToTile = parent.getCostToTile();
 		float costToGoal = VectorComputation.getInstance().getDistance(position, goalPosition);
 		cost = costToTile + costToGoal;
 	}
