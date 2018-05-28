@@ -34,13 +34,7 @@ public class Golfball {
 	
 	public Golfball(float radius) {
 		this.radius = radius;
-<<<<<<< HEAD
 		mass = 5;
-=======
-		//directionVector = new Vector3(0, 0, 0);
-		mass = 10;
-		
->>>>>>> 837e47ff48f6d6dd3fe073b386c87edf535966b6
 		modelBuilder = new ModelBuilder();
 
 		ballModel = modelBuilder.createSphere(radius * 2, radius * 2, radius * 2, 50, 50, new Material(),
@@ -96,10 +90,10 @@ public class Golfball {
 		Vector3 max = new Vector3( radius,  radius,  radius);
 		boundingBox = boundingBox.set(min.add(position), max.add(position));
 
-		veloAccel[0].scl(0.95f);
-//		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0) {
-//			veloAccel = ode.rungeKutterMethod(veloAccel, position);
-//		}
+//		veloAccel[0].scl(0.95f);
+		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0) {
+			veloAccel = ode.rungeKutterMethod(veloAccel, position);
+		}
 		moveWithKeys();
 	}
 

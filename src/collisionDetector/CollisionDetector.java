@@ -12,9 +12,8 @@ import physics.VectorComputation;
 public class CollisionDetector {
 
 	private static boolean inHole = false;
-	private DifferentialEquationSolver ode;
-	public CollisionDetector(DifferentialEquationSolver ode) {
-		this.ode = ode;
+	public CollisionDetector() {
+
 	}
 	
 	public boolean detectCollision(Golfball ball, Obstacle obstacle) {
@@ -138,6 +137,6 @@ public class CollisionDetector {
 		// TODO: Absorb force when colliding
 		ball.bounceOff(reflectionAxis);
 		ball.setPosiition(ballPosition);
-		ball.update(ode);
+		ball.update();
 	}
 }

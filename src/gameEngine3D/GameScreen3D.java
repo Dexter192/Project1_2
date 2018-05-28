@@ -69,7 +69,7 @@ public class GameScreen3D extends AbstractScreen {
 		
 		
 		modelBatch = new ModelBatch();
-		collisionDetector = new CollisionDetector(ode);
+		collisionDetector = new CollisionDetector();
 
 		// initialize camera
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

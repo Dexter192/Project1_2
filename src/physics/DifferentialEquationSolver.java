@@ -9,10 +9,14 @@ public class DifferentialEquationSolver {
 		private Physics boardFunction;
 		private float frictionConstant = 1; // TODO implement proper friction
 		private Vector3 position;
+		private DifferentialEquationSolver ode;
+		
+		
 		public DifferentialEquationSolver(Physics physics, float mass) {
 			boardFunction = physics;
 			this.mass = mass;
 		}
+		
 		
 		public Vector3[] rungeKutterMethod(Vector3[] initial, Vector3 pos) {
 
