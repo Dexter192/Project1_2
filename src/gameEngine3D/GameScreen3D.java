@@ -89,6 +89,7 @@ public class GameScreen3D extends AbstractScreen {
 		
 		hole = new Hole(20, 0.01f, 20, golfball.getRadius()*2);
 		ode = new DifferentialEquationSolver(physics, golfball.getMass());
+		golfball.setODE(ode);
 		obstacleList.add(hole);
 		
 		// inizialize hit indicator line
@@ -146,7 +147,7 @@ public class GameScreen3D extends AbstractScreen {
 		}
 
 		// First update, than draw or the other way around?
-		golfball.update(ode);
+		golfball.update();
 		updateCameraPosition();
 		modelBatch.end();
 
@@ -155,6 +156,7 @@ public class GameScreen3D extends AbstractScreen {
 	
 		if(golfball.getVelocity().isZero()) {
 			System.out.println(VectorComputation.getInstance().getDistanceXZ(golfball.getPosition(), hole.getBoundingBox().getCenter(new Vector3())) + " " + golfball.getPosition() + " " + hole.getBoundingBox().getCenter(new Vector3()));
+		
 		}
 		
 		collisionBox.rotate(new Vector3(0,0,1), 1);

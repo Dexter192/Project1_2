@@ -75,8 +75,9 @@ public class Golfball {
 
 	/**
 	 * Updates the ball. Primarily its position.
+	 * TODO: Add ode as a param
 	 */
-	public void update(DifferentialEquationSolver ode) 
+	public void update() 
 	{
 		ignoreMinimalVelocity();
 		// Transform the ballposition by the directionvector
@@ -91,8 +92,10 @@ public class Golfball {
 		Vector3 max = new Vector3( radius,  radius,  radius);
 		boundingBox = boundingBox.set(min.add(position), max.add(position));
 
-		//directionVector.scl(0.95f);
-		
+		veloAccel[0].scl(0.95f);
+//		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0) {
+//			veloAccel = ode.rungeKutterMethod(veloAccel, position);
+//		}
 		moveWithKeys();
 	}
 
@@ -113,8 +116,7 @@ public class Golfball {
 			}
 		}
 		///* CHECK ME PLEZ \/\/\/ *///
-		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0)  
-			veloAccel = ode.rungeKutterMethod(veloAccel, position);
+
 		///* CHECK ME PLEZ /\/\/\ *///
 
 	}
@@ -126,6 +128,9 @@ public class Golfball {
 		}
 		if (Math.abs(veloAccel[0].z) <= 0.01) {
 			veloAccel[0].z = 0;
+		}
+		if(Math.abs(veloAccel[0].y) <= 0.01) {
+			veloAccel[0].y = 0;
 		}
 	}
 

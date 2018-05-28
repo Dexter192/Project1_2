@@ -145,8 +145,7 @@ public class AStar
 	}
 	
 	
-	private void printPath()
-	{
+	private void printPath() {
 		pathList.add(lastTile);
 		System.out.println("Found Path!");
 		for (AStarTile o : pathList)
@@ -154,18 +153,14 @@ public class AStar
 	}
 	
 	
-	private AStarTile findCheapestElement() 
-	{
+	private AStarTile findCheapestElement()  {
 		AStarTile cheapestTile = null;
 		float minCost = Integer.MAX_VALUE;
 		for(AStarTile a : openList) // Scan the openList for the lowest value tile.
-			if(a.getTotalCost() < minCost) 
-			{ 
+			if(a.getTotalCost() < minCost) { 
 				cheapestTile = a;
 				minCost = a.getTotalCost();
 			}
-		
-		pathList.add(cheapestTile);
 		return cheapestTile;
 	}
 
@@ -184,8 +179,7 @@ public class AStar
 	 * 
 	 * @param expandablePosition
 	 */
-	private void expandArea(AStarTile expandTile) 
-	{
+	private void expandArea(AStarTile expandTile) {
 		HashSet<AStarTile> neighbours = helperA(expandTile);
 		helperB(neighbours);
 		closedList.add(expandTile);
@@ -194,12 +188,11 @@ public class AStar
 	
 	
 	// Generates 3x3x3 grid and thus creates the given tile's neighbours.
-	private HashSet<AStarTile> helperA(AStarTile expandTile)
-	{
+	private HashSet<AStarTile> helperA(AStarTile expandTile) {
 		Vector3 expandPosition = expandTile.getPosition(); // Current coordinates.
 		// TODO: see, if we still are in the feasible region ///* LIKE CHECK THIS TILE ISNT IN closedList? *///
 
-		System.out.println("Remaining Distance: " + VectorComputation.getInstance().getDistance(holePosition, expandTile.getPosition())); // From this tile to the goal.
+//		System.out.println("Remaining Distance: " + VectorComputation.getInstance().getDistance(holePosition, expandTile.getPosition())); // From this tile to the goal.
 		
 		
 		// Build a "Box" around the current position by computing the centre positions of the touching boxes.
@@ -208,12 +201,9 @@ public class AStar
 		// Create a 3x3x3 "box" around the current position with the edge tiles the neighbouring tiles of this tile.
 		// 
 		HashSet<AStarTile> neighbours = new HashSet<>(); 
-		for (int x = -1; x <= 1; x++) // The limits on these loops are to mimic a 3x3x3 grid.
-		{
-			for (int y = -1; y <= 1; y++) 
-			{
-				for (int z = -1; z <= 1; z++) 
-				{
+		for (int x = -1; x <= 1; x++) { // The limits on these loops are to mimic a 3x3x3 grid.
+			for (int y = -1; y <= 1; y++) {
+				for (int z = -1; z <= 1; z++) {
 					if (x == 0 && y == 0 && z == 0)
 						continue; // Skip the centre box.
 					
@@ -231,10 +221,8 @@ public class AStar
 	
 	
 	// Inspects neighbours' validity and object intersection status.
-	private void helperB(HashSet<AStarTile> neighbours) 
-	{
-		for (AStarTile v : neighbours)
-		{
+	private void helperB(HashSet<AStarTile> neighbours) {
+		for (AStarTile v : neighbours) {
 			// If the current position is already in one of the two sets, just jump to the next position.
 			if (isInOpenList(v) || isInClosedList(v))
 				continue;
@@ -249,45 +237,26 @@ public class AStar
 //			if (collisionDetector.determineIntersection(boundingBox, courseDimensions)) 
 //			{
 				// Then check if this bounding box intersects with any other obstacles.
-				boolean intersectsWithObstacle = false;
-				for (Obstacle o : obstacleList) 
-				{
-					///* MY VERSION OF CHECKING FOR INTERSECTION, YOURS BUT REARRANGED *///
-					if (collisionDetector.determineIntersection(boundingBox, o.getBoundingBox()))
-					{
-						if (o instanceof Hole) // Then check if said obstacle is the hole (goal).
-						{
-							hasFoundPath = true;
-							lastTile = v;
-							System.out.println("PATHFOUND WITH TILE: " + v.getPosition());
-							//System.out.println( "A* Intersection position is at: " + boundingBox + "\n The hole position at: " + o.getBoundingBox().toString() );
-						}
-						else
-						{
-							intersectsWithObstacle = true;
-							break;
-						}
-					}
-				/*	THIS IS WHAT YOU WROTE AND I REARRANGED IT. THAT COOL?:
-				 * 
-				    if (o instanceof Hole && collisionDetector.determineIntersection(boundingBox, o.getBoundingBox())) 
-					{
+			boolean intersectsWithObstacle = false;
+			for (Obstacle o : obstacleList) {
+				///* MY VERSION OF CHECKING FOR INTERSECTION, YOURS BUT REARRANGED *///
+				if (collisionDetector.determineIntersection(boundingBox, o.getBoundingBox())) {
+					if (o instanceof Hole) {// Then check if said obstacle is the hole (goal).
 						hasFoundPath = true;
 						lastTile = v;
+						System.out.println("PATHFOUND WITH TILE: " + v.getPosition());
 						//System.out.println( "A* Intersection position is at: " + boundingBox + "\n The hole position at: " + o.getBoundingBox().toString() );
 					}
-					
-					if (collisionDetector.determineIntersection(boundingBox, o.getBoundingBox())) 
-					{
+					else {
 						intersectsWithObstacle = true;
 						break;
-					} */
+					}
 				}
-				
-				if (!intersectsWithObstacle)
-				{
-					//System.out.println("Add: " + boundingBox);
-					openList.add(v);
+			}
+			
+			if (!intersectsWithObstacle) {
+				//System.out.println("Add: " + boundingBox);
+				openList.add(v);
 			}
 		}
 	}
@@ -304,17 +273,14 @@ public class AStar
 	 * @return A boundingbox, with the dimensions of the hole and the center in the
 	 *         position from the parameter
 	 */
-	private BoundingBox buildBoundingBoxAroundPosition(Vector3 position) 
-	{
-		// Vectro3.sub/add did not work....
+	private BoundingBox buildBoundingBoxAroundPosition(Vector3 position) {
 		Vector3 min = new Vector3(position.x - stepSize/2, position.y - stepSize/2, position.z - stepSize/2);
 		Vector3 max = new Vector3(position.x + stepSize/2, position.y + stepSize/2, position.z + stepSize/2);
 		return new BoundingBox(min, max);
 	}
 	
 	
-	public void setToNextPosition() 
-	{
+	public void setToNextPosition() {
 		if(lastTile == null)
 			return;
 		
@@ -378,13 +344,7 @@ public class AStar
 		return straightPath;
 	}
 	
-		
-		
-		
-
-
-	public Vector3 getDirection() // Direction from the ball to the lastTile
-	{
+	public Vector3 getDirection() { // Direction from the ball to the lastTile
 		Vector3 temp = new Vector3(holePosition);
 		Vector3 movement = temp.sub(gameScreen.getGolfball().getPosition());
 		return movement;

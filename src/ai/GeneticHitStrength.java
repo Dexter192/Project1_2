@@ -67,10 +67,10 @@ public class GeneticHitStrength {
 		//TODO: This is wrong. It has to include the direction which we were going. 
 		
 		if(supposedDist < actualDist) {
-			strengthPerUnit = (float) (strengthPerUnit * 0.9);
+			strengthPerUnit = (float) (strengthPerUnit * 0.999);
 		}
 		else if (supposedDist > actualDist) {
-			strengthPerUnit = (float) (strengthPerUnit * 1.1);
+			strengthPerUnit = (float) (strengthPerUnit * 1.001);
 		}
 		try {
 			writeStrengthPerUnit();
