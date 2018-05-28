@@ -24,7 +24,7 @@ public class Hole extends Obstacle{
 	@Override
 	public void buildModel() {
 		super.model = modelBuilder.createCylinder(radius*2, radius*2, radius*2, 1000, 
-				new Material(ColorAttribute.createDiffuse(Color.BLACK)),
+				new Material(ColorAttribute.createDiffuse(Color.BLUE)),
 	            Usage.Position | Usage.Normal);		
 	}
 

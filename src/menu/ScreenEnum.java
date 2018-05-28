@@ -1,9 +1,7 @@
 package menu;
 
 import CourseBuilder.CourseBuilder;
-import CourseBuilder.ObstacleSelector;
 import gameEngine.GameScreen;
-import gameEngine.GameScreenRead;
 import gameEngine3D.GameScreen3D;
 import settings.SettingsScreen;
 

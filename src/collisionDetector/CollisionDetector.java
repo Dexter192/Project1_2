@@ -16,18 +16,17 @@ public class CollisionDetector {
 	public CollisionDetector(DifferentialEquationSolver ode) {
 		this.ode = ode;
 	}
-
+	
 	public boolean detectCollision(Golfball ball, Obstacle obstacle) {
 		boolean intersects = false;
 		
 		BoundingBox ballBoundingBox = ball.getBoundingBox();
 
 		BoundingBox obstacleBoundingBox = obstacle.getBoundingBox();
-//
-		// System.out.println("Ball: " + ballBoundingBox + " , " + obstacleBoundingBox);
 
+//		System.out.println(obstacleBoundingBox);
+		
 		if (obstacle instanceof Hole) {
-//			System.out.println(ball.getPosition() + ", " + obstacle.getBoundingBox().getCenter(new Vector3()));
 			if (determineHoleIntersection(ball, (Hole) obstacle)) {
 				inHole = true;
 				handleHoleCollision(ball, (Hole) obstacle);
@@ -49,7 +48,7 @@ public class CollisionDetector {
 	 * @param obstacle
 	 * @return
 	 */
-	private boolean determineIntersection(BoundingBox ball, BoundingBox obstacle) {
+	public boolean determineIntersection(BoundingBox ball, BoundingBox obstacle) {
 		Vector3 ballMin = ball.min, ballMax = ball.max, obstacleMin = obstacle.min, obstacleMax = obstacle.max;
 
 		if (ballMin.x < obstacleMax.x && ballMax.x > obstacleMin.x && ballMin.y < obstacleMax.y
@@ -60,7 +59,7 @@ public class CollisionDetector {
 		return false;
 	}
 
-	private boolean determineHoleIntersection(Golfball ball, Hole hole) {
+	public boolean determineHoleIntersection(Golfball ball, Hole hole) {
 		Vector3 holeCenter = new Vector3();
 		hole.getBoundingBox().getCenter(holeCenter);
 		float xz = VectorComputation.getInstance().getDistanceXZ(ball.getPosition(), holeCenter);
@@ -75,8 +74,7 @@ public class CollisionDetector {
 	private void handleHoleCollision(Golfball ball, Hole hole) {
 		Vector3 holeCenter = new Vector3();
 		hole.getBoundingBox().getCenter(holeCenter);
-		float xz = VectorComputation.getInstance().getDistanceXZ(ball.getPosition(), holeCenter);
-
+		
 		Vector3 velocity = holeCenter.sub(ball.getPosition());
 		velocity.scl(0.05f);
 		ball.setPosiition(ball.getPosition().add(velocity));
@@ -108,27 +106,31 @@ public class CollisionDetector {
 		// ballPosition.z = obstacleMin.z - ball.getRadius() - 0.05f;
 		// }
 
+		boolean collisionX1 = ballMin.x-0.05f < obstacleMax.x && ballMax.x+0.05f > obstacleMax.x;
+						
 		// Collision with the x sides of an obstacle
-		if (ballMin.x < obstacleMax.x && ballMax.x > obstacleMax.x) {
+		if (collisionX1) {
 			reflectionAxis = new Vector3(-1, 1, 1);
 			ballPosition.x = obstacleMax.x + ball.getRadius() + 0.05f;
-		} else if (ballMax.x > obstacleMin.x && ballMin.x < obstacleMin.x) {
+		} else if (ballMax.x+0.05f > obstacleMin.x && ballMin.x-0.05f < obstacleMin.x) {
 			reflectionAxis = new Vector3(-1, 1, 1);
 			ballPosition.x = obstacleMin.x - ball.getRadius() - 0.05f;
 		}
+		
 		// Collisions with the y side of an obstacle
-		else if (ballMin.y < obstacleMax.y && ballMax.y > obstacleMax.y) {
+		else if (ballMin.y-0.05f < obstacleMax.y && ballMax.y+0.05f > obstacleMax.y) {
 			reflectionAxis = new Vector3(1, -1, 1);
 			ballPosition.y = obstacleMax.y + ball.getRadius() + 0.05f;
-		} else if (ballMax.y > obstacleMin.y && ballMin.y < obstacleMin.y) {
+		} else if (ballMax.y+0.05f > obstacleMin.y && ballMin.y-0.05f < obstacleMin.y) {
 			reflectionAxis = new Vector3(1, -1, -1);
 			ballPosition.y = obstacleMin.y - ball.getRadius() - 0.05f;
 		}
+		
 		// Collisions with the z sides of an obstacle
-		else if (ballMin.z < obstacleMax.z && ballMax.z > obstacleMax.z) {
+		else if (ballMin.z-0.05f < obstacleMax.z && ballMax.z+0.05f > obstacleMax.z) {
 			reflectionAxis = new Vector3(1, 1, -1);
 			ballPosition.z = obstacleMax.z + ball.getRadius() + 0.05f;
-		} else if (ballMax.z > obstacleMin.z && ballMin.z < obstacleMin.z) {
+		} else if (ballMax.z+0.05f > obstacleMin.z && ballMin.z-0.05f < obstacleMin.z) {
 			reflectionAxis = new Vector3(1, 1, -1);
 			ballPosition.z = obstacleMin.z - ball.getRadius() - 0.05f;
 		}

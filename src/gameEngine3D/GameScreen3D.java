@@ -17,13 +17,16 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 
 import Obstacles.Hole;
 import Obstacles.Obstacle;
 import Obstacles.ObstacleBox;
+import ai.AStar;
 import collisionDetector.CollisionDetector;
 import menu.AbstractScreen;
+import physics.VectorComputation;
 import physics.DifferentialEquationSolver;
 import physics.Physics;
 
@@ -39,7 +42,7 @@ public class GameScreen3D extends AbstractScreen {
 
 	private PerspectiveCamera camera;
 	private boolean showAxis = true;
-	
+	private Obstacle collisionBox;
 	private DifferentialEquationSolver ode;
 	private Golfball golfball;
 	private Hole hole;
@@ -50,7 +53,10 @@ public class GameScreen3D extends AbstractScreen {
 	private InputMultiplexer inputMultiplexer;
 	public LineIndicator indicatorLine;
 	public LineIndicator[] axis = new LineIndicator[3];
-
+	public static BoundingBox courseDimensions;
+	private AStar aStar;
+	private boolean findPath = true;
+	
 	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 
@@ -61,13 +67,6 @@ public class GameScreen3D extends AbstractScreen {
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 		
-		// initialize golfball
-		golfball = new Golfball(1);
-		float[] a = { 0.01f,0 };
-		float[] b = { 0.01f,0 };
-		Physics physics = new Physics(a, b);
-		
-		ode = new DifferentialEquationSolver(physics, golfball.getMass());
 		
 		modelBatch = new ModelBatch();
 		collisionDetector = new CollisionDetector(ode);
@@ -79,13 +78,20 @@ public class GameScreen3D extends AbstractScreen {
 		camera.near = 1f;
 		camera.far = 300f;
 		camera.update();
-
 		camController = new CameraInputController(camera);
 
 		initObstacles();
 		
 
-		hole = new Hole(-10, 0.01f, -10, golfball.getRadius()*2);
+		golfball = new Golfball(1);
+		float[] a = { 0.01f,0 };
+		float[] b = { 0.01f,0 };
+		Physics physics = new Physics(a, b);
+		
+		hole = new Hole(20, 0.01f, 20, golfball.getRadius()*2);
+		ode = new DifferentialEquationSolver(physics, golfball.getMass());
+		golfball.setODE(ode);
+
 		obstacleList.add(hole);
 		
 		// inizialize hit indicator line
@@ -102,6 +108,15 @@ public class GameScreen3D extends AbstractScreen {
 			axis[1] = new LineIndicator();
 			axis[2] = new LineIndicator();
 		}
+		
+		for(Obstacle o : obstacleList) {
+			collisionDetector.detectCollision(golfball, o);
+		}
+		
+		calculateCouseDimensions(obstacleList);
+
+		aStar = new AStar(this);
+//		aStar.findPathToHole();
 	}
 
 	/**
@@ -116,7 +131,6 @@ public class GameScreen3D extends AbstractScreen {
 		camController.update();
 		modelBatch.begin(camera);
 		modelBatch.render(golfball.getBallInstance());
-
 		// Dis-/Enabling the axis. Makes axis a bit more clear
 		if (showAxis) {
 			modelBatch.render(axis[0].getInstance());
@@ -124,11 +138,7 @@ public class GameScreen3D extends AbstractScreen {
 			modelBatch.render(axis[2].getInstance());
 		}
 
-		modelBatch.render(indicatorLine.getInstance());
-		
-		for(Obstacle o : obstacleList) {			
-			modelBatch.render(o.getInstance());
-		}
+		modelBatch.render(indicatorLine.getInstance());		
 		
 		modelBatch.render(hole.getInstance());
 		
@@ -139,32 +149,47 @@ public class GameScreen3D extends AbstractScreen {
 		}
 
 		// First update, than draw or the other way around?
-		golfball.update(ode);
+		golfball.update();
 		updateCameraPosition();
 		modelBatch.end();
 
 		Vector3 mousePosition = getWorldCoords();
 		indicatorLine.updateLine(golfball.getPosition(), mousePosition);
 	
+		if(golfball.getVelocity().isZero()) {
+			System.out.println(VectorComputation.getInstance().getDistanceXZ(golfball.getPosition(), hole.getBoundingBox().getCenter(new Vector3())) + " " + golfball.getPosition() + " " + hole.getBoundingBox().getCenter(new Vector3()));
+		
+		}
+		
+		collisionBox.rotate(new Vector3(0,0,1), 1);
+		
 		for (Obstacle o : obstacleList) {
-			modelBatch.render(o.getInstance());
-			collisionDetector.detectCollision(golfball, o);
+			if(o instanceof Hole)modelBatch.render(o.getInstance());
+//			collisionDetector.detectCollision(golfball, o);
 		}		
 	}
 
-	public void dispose() {
-		modelBatch.dispose();
-		golfball.getBallModel().dispose();
-	}
-
+	/**
+	 * Get the golfball from the current game
+	 * @return the golfball of the game
+	 */
 	public Golfball getGolfball() {
 		return golfball;
 	}
 
+	/**
+	 * Update the camera position according to the ball velocity
+	 */
 	public void updateCameraPosition() {
 		// TODO: we might have to do this manually --> ask in project meeting, prehaps
 		// ask pietro
+		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			if(findPath) {
+			findPath = false;
+			modelBatch.end();
+			aStar.findPathToHole();
+			}
 			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), -2f);
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
@@ -182,13 +207,100 @@ public class GameScreen3D extends AbstractScreen {
 		camera.update();
 	}
 	
+	/**
+	 * Initialize all ostacles with position and add them to the obstacle list
+	 */
 	private void initObstacles() {
 		Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
-		obstacleList.add(box);
-							
-		Obstacle collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		obstacleList.add(box);					
+		
+		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
 		collisionBox.setColor(Color.BLUE);
 		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(20, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(30, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(40, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 20, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 30, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+		collisionBox = new ObstacleBox(10, 0, 40, 10f, 10f, 10f);
+		collisionBox.setColor(Color.BLUE);
+		obstacleList.add(collisionBox);
+	
+	}
+
+	/**
+	 * Calculate the bounding box of the whole couse. 
+	 * The resulting boundingbox will be used for the A*-path finding, to avoid searching areas out of the course
+	 * 
+	 * @param obstacleList The list of all obstacles in the course
+	 */
+	private void calculateCouseDimensions(Set<Obstacle> obstacleList) {
+		courseDimensions = new BoundingBox();
+		Vector3 min = golfball.getPosition();
+		Vector3 max = golfball.getPosition();
+		for(Obstacle o : obstacleList) {
+			if(max.x < o.getBoundingBox().max.x) 
+				max.x = o.getBoundingBox().max.x;
+			if(max.y < o.getBoundingBox().max.y) 
+				max.y = o.getBoundingBox().max.y;
+			if(max.z < o.getBoundingBox().max.z) 
+				max.z = o.getBoundingBox().max.z;
+			if(min.x > o.getBoundingBox().min.x) 
+				min.x = o.getBoundingBox().min.x;
+			if(min.y > o.getBoundingBox().min.y)
+				min.y = o.getBoundingBox().min.y;
+			if(min.z > o.getBoundingBox().min.z) 
+				min.z = o.getBoundingBox().min.z;			
+		}
+		courseDimensions.set(min, max);
+	}
+	
+	/**
+	 * Retrieve the bounding box spanning over the hole course
+	 * @return the boundingbox containing all elements in the course
+	 */
+	public BoundingBox getCouserDimensions() {
+		if(courseDimensions == null) {
+			calculateCouseDimensions(obstacleList);
+		}
+		return courseDimensions;
+	}
+
+	public Obstacle getHole() {
+		return hole;
+	}
+	
+	public Set<Obstacle> getAllObstacles() {
+		return obstacleList;
+	}
+	
+	public AStar getAi() {
+		return aStar;
+	}
+	
+	public void dispose() {
+		modelBatch.dispose();
+		golfball.getBallModel().dispose();
 	}
 
 	@Override
