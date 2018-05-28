@@ -80,7 +80,7 @@ public class GameScreen3D extends AbstractScreen {
 		camera.update();
 		camController = new CameraInputController(camera);
 
-		initObstacles();
+//		initObstacles();
 		
 
 		golfball = new Golfball(1);
@@ -161,7 +161,7 @@ public class GameScreen3D extends AbstractScreen {
 		
 		}
 		
-		collisionBox.rotate(new Vector3(0,0,1), 1);
+//		collisionBox.rotate(new Vector3(0,0,1), 1);
 		
 		for (Obstacle o : obstacleList) {
 			if(o instanceof Hole)modelBatch.render(o.getInstance());

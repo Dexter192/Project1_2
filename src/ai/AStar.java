@@ -161,6 +161,7 @@ public class AStar
 				cheapestTile = a;
 				minCost = a.getTotalCost();
 			}
+		System.out.println(cheapestTile.getTotalCost());
 		return cheapestTile;
 	}
 
@@ -233,9 +234,6 @@ public class AStar
 //			if (collisionDetector.determineIntersection(boundingBox, courseDimensions)) {
 				// Only add positions, which dont intersect with an obstacle.
 			
-			// Check if this bounding box is within the course's dimensions.
-//			if (collisionDetector.determineIntersection(boundingBox, courseDimensions)) 
-//			{
 				// Then check if this bounding box intersects with any other obstacles.
 			boolean intersectsWithObstacle = false;
 			for (Obstacle o : obstacleList) {
