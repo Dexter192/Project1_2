@@ -1,7 +1,5 @@
 package main;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Game;
 
 import menu.ScreenEnum;
@@ -13,13 +11,8 @@ public class MainGame extends Game {
 	}
 
 	@Override
-	public void create(){
+	public void create() {
 		ScreenManager.getInstance().initialize(this);
-		try {
-			ScreenManager.getInstance().showScreen( ScreenEnum.MAIN_MENU );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		ScreenManager.getInstance().showScreen( ScreenEnum.MAIN_MENU );	
 	}
 }
