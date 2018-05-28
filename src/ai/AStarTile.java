@@ -40,10 +40,11 @@ public class AStarTile
 	 * Compute the cost, which is needed to reach the goal, by adding the distance
 	 * made until the tile and the remaining distance to the goal
 	 */
-	private void computeCost() {
-		costToTile = parent.getCostToTile();
-		float costToGoal = VectorComputation.getInstance().getDistance(position, goalPosition);
-		cost = costToTile + costToGoal;
+	private void computeCost() 
+	{
+		costToTile = parent.getCostToTile() + VectorComputation.getInstance().getDistance(position, parent.getPosition()); // Travelled Distance.
+		float costToGoal = VectorComputation.getInstance().getDistance(position, goalPosition); // Smart heuristic.
+		cost = costToTile + costToGoal; // Sum.
 	}
 
 	

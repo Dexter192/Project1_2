@@ -35,10 +35,22 @@ public class AStar
 	 */
 	
 	//Objekte müssen Nodes haben! (Objects must have nodes!) ///* WHAT DOES THIS EVEN MEAN!? *///
-
+	/*
+	 TODO: We dont need to find the path to the hole. Apparently the A* algorithm is allowed to know, where the hole is. 
+	 In that case replacing the sets with a map and assigning costs to a vector/position would be more useful. 
+	 The structure of the algorithm stays very similar though.
+	 
+	 TODO: The step size might be adjusted to the smallest obstacle size .Only add the element with the cheapest cost to the expandable list.
+	 Take the cheapest element of the queue and iterate over it. Create new individual objects for the nodes.
+	 
+	 TODO: Add a break clause for when the hole cannot be reached (Period 6).
+	 */
 	private HashSet<AStarTile> openList; // Viable area, needs to be evaluated.
 	private HashSet<AStarTile> closedList; // Cleared area.
-	private AStarTile lastTile; // ...
+	private ArrayList<AStarTile> pathList; // Derp.
+	private AStarTile lastTile; // Final tile in the path.
+	
+	//Objekte müssen Nodes haben! (Objects must have nodes!) ///* WHAT DOES THIS EVEN MEAN!? *///
 	
 	private List<AStarTile> pathToHole;
 	private BoundingBox courseDimensions;
@@ -65,6 +77,7 @@ public class AStar
 		courseDimensions = gamescreen.getCouserDimensions();
 		holePosition = gamescreen.getHole().getBoundingBox().getCenter(new Vector3());
 		obstacleList = gamescreen.getAllObstacles();
+		
 		collisionDetector = new CollisionDetector();
 		openList = new HashSet<>();
 		closedList = new HashSet<>();
@@ -134,10 +147,10 @@ public class AStar
 	
 	private void printPath()
 	{
-		pathToHole.add(lastTile);
+		pathList.add(lastTile);
 		System.out.println("Found Path!");
-		for (AStarTile o : pathToHole)
-			System.out.println(o.getPosition());
+		for (AStarTile o : pathList)
+			System.out.println("I'm so happy I've finally contributed!  " + o.getPosition());
 	}
 	
 	
@@ -152,7 +165,7 @@ public class AStar
 				minCost = a.getTotalCost();
 			}
 		
-		pathToHole.add(cheapestTile);
+		pathList.add(cheapestTile);
 		return cheapestTile;
 	}
 
@@ -276,7 +289,6 @@ public class AStar
 					//System.out.println("Add: " + boundingBox);
 					openList.add(v);
 			}
-
 		}
 	}
 
@@ -366,9 +378,15 @@ public class AStar
 		return straightPath;
 	}
 	
-	class GeneticHit {
 		
 		
 		
+
+
+	public Vector3 getDirection() // Direction from the ball to the lastTile
+	{
+		Vector3 temp = new Vector3(holePosition);
+		Vector3 movement = temp.sub(gameScreen.getGolfball().getPosition());
+		return movement;
 	}
 }
