@@ -45,7 +45,6 @@ public class AStar
 	private Vector3 holePosition;
 	private Vector3 startPosition;
 	private Vector3 goalPosition;
-	private Vector3 ballPosition;
 	private CollisionDetector collisionDetector;
 	private Set<Obstacle> obstacleList;
 	private boolean hasFoundPath = false;
@@ -66,7 +65,6 @@ public class AStar
 		courseDimensions = gamescreen.getCouserDimensions();
 		holePosition = gamescreen.getHole().getBoundingBox().getCenter(new Vector3());
 		obstacleList = gamescreen.getAllObstacles();
-		ballPosition = gameScreen.getGolfball().getPosition();
 		collisionDetector = new CollisionDetector();
 		openList = new HashSet<>();
 		closedList = new HashSet<>();
@@ -101,7 +99,7 @@ public class AStar
 		pathToHole.clear();
 		hasFoundPath = false;
 		
-		AStarTile start = new AStarTile(ballPosition, holePosition); // Initial tile constructor.
+		AStarTile start = new AStarTile(gameScreen.getGolfball().getPosition(), holePosition); // Initial tile constructor.
 		openList.add(start);
 		AStarTile cheapestElement = null; ///* THIS LINE GOT ADDED SO A NEW AStarTile OBJECT WASN'T CREATED EACH LOOP *///
 		
