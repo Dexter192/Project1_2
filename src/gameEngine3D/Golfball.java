@@ -1,6 +1,7 @@
 package gameEngine3D;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -23,6 +24,7 @@ public class Golfball {
 	private ModelInstance ballInstance;
 	private ModelBuilder modelBuilder;
 	private BoundingBox boundingBox;
+	private boolean moveWithKeys = true;
 	private Vector3 position;
 	private float radius;
 	private float mass;
@@ -31,6 +33,10 @@ public class Golfball {
 	public Golfball(float radius) {
 		this.radius = radius;
 		mass = 5;
+
+		//ve = new Vector3(0, 0, 0);
+
+
 		modelBuilder = new ModelBuilder();
 
 		ballModel = modelBuilder.createSphere(radius * 2, radius * 2, radius * 2, 50, 50, new Material(),
@@ -70,17 +76,36 @@ public class Golfball {
 	public void update(DifferentialEquationSolver ode) {
 		ignoreMinimalVelocity();
 		// Transform the ballposition by the directionvector
+
 		position.add(veloAccel[0]); 
 
 		//ballInstance.transform.translate(veloAccel[0]);
 		ballInstance.transform.setTranslation(position);
-		
+
 		Vector3 min = new Vector3(-radius, -radius, -radius);
 		Vector3 max = new Vector3( radius,  radius,  radius);
 		boundingBox = boundingBox.set(min.add(position), max.add(position));
-		
 		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0) 
 			veloAccel = ode.rungeKutterMethod(veloAccel, position);
+		moveWithKeys();
+	}
+
+	private void moveWithKeys() {
+		if(moveWithKeys) {
+			if (Gdx.input.isKeyPressed(Keys.Q)) {
+				position.add(new Vector3(0.1f, 0, 0));
+			}
+			if (Gdx.input.isKeyPressed(Keys.E)) {
+				position.add(new Vector3(-0.1f, 0, 0));
+			}
+			if (Gdx.input.isKeyPressed(Keys.D)) {
+				position.add(new Vector3(0, 0, 0.1f));
+			}
+			if (Gdx.input.isKeyPressed(Keys.A)) {
+				position.add(new Vector3(0, 0, -0.1f));
+			}
+		}
+
 	}
 		
 	
