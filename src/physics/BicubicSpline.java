@@ -20,22 +20,8 @@ public class BicubicSpline {
 								{physics.getHeightSplines(x1, y0), physics.getHeightSplines(x1, y1),physics.getPartialDerivativeY(y0),physics.getPartialDerivativeY(y1)},
 								{physics.getPartialDerivativeX(x0),physics.getPartialDerivativeX(x0),0,0},
 								{physics.getPartialDerivativeX(x1),physics.getPartialDerivativeX(x1),0,0}};
-		for(int i = 0; i<valuesF.length;i++){
-			for(int j = 0;j<valuesF.length;j++){
-				System.out.print(valuesF[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
 		float[][] tmpParameters = multiplicar(one,valuesF);
 		float[][] parameters = multiplicar(tmpParameters,three);
-		for(int i = 0; i<parameters.length;i++){
-			for(int j = 0;j<parameters.length;j++){
-				System.out.print(parameters[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
 		return parameters;
 	}
 	public float calculateHeight(float x, float y, float x0, float x1, float y0, float y1) {
@@ -46,7 +32,6 @@ public class BicubicSpline {
 				height = height+(float)(para[i][j]*Math.pow(x,i)*Math.pow(y,j));
 			}
 		}
-		System.out.println(height);
 		return height;
 	}
 	public float[][] multiplicar(float[][] A, float[][] B) {
