@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-
+import physics.Physics;
 import menu.AbstractScreen;
 
 public class GameScreen extends AbstractScreen {
