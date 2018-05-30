@@ -56,8 +56,7 @@ public class GameScreen3D extends AbstractScreen {
 	public static BoundingBox courseDimensions;
 	private AStar aStar;
 	private boolean findPath = true;
-	
-	
+
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 
 	@Override
@@ -84,8 +83,8 @@ public class GameScreen3D extends AbstractScreen {
 		
 
 		golfball = new Golfball(1);
-		float[] a = { 0.01f,0 };
-		float[] b = { 0.01f,0 };
+		float[] a = { 0.01f,0.1f };
+		float[] b = { 0.01f,0.1f };
 		Physics physics = new Physics(a, b);
 		
 		hole = new Hole(20, 0.01f, 20, golfball.getRadius()*2);
@@ -139,7 +138,7 @@ public class GameScreen3D extends AbstractScreen {
 		}
 
 		modelBatch.render(indicatorLine.getInstance());		
-		
+
 		modelBatch.render(hole.getInstance());
 		
 		if (showAxis) {
@@ -157,7 +156,7 @@ public class GameScreen3D extends AbstractScreen {
 		indicatorLine.updateLine(golfball.getPosition(), mousePosition);
 	
 		if(golfball.getVelocity().isZero()) {
-			System.out.println(VectorComputation.getInstance().getDistanceXZ(golfball.getPosition(), hole.getBoundingBox().getCenter(new Vector3())) + " " + golfball.getPosition() + " " + hole.getBoundingBox().getCenter(new Vector3()));
+		//	System.out.println(VectorComputation.getInstance().getDistanceXZ(golfball.getPosition(), hole.getBoundingBox().getCenter(new Vector3())) + " " + golfball.getPosition() + " " + hole.getBoundingBox().getCenter(new Vector3()));
 		
 		}
 		

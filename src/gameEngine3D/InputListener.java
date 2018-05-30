@@ -29,12 +29,13 @@ public class InputListener implements InputProcessor {
 		Vector3 directionVector = ball.getPosition().sub(mousePosition);
 
 		float stength = VectorComputation.getInstance().getDistance(mousePosition, ball.getPosition())/100;
+		System.out.println("STRENGTH " + stength);
 		directionVector.nor();
 
 		if (!initialize && ball.getVelocity().isZero()) {
 			directionVector.y = 0;
-//		ball.setVelocity(directionVector.scl(stength));
-			gameScreen3D.getAi().makeMove();
+ 	ball.setVelocity(directionVector.scl(stength));
+//			gameScreen3D.getAi().makeMove();
 		}
 		initialize = false;
 		return false;

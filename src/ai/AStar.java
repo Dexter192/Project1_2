@@ -92,6 +92,7 @@ public class AStar
 
 
 	public void makeMove() {
+		
 		if(!pathToHole.isEmpty()) {			
 			geneticHitStrength.updateStrengthPerUnit(startPosition, goalPosition, golfBall.getPosition());
 		}
@@ -118,11 +119,13 @@ public class AStar
 		
 		System.out.println("Starting WHILE loop.");
 		// Search.
+		//float startTime = System.currentTimeMillis();
 		while (!hasFoundPath && !openList.isEmpty()) 
 		{
 			cheapestElement = findCheapestElement(); // Checks openList and finds the best valued tile.
 			expandArea(cheapestElement); // Uses the "best valued tile" to the expand the openlist, rinse and repeat.
 		}
+		//float endTime = System.currentTimeMillis();
 		if (hasFoundPath) {
 			AStarTile temp = lastTile;
 			pathToHole.add(temp);

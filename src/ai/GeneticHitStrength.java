@@ -28,6 +28,7 @@ public class GeneticHitStrength {
 		Vector3 direction = new Vector3(temp.sub(startPosition));
 		direction.nor();
 		float distance = VectorComputation.getInstance().getDistanceXZ(startPosition, goalPosition);
+		direction.y = 0;
 		direction.scl(strengthPerUnit*distance);
 		return direction;
 	}
@@ -67,10 +68,10 @@ public class GeneticHitStrength {
 		//TODO: This is wrong. It has to include the direction which we were going. 
 		
 		if(supposedDist < actualDist) {
-			strengthPerUnit = (float) (strengthPerUnit * 0.999);
+			strengthPerUnit = (float) (strengthPerUnit - actualDist/1000);
 		}
 		else if (supposedDist > actualDist) {
-			strengthPerUnit = (float) (strengthPerUnit * 1.001);
+			strengthPerUnit = (float) (strengthPerUnit + actualDist/1000);
 		}
 		try {
 			writeStrengthPerUnit();

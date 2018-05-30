@@ -40,8 +40,8 @@ public class Physics {
 		return ans;
 	}
 
-	/*
-	public float getHeight(double x, double y) {
+	
+	/*public float getHeight(double x, double y) {
 		float height = 0;
 		for (int i = 0; i < array1.length; i++) 
 			height += array1[i] * (Math.pow(x, array1.length - 1 - i));
@@ -50,8 +50,8 @@ public class Physics {
 			height += array2[j] * (Math.pow(y, array2.length - 1 - j));
 		
 		return height;
-	}
-	*/
+	}*/
+	
 	///*
 	public float getHeight(double x, double y) {
 		int tmp = (int) (x/diff);

@@ -75,7 +75,7 @@ public class CollisionDetector {
 		hole.getBoundingBox().getCenter(holeCenter);
 		
 		Vector3 velocity = holeCenter.sub(ball.getPosition());
-		velocity.scl(0.05f);
+		velocity.scl(0f);
 		ball.setPosiition(ball.getPosition().add(velocity));
 	}
 

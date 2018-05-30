@@ -14,7 +14,7 @@ public class Hole extends Obstacle{
 		super(posX, posY, posZ, radius);
 		this.radius = radius;
 
-		position.y = position.y - radius;
+		//position.y = position.y - radius;
 		
 		buildModel();
 		modelInstance = new ModelInstance(model);
