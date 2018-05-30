@@ -23,7 +23,7 @@ public class CollisionDetector {
 
 		BoundingBox obstacleBoundingBox = obstacle.getBoundingBox();
 
-//		System.out.println(obstacleBoundingBox);
+//		System.out.println(obstacleBoundingBox); 
 		
 		if (obstacle instanceof Hole) {
 			if (determineHoleIntersection(ball, (Hole) obstacle)) {

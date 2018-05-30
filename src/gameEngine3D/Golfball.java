@@ -151,7 +151,7 @@ public class Golfball {
 	
 	public void setPosiition(Vector3 position) {
 		this.position = position;
-	}
+	} //
 
 	
 	public Vector3 getPosition() {

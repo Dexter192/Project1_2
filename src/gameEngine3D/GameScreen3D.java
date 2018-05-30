@@ -201,7 +201,7 @@ public class GameScreen3D extends AbstractScreen {
 		
 		camera.lookAt(golfball.getPosition());
 		camera.translate(golfball.getVelocity());
-		camera.update();
+		camera.update(); //
 	}
 	
 	/**

@@ -37,6 +37,7 @@ public class AStarTile
 	
 
 	/**
+	 * 
 	 * Compute the cost, which is needed to reach the goal, by adding the distance
 	 * made until the tile and the remaining distance to the goal
 	 */

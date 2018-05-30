@@ -100,7 +100,7 @@ public class AStar
 		
 		startPosition = new Vector3(straightPath.get(0).getPosition());
 		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());
-		
+		//
 		Vector3 velocityVector = new Vector3(geneticHitStrength.getHitStrength(golfBall.getPosition(), goalPosition));
 		golfBall.setVelocity(velocityVector);
 	}

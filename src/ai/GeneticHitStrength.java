@@ -42,7 +42,7 @@ public class GeneticHitStrength {
 		try {
 			s = new Scanner(f);
 			String strength = s.nextLine();
-			s.close();
+			s.close(); //
 			return Float.parseFloat(strength);
 		} catch (FileNotFoundException e) {
 			return (float) 0.001;
