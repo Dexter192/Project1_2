@@ -50,6 +50,9 @@ public class AStarTile
 	
 	public AStarTile getParent()	{	return parent;	}
 
+	public void setPosition(Vector3 position) { 
+		this.position = position;
+	}
 	
 	public float getCostToTile()	{	return costToTile;	}
 	

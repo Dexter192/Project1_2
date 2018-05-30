@@ -73,14 +73,14 @@ public class GameScreen3D extends AbstractScreen {
 
 		// initialize camera
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.position.set(10f, 15f, 10f);
+		camera.position.set(-10f, 15f, -10f);
 		camera.lookAt(0, 0, 0);
 		camera.near = 1f;
 		camera.far = 300f;
 		camera.update();
 		camController = new CameraInputController(camera);
 
-//		initObstacles();
+		initObstacles();
 		
 
 		golfball = new Golfball(1);
@@ -88,11 +88,12 @@ public class GameScreen3D extends AbstractScreen {
 		float[] b = { 0.01f,0 };
 		Physics physics = new Physics(a, b);
 		
-		hole = new Hole(20, 0.01f, 20, golfball.getRadius()*2);
+		hole = new Hole(20, 0.1f, 20, golfball.getRadius()*2);
 		ode = new DifferentialEquationSolver(physics, golfball.getMass());
 		golfball.setODE(ode);
 
 		obstacleList.add(hole);
+		
 		
 		// inizialize hit indicator line
 		indicatorLine = new LineIndicator();
@@ -107,10 +108,6 @@ public class GameScreen3D extends AbstractScreen {
 			axis[0] = new LineIndicator();
 			axis[1] = new LineIndicator();
 			axis[2] = new LineIndicator();
-		}
-		
-		for(Obstacle o : obstacleList) {
-			collisionDetector.detectCollision(golfball, o);
 		}
 		
 		calculateCouseDimensions(obstacleList);
@@ -164,8 +161,8 @@ public class GameScreen3D extends AbstractScreen {
 //		collisionBox.rotate(new Vector3(0,0,1), 1);
 		
 		for (Obstacle o : obstacleList) {
-			if(o instanceof Hole)modelBatch.render(o.getInstance());
-//			collisionDetector.detectCollision(golfball, o);
+			modelBatch.render(o.getInstance());
+			collisionDetector.detectCollision(golfball, o);
 		}		
 	}
 
