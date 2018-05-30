@@ -27,31 +27,31 @@ public class DifferentialEquationSolver {
 			
 			float newt = (deltaTime/3);
 
-			Vector3[] neww = {initial[0].add(k1[0].scl(1/3)),initial[1].add(k1[1].scl(1/3))};
+			Vector3[] neww = {add(initial[0],(k1[0].scl(1/3))),add(initial[1],(k1[1].scl(1/3)))};
 
 			Vector3[] k2 = 	calc(newt, neww );
 			scl(k2,deltaTime);
 			
 			newt = (2*deltaTime)/3;
-			neww[0] = (initial[0].sub(k1[0].scl(1/3f))).add(k2[0]);
-			neww[1] = (initial[1].sub(k1[1].scl(1/3f))).add(k2[1]);
+			neww[0] = add((sub(initial[0],(k1[0].scl(1/3f)))),k2[0]);
+			neww[1] = add((sub(initial[1],(k1[1].scl(1/3f)))),k2[1]);
 			Vector3[] k3 = calc(newt, neww);
 			scl(k3,deltaTime);
 			
 			newt = deltaTime;
-			neww[0] = ((initial[0].add(k1[0])).sub(k2[0])).add(k3[0]);
-			neww[1] = ((initial[1].add(k1[1])).sub(k2[1])).add(k3[1]);
+			neww[0] = add(sub((add(initial[0],k1[0])),k2[0]),k3[0]);
+			neww[1] = add(sub((add(initial[1],k1[1])),k2[1]),k3[1]);
 			Vector3[] k4 = calc(newt, neww);
 			scl(k4,deltaTime);
 			
-			Vector3[] k = {((k1[0].add(k2[0].scl(3f))).add(k3[0].scl(3f))).add(k4[0]),((k1[1].add(k2[1].scl(3f))).add(k3[1].scl(3f))).add(k4[1])};
+			Vector3[] k = {add(add(add(k1[0],(k2[0].scl(3f))),(k3[0].scl(3f))),k4[0]),add(add(add(k1[1],(k2[1].scl(3f))),(k3[1].scl(3f))),k4[1])};
 			Vector3[] result = new Vector3[2];
-			result[0] = initial[0].add(k[0].scl(1/8f));
-			result[1] = initial[1].add(k[1].scl(1/8f));
+			result[0] = add(initial[0],k[0].scl(1/8f));
+			result[1] = add(initial[1],k[1].scl(1/8f));
 			
 			
-			System.out.println(" end acceleration x: " + result[1].toString());
-			System.out.println(" end velocoty x " + result[0].toString());
+			//System.out.println(" end acceleration x: " + result[1].toString());
+			//System.out.println(" end velocoty x " + result[0].toString());
 			return result;
 		}
 		
@@ -72,7 +72,20 @@ public class DifferentialEquationSolver {
 			return tempva;
 		}
 		
-		
+		private Vector3 add (Vector3 a, Vector3 b) {
+			Vector3  c = new Vector3(0,0,0);
+			c.x = a.x + b.x;
+			c.y = a.y + b.y;
+			c.z = a.z + b.z;
+			return c;
+		}
+		private Vector3 sub (Vector3 a, Vector3 b) {
+			Vector3  c = new Vector3(0,0,0);
+			c.x = a.x - b.x;
+			c.y = a.y - b.y;
+			c.z = a.z - b.z;
+			return c;
+		}
 		private Vector3[] scl (Vector3[] matrix, float scalar) {
 			for(int i = 0; i < matrix.length; i++) {
 				matrix[i].scl(scalar);
