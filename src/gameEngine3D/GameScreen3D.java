@@ -41,7 +41,7 @@ import physics.Physics;
 public class GameScreen3D extends AbstractScreen {
 
 	private PerspectiveCamera camera;
-	private boolean showAxis = true;
+	private boolean showAxis = false;
 	private Obstacle collisionBox;
 	private DifferentialEquationSolver ode;
 	private Golfball golfball;
@@ -73,7 +73,7 @@ public class GameScreen3D extends AbstractScreen {
 
 		// initialize camera
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.position.set(-10f, 15f, -10f);
+		camera.position.set(40f, 15f, 40f);
 		camera.lookAt(0, 0, 0);
 		camera.near = 1f;
 		camera.far = 300f;
@@ -308,12 +308,15 @@ public class GameScreen3D extends AbstractScreen {
 	public void resize(int width, int height) {
 	}
 
+	private long delta;
+	
 	@Override
 	public void pause() {
 	}
-
+	
 	@Override
 	public void resume() {
+	
 	}
 
 	@Override

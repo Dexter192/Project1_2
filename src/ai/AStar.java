@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
@@ -92,6 +93,8 @@ public class AStar
 
 
 	public void makeMove() {
+		gameScreen.pause();
+		float delta = Gdx.graphics.getDeltaTime();
 		if(!pathToHole.isEmpty()) {			
 			geneticHitStrength.updateStrengthPerUnit(startPosition, goalPosition, golfBall.getPosition());
 		}
@@ -100,10 +103,14 @@ public class AStar
 		
 		startPosition = new Vector3(straightPath.get(0).getPosition());
 		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());
-		//
+		
 		Vector3 velocityVector = new Vector3(geneticHitStrength.getHitStrength(golfBall.getPosition(), goalPosition));
+		gameScreen.render(delta);
+		
 		golfBall.setVelocity(velocityVector);
+		gameScreen.resume();
 	}
+	
 	
 
 	public void findPathToHole() {
