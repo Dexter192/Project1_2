@@ -37,6 +37,7 @@ public class AStarTile
 	
 
 	/**
+	 * 
 	 * Compute the cost, which is needed to reach the goal, by adding the distance
 	 * made until the tile and the remaining distance to the goal
 	 */
@@ -50,6 +51,9 @@ public class AStarTile
 	
 	public AStarTile getParent()	{	return parent;	}
 
+	public void setPosition(Vector3 position) { 
+		this.position = position;
+	}
 	
 	public float getCostToTile()	{	return costToTile;	}
 	

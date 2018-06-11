@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
@@ -92,7 +93,10 @@ public class AStar
 
 
 	public void makeMove() {
-		
+
+		gameScreen.pause();
+		float delta = Gdx.graphics.getDeltaTime();
+
 		if(!pathToHole.isEmpty()) {			
 			geneticHitStrength.updateStrengthPerUnit(startPosition, goalPosition, golfBall.getPosition());
 		}
@@ -103,8 +107,12 @@ public class AStar
 		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());
 		
 		Vector3 velocityVector = new Vector3(geneticHitStrength.getHitStrength(golfBall.getPosition(), goalPosition));
+		gameScreen.render(delta);
+		
 		golfBall.setVelocity(velocityVector);
+		gameScreen.resume();
 	}
+	
 	
 
 	public void findPathToHole() {
@@ -164,7 +172,7 @@ public class AStar
 				cheapestTile = a;
 				minCost = a.getTotalCost();
 			}
-		System.out.println(cheapestTile.getTotalCost());
+		System.out.println(cheapestTile.getTotalCost() + " " + cheapestTile.getCostToTile() + " "  + cheapestTile.getPosition());
 		return cheapestTile;
 	}
 
@@ -190,7 +198,8 @@ public class AStar
 		openList.remove(expandTile);
 	}
 	
-	
+	//TODO: PLEASE NAME YOUR METHODS PROPERLY... UNLESS I´VE WRITTEN THE CODE I HAVE NO IDEA WHAT HELPERA DOES... 
+	// Also the method expandarea is now obsolete and can be squeezed into the find path method.
 	// Generates 3x3x3 grid and thus creates the given tile's neighbours.
 	private HashSet<AStarTile> helperA(AStarTile expandTile) {
 		Vector3 expandPosition = expandTile.getPosition(); // Current coordinates.
@@ -245,6 +254,7 @@ public class AStar
 					if (o instanceof Hole) {// Then check if said obstacle is the hole (goal).
 						hasFoundPath = true;
 						lastTile = v;
+						lastTile.setPosition(holePosition);
 						System.out.println("PATHFOUND WITH TILE: " + v.getPosition());
 						//System.out.println( "A* Intersection position is at: " + boundingBox + "\n The hole position at: " + o.getBoundingBox().toString() );
 					}
@@ -308,7 +318,7 @@ public class AStar
 	}
 	
 	private float computeStepsize() {
-		float stepSize = Integer.MAX_VALUE;
+		float stepSize = gameScreen.getGolfball().getRadius()*2;
 		Set<Obstacle> obstacleList = gameScreen.getAllObstacles();
 		Iterator<Obstacle> it = obstacleList.iterator();
 	
@@ -336,6 +346,9 @@ public class AStar
 			if(direction.x <= subDirection.x + 0.05 * stepSize && direction.z <= subDirection.z + 0.05 * stepSize &&
 			   direction.x >= subDirection.x - 0.05 * stepSize && direction.z >= subDirection.z - 0.05 * stepSize ) {
 				straightPath.add(pathToHole.get(i));
+			}
+			else if(i == pathToHole.size()-2) {
+				straightPath.add(lastTile);
 			}
 			else {
 				break;

@@ -27,6 +27,7 @@ public class GeneticHitStrength {
 		Vector3 temp = new Vector3(goalPosition);
 		Vector3 direction = new Vector3(temp.sub(startPosition));
 		direction.nor();
+		direction.y = 0;
 		float distance = VectorComputation.getInstance().getDistanceXZ(startPosition, goalPosition);
 		direction.y = 0;
 		direction.scl(strengthPerUnit*distance);
@@ -36,13 +37,13 @@ public class GeneticHitStrength {
 	private float readStrengthPerUnit()  {
 		File f = new File(path);
 		if(!f.exists()) {
-			return (float) 0.001;
+			return (float) 0.01f;
 		}
 		Scanner s;
 		try {
 			s = new Scanner(f);
 			String strength = s.nextLine();
-			s.close();
+			s.close(); //
 			return Float.parseFloat(strength);
 		} catch (FileNotFoundException e) {
 			return (float) 0.001;

@@ -23,7 +23,7 @@ public class CollisionDetector {
 
 		BoundingBox obstacleBoundingBox = obstacle.getBoundingBox();
 
-//		System.out.println(obstacleBoundingBox);
+//		System.out.println(obstacleBoundingBox); 
 		
 		if (obstacle instanceof Hole) {
 			if (determineHoleIntersection(ball, (Hole) obstacle)) {
@@ -50,8 +50,8 @@ public class CollisionDetector {
 	public boolean determineIntersection(BoundingBox ball, BoundingBox obstacle) {
 		Vector3 ballMin = ball.min, ballMax = ball.max, obstacleMin = obstacle.min, obstacleMax = obstacle.max;
 
-		if (ballMin.x < obstacleMax.x && ballMax.x > obstacleMin.x && ballMin.y < obstacleMax.y
-				&& ballMax.y > obstacleMin.y && ballMin.z < obstacleMax.z && ballMax.z > obstacleMin.z) {
+		if (ballMin.x < obstacleMax.x && ballMax.x > obstacleMin.x && ballMin.y-0.5 < obstacleMax.y
+				&& ballMax.y+0.5 > obstacleMin.y && ballMin.z < obstacleMax.z && ballMax.z > obstacleMin.z) {
 			return true;
 		}
 
@@ -115,12 +115,11 @@ public class CollisionDetector {
 			reflectionAxis = new Vector3(-1, 1, 1);
 			ballPosition.x = obstacleMin.x - ball.getRadius() - 0.05f;
 		}
-		
 		// Collisions with the y side of an obstacle
-		else if (ballMin.y-0.05f < obstacleMax.y && ballMax.y+0.05f > obstacleMax.y) {
+		else if (ballMin.y+0.05f < obstacleMax.y && ballMax.y-0.05f > obstacleMax.y) {
 			reflectionAxis = new Vector3(1, -1, 1);
 			ballPosition.y = obstacleMax.y + ball.getRadius() + 0.05f;
-		} else if (ballMax.y+0.05f > obstacleMin.y && ballMin.y-0.05f < obstacleMin.y) {
+		} else if (ballMax.y-0.05f > obstacleMin.y && ballMin.y+0.05f < obstacleMin.y) {
 			reflectionAxis = new Vector3(1, -1, -1);
 			ballPosition.y = obstacleMin.y - ball.getRadius() - 0.05f;
 		}
