@@ -1,6 +1,8 @@
 package gameEngine3D;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
@@ -59,6 +61,7 @@ public class GameScreen3D extends AbstractScreen {
 	
 	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
+	private Set<Obstacle> pathIndicator = new HashSet<Obstacle>();
 
 	@Override
 	public void buildStage() {
@@ -88,7 +91,7 @@ public class GameScreen3D extends AbstractScreen {
 		float[] b = { 0.01f,0 };
 		Physics physics = new Physics(a, b);
 		
-		hole = new Hole(20, 0.1f, 20, golfball.getRadius()*2);
+		hole = new Hole(-20, 0.1f, 0, golfball.getRadius()*2);
 		ode = new DifferentialEquationSolver(physics, golfball.getMass());
 		golfball.setODE(ode);
 
@@ -160,6 +163,9 @@ public class GameScreen3D extends AbstractScreen {
 		
 //		collisionBox.rotate(new Vector3(0,0,1), 1);
 		
+		for (Obstacle o : pathIndicator) {
+			modelBatch.render(o.getInstance());
+		}
 		for (Obstacle o : obstacleList) {
 			modelBatch.render(o.getInstance());
 			collisionDetector.detectCollision(golfball, o);
@@ -211,39 +217,21 @@ public class GameScreen3D extends AbstractScreen {
 		Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
 		obstacleList.add(box);					
 		
-		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
+		collisionBox = new ObstacleBox(0, 0, 0, 10f, 10f, 10f);
 		collisionBox.setColor(Color.BLUE);
 		obstacleList.add(collisionBox);
 	
-		collisionBox = new ObstacleBox(20, 0, 10, 10f, 10f, 10f);
+		
+		collisionBox = new ObstacleBox(0, 0, 10, 10f, 10f, 10f);
 		collisionBox.setColor(Color.BLUE);
 		obstacleList.add(collisionBox);
-	
-		collisionBox = new ObstacleBox(30, 0, 10, 10f, 10f, 10f);
+
+		collisionBox = new ObstacleBox(0, 0, -10, 10f, 10f, 10f);
 		collisionBox.setColor(Color.BLUE);
 		obstacleList.add(collisionBox);
-	
-		collisionBox = new ObstacleBox(40, 0, 10, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
-	
-		collisionBox = new ObstacleBox(10, 0, 10, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
-	
-		collisionBox = new ObstacleBox(10, 0, 20, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
-	
-		collisionBox = new ObstacleBox(10, 0, 30, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
-	
-		collisionBox = new ObstacleBox(10, 0, 40, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
-	
 	}
+	
+	
 
 	/**
 	 * Calculate the bounding box of the whole couse. 
@@ -298,6 +286,10 @@ public class GameScreen3D extends AbstractScreen {
 	public void dispose() {
 		modelBatch.dispose();
 		golfball.getBallModel().dispose();
+	}
+	
+	public void addObstacles(Collection<Obstacle> obstacles) {
+		pathIndicator.addAll(obstacles);
 	}
 
 	@Override

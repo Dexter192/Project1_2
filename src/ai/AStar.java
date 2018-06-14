@@ -1,16 +1,19 @@
 package ai;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import Obstacles.Hole;
+import Obstacles.*;
 import Obstacles.Obstacle;
 import collisionDetector.CollisionDetector;
 import gameEngine3D.GameScreen3D;
@@ -92,7 +95,7 @@ public class AStar
 	}
 
 
-	public void makeMove() {
+	public Collection<Obstacle> makeMove() {
 		gameScreen.pause();
 		float delta = Gdx.graphics.getDeltaTime();
 		if(!pathToHole.isEmpty()) {			
@@ -100,6 +103,15 @@ public class AStar
 		}
 		findPathToHole();
 		List<AStarTile> straightPath = computeStraightPathFromPosition();
+		
+		Collection<Obstacle> obstacleList = new HashSet<>();
+		Iterator<AStarTile> itr = pathToHole.iterator();
+		Color c = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1f);
+		while(itr.hasNext()) {
+			AStarTile tile = itr.next();
+			Vector3 position = tile.getPosition();
+			obstacleList.add(new ObstacleBox(position.x, position.y, position.z, stepSize, stepSize, stepSize, c));
+		}
 		
 		startPosition = new Vector3(straightPath.get(0).getPosition());
 		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());
@@ -109,6 +121,7 @@ public class AStar
 		
 		golfBall.setVelocity(velocityVector);
 		gameScreen.resume();
+		return obstacleList;
 	}
 	
 	
@@ -150,15 +163,7 @@ public class AStar
 		}
 		return flippedPathToHole;
 	}
-	
-	
-	private void printPath() {
-		pathList.add(lastTile);
-		System.out.println("Found Path!");
-		for (AStarTile o : pathList)
-			System.out.println("I'm so happy I've finally contributed!  " + o.getPosition());
-	}
-	
+		
 	
 	private AStarTile findCheapestElement()  {
 		AStarTile cheapestTile = null;
