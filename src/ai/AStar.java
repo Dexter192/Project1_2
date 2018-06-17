@@ -295,7 +295,7 @@ public class AStar
 		if(lastTile == null)
 			return;
 		
-		golfBall.setPosiition(lastTile.getPosition());
+		golfBall.setPosition(lastTile.getPosition());
 		lastTile = lastTile.getParent();
 	}
 

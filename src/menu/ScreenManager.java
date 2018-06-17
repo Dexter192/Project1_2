@@ -1,7 +1,13 @@
 package menu;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+
+import MultiPlayer.GameOverScreen;
+import MultiPlayer.ScreenEnumMP;
+import gameEngine3D.Golfball;
 
 /**
  * Singleton instance of the screen manager. It is used to switch the screen.
@@ -57,6 +63,21 @@ public class ScreenManager {
 
 		// Show new screen
 		AbstractScreen newScreen = screenEnum.getScreen();
+		newScreen.buildStage();
+		game.setScreen(newScreen);
+
+		// Dispose previous screen
+		if (currentScreen != null) {
+			currentScreen.dispose();
+		}
+	}
+	public void showScreen(ScreenEnumMP screenEnum, ArrayList<Golfball> golfball, boolean teammode) {
+		
+		// Get current screen to dispose it
+		Screen currentScreen = game.getScreen();
+
+		// Show new screen
+		GameOverScreen newScreen = (GameOverScreen) screenEnum.getScreen(golfball, teammode);
 		newScreen.buildStage();
 		game.setScreen(newScreen);
 

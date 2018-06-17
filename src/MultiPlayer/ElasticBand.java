@@ -1,4 +1,4 @@
-package gameEngine3D;
+package MultiPlayer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -8,18 +8,27 @@ import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 
+import gameEngine3D.Golfball;
 import physics.VectorComputation;
 
-public class LineIndicator {
+public class ElasticBand {
 
 	private ModelInstance lineInstance;
 	private Model lineModel;
 	private ModelBuilder modelBuilder;
+	private float maxAllowedDistance;
+	private Golfball ball1;
+	private Golfball ball2;
+	private boolean elasticity;
+	
 
-	// TODO: Build a line between the golfball and the mouse position. Find out how
-	// to draw a 3d Line :D
-	public LineIndicator() {
+
+	public ElasticBand(float maxAllowedDistance, Golfball ball1, Golfball ball2, boolean elasticity) {
 		buildModel();
+		this.maxAllowedDistance = maxAllowedDistance;
+		this.ball1 = ball1;
+		this.ball2 = ball2;
+		this.elasticity = elasticity;
 	}
 
 	/**
@@ -34,19 +43,37 @@ public class LineIndicator {
 		lineModel = modelBuilder.end();
 		lineInstance = new ModelInstance(lineModel);
 	}
-
-	public void updateLine(Vector3 golfballPosition, Vector3 mousePosition) {
-
-		float lineLength = VectorComputation.getInstance().getDistanceXZ(golfballPosition, mousePosition);
-		Color lineColor = computeLineColor(lineLength);
+	public float calculateDistance(Vector3 pointA, Vector3 pointB) {
+    	double x = Math.pow(pointA.x-pointB.x, 2);
+    	double y = Math.pow(pointA.y-pointB.y, 2);
+    	double z = Math.pow(pointA.z-pointB.z, 2);
+    	double distance = Math.sqrt(x+y+z);
+    	return (float) distance;
+	}
+	public void updateLine( ) {
+		Vector3 golfballPosition = ball1.getPosition();
+		Vector3 golfball2Position = ball2.getPosition();
+		Color lineColor = Color.BLACK;
 		// There must be a more efficient way, than disposing and redeclaring the
 		// line...
 		modelBuilder.begin();
 		MeshPartBuilder builder = modelBuilder.part("line", 1, 3, new Material());
 		builder.setColor(lineColor);
-		builder.line(golfballPosition, mousePosition);
+		builder.line(golfballPosition, golfball2Position);
 		lineModel = modelBuilder.end();
 		lineInstance = new ModelInstance(lineModel);
+		if(calculateDistance(golfballPosition, golfball2Position) > maxAllowedDistance) {
+			if(elasticity) {
+				ball1.setVelocity(ball1.getVelocity().scl(-1f));
+				//change here
+				ball2.setVelocity(ball1.getVelocity().scl(-0.5f));
+			}
+			else{
+				ball1.setVelocity(new Vector3(0,0,0));//ball1.getVelocity().scl(-0.01f));
+				ball2.setVelocity(new Vector3(0,0,0));
+			}
+		}
+		//System.out.println("distance " + calculateDistance(golfballPosition, mousePosition));
 	}
 
 	public void setLine(Vector3 a, Vector3 b, Color color) {
@@ -57,26 +84,8 @@ public class LineIndicator {
 		lineModel = modelBuilder.end();
 		lineInstance = new ModelInstance(lineModel);		
 	}
-	/**
-	 * Computes a color for the line between the ball and the cursor. This line
-	 * should become more red, if the curser is far from the ball and green, if it
-	 * is close.
-	 * 
-	 * @param lineLength
-	 *            The length of the line, that is between the ball and the cursor
-	 * @return the color of the line
-	 */
-	public Color computeLineColor(float lineLength) {
-		// TODO: find a proper computation for the line color. But first make the camera
-		// follow the ball, s.t. we have a consistent distance -- fix the hitting, then fix the colour
-		Color lineColor = new Color();
-		lineColor.b = 0;
-		lineColor.g = (lineLength >= 255) ? 255 : (int)255-lineLength; 
-		lineColor.r = 255-lineColor.g;
-		
-		return lineColor;
 
-	}
+
 
 	public ModelInstance getInstance() {
 		return lineInstance;
@@ -91,3 +100,5 @@ public class LineIndicator {
 	}
 
 }
+
+

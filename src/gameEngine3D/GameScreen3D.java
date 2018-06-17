@@ -82,7 +82,7 @@ public class GameScreen3D extends AbstractScreen {
 		initObstacles();
 		
 
-		golfball = new Golfball(1);
+		golfball = new Golfball();
 		float[] a = { 0.01f,0.1f };
 		float[] b = { 0.01f,0.1f };
 		Physics physics = new Physics(a, b);

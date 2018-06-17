@@ -54,10 +54,10 @@ public class MainMenuScreen extends AbstractScreen {
 		addActor(btnBuild);
 
 		// Uncomment if zou want to implement a settings page
-		// ImageButton btnSettings = ButtonFactory.createButton(txtrPlay);
-		// btnSettings.setSize(40f, 20f);
-		// btnSettings.setPosition(getWidth() / 2, 70.f, Align.center);
-		// addActor(btnSettings);
+		ImageButton btnSettings = ButtonFactory.createButton(txtrPlay);
+		 btnSettings.setSize(40f, 20f);
+		 btnSettings.setPosition(getWidth() / 2, 70.f, Align.center);
+		 addActor(btnSettings);
 
 		ImageButton btnExit = ButtonFactory.createButton(txtrExit);
 		btnExit.setSize(40f, 20f);
@@ -72,7 +72,7 @@ public class MainMenuScreen extends AbstractScreen {
 		btnBuild.addListener(ButtonFactory.createListener(ScreenEnum.COURSE_BUILDER));
 
 		// implement settings
-		// btnSettings.addListener(ButtonFactory.createListener(ScreenEnum.SETTINGS_SCREEN));
+		//btnSettings.addListener(ButtonFactory.createListener(ScreenEnum.SETTINGS_SCREEN));
 
 		btnExit.addListener(new InputListener() {
 			@Override

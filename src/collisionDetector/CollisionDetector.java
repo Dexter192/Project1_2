@@ -3,6 +3,7 @@ package collisionDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import MultiPlayer.GameScreenMultiPlayer;
 import Obstacles.Hole;
 import Obstacles.Obstacle;
 import gameEngine3D.Golfball;
@@ -10,10 +11,13 @@ import physics.DifferentialEquationSolver;
 import physics.VectorComputation;
 
 public class CollisionDetector {
-
 	private static boolean inHole = false;
+	private GameScreenMultiPlayer gameScreen;
 	public CollisionDetector() {
 
+	}
+	public CollisionDetector(GameScreenMultiPlayer gsmp) {
+		this.gameScreen = gsmp;
 	}
 	
 	public boolean detectCollision(Golfball ball, Obstacle obstacle) {
@@ -38,6 +42,33 @@ public class CollisionDetector {
 			handleCollision(ball, obstacleBoundingBox);
 		}
 		return intersects;
+	}
+	public boolean detectCollision(Golfball ball, Golfball ball2) {
+		boolean intersects = false;
+		
+		BoundingBox ballBoundingBox = ball.getBoundingBox();
+
+		BoundingBox obstacleBoundingBox = ball2.getBoundingBox();
+
+		if(determineIntersection(ballBoundingBox, obstacleBoundingBox)) {
+			handleCollisionBall(ball, ball2);
+		}
+		return intersects;
+	}
+
+
+	private void handleCollisionBall(Golfball ball, Golfball ball2) {
+		// TODO Auto-generated method stub
+		Vector3 oldVeloBall1 = ball.getVelocity();
+		Vector3 oldVeloBall2 = ball2.getVelocity();
+		float a = ((ball.getMass()-ball2.getMass())*oldVeloBall1.x + 2* ball2.getMass() * oldVeloBall2.x) / (ball.getMass() + ball2.getMass());
+		float b = ((ball.getMass()-ball2.getMass())*oldVeloBall1.z + 2* ball2.getMass() * oldVeloBall2.z) / (ball.getMass() + ball2.getMass());
+		
+		float c = ((ball2.getMass()-ball.getMass())*oldVeloBall2.x + 2* ball2.getMass() * oldVeloBall1.x) / (ball.getMass() + ball2.getMass());
+		float d = ((ball2.getMass()-ball.getMass())*oldVeloBall2.z + 2* ball2.getMass() * oldVeloBall1.z) / (ball.getMass() + ball2.getMass());
+		ball.setVelocity(new Vector3(a,0,b));
+		ball2.setVelocity(new Vector3(c,0,d));
+		handleCollision(ball, ball2.getBoundingBox());
 	}
 
 	/**
@@ -76,7 +107,12 @@ public class CollisionDetector {
 		
 		Vector3 velocity = holeCenter.sub(ball.getPosition());
 		velocity.scl(0f);
-		ball.setPosiition(ball.getPosition().add(velocity));
+		ball.setPosition(ball.getPosition().add(velocity));
+		if(hole.getIndex() == ball.getIndex()) {
+			//ball.setPosition(hole.getCenter());
+			ball.setVelocity(new Vector3(0,0,0));
+			gameScreen.removeBall(ball.getIndex());
+		}
 	}
 
 	/**
@@ -85,6 +121,7 @@ public class CollisionDetector {
 	 * @param obstacle
 	 */
 	private void handleCollision(Golfball ball, BoundingBox obstacle) {
+		
 		BoundingBox ballBox = ball.getBoundingBox();
 		Vector3 ballMin = ballBox.min, ballMax = ballBox.max, obstacleMin = obstacle.min, obstacleMax = obstacle.max;
 		Vector3 ballPosition = ball.getPosition();
@@ -135,7 +172,7 @@ public class CollisionDetector {
 
 		// TODO: Absorb force when colliding
 		ball.bounceOff(reflectionAxis);
-		ball.setPosiition(ballPosition);
+		ball.setPosition(ballPosition);
 		ball.update();
 	}
 }

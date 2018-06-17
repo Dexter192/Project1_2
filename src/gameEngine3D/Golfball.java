@@ -2,10 +2,13 @@ package gameEngine3D;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -25,15 +28,14 @@ public class Golfball {
 	private BoundingBox boundingBox;
 	private boolean moveWithKeys = true;
 	private Vector3 position;
-	private float radius;
 	private float mass;
 	private Vector3[] veloAccel = {new Vector3(0,0,0), new Vector3(0,0,0)};
 	// Note that veloAccel[0] is the direction vector	
-	private DifferentialEquationSolver ode;
-	
-	
-	public Golfball(float radius) {
-		this.radius = radius;
+	private static DifferentialEquationSolver ode;
+	private static float radius = 1;
+	private int index;
+	private int score =0;
+	public Golfball() {
 		mass = 5;
 		modelBuilder = new ModelBuilder();
 
@@ -48,8 +50,35 @@ public class Golfball {
 		ballInstance.transform.translate(position);
 		getBoundingBox();
 	}
+	public Golfball(float a, float b) {
+		mass = 5;
+		modelBuilder = new ModelBuilder();
 
-	
+		ballModel = modelBuilder.createSphere(radius * 2, radius * 2, radius * 2, 50, 50, new Material(),
+				VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
+						| VertexAttributes.Usage.TextureCoordinates);
+
+
+		this.position = new Vector3(a,radius*2,b);
+
+		ballInstance = new ModelInstance(ballModel);
+		ballInstance.transform.translate(position);
+		getBoundingBox();
+	}
+	public void setColour(int i ) {
+		index = i;
+		Attribute colourAttribute = ColorAttribute.createDiffuse(Color.WHITE);
+		if(i == 0) colourAttribute = ColorAttribute.createDiffuse(Color.RED);		
+		if(i == 1) colourAttribute = ColorAttribute.createDiffuse(Color.BLUE);
+		if(i == 2) colourAttribute = ColorAttribute.createDiffuse(Color.YELLOW);		
+		if(i == 3) colourAttribute = ColorAttribute.createDiffuse(Color.ORANGE);
+		if(i == 4) colourAttribute = ColorAttribute.createDiffuse(Color.OLIVE);
+		if(i == 5) colourAttribute = ColorAttribute.createDiffuse(Color.FOREST);
+		ballInstance.materials.get(0).set(colourAttribute);
+	}
+	public int getIndex() {
+		return index;
+	}
 	/**
 	 * 
 	 * @return The Model of the ball
@@ -149,12 +178,6 @@ public class Golfball {
 		
 	}
 	
-	
-	public void setPosiition(Vector3 position) {
-		this.position = position;
-	} //
-
-	
 	public Vector3 getPosition() {
 		return ballInstance.transform.getTranslation(new Vector3());
 	}
@@ -194,13 +217,17 @@ public class Golfball {
 		return mass;
 	}
 	
-	
+	public void incrementScore() {
+		score++;
+	}
+	public int getScore() {
+		return score;
+	}
 	public void setODE(DifferentialEquationSolver input)
 	{
-		this.ode = input;
+		ode = input;
 	}
 	
-	//hello
 	public DifferentialEquationSolver getODE()
 	{
 		return ode;

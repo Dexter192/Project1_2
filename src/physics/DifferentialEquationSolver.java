@@ -21,7 +21,7 @@ public class DifferentialEquationSolver {
 		public Vector3[] rungeKutterMethod(Vector3[] initial, Vector3 pos) {
 
 			position = pos;
-			float deltaTime = 0.21f;
+			float deltaTime = Gdx.graphics.getDeltaTime();
 			Vector3[] k1 =  calc(0,initial);
 			scl(k1,deltaTime);
 			
@@ -50,8 +50,8 @@ public class DifferentialEquationSolver {
 			result[1] = add(initial[1],k[1].scl(1/8f));
 			
 			
-			//System.out.println(" end acceleration x: " + result[1].toString());
-			//System.out.println(" end velocoty x " + result[0].toString());
+			System.out.println(" end acceleration x: " + result[1].toString());
+			System.out.println(" end velocoty x " + result[0].toString());
 			return result;
 		}
 		
