@@ -76,7 +76,7 @@ public class GameScreen3D extends AbstractScreen {
 
 		// initialize camera
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.position.set(40f, 15f, 40f);
+		camera.position.set(0f, 50f, 0f);
 		camera.lookAt(0, 0, 0);
 		camera.near = 1f;
 		camera.far = 300f;
@@ -91,7 +91,7 @@ public class GameScreen3D extends AbstractScreen {
 		float[] b = { 0.01f,0 };
 		Physics physics = new Physics(a, b);
 		
-		hole = new Hole(-20, 0.1f, 0, golfball.getRadius()*2);
+		hole = new Hole(-70, 0.1f, 0, golfball.getRadius()*2);
 		ode = new DifferentialEquationSolver(physics, golfball.getMass());
 		golfball.setODE(ode);
 
@@ -157,7 +157,7 @@ public class GameScreen3D extends AbstractScreen {
 		indicatorLine.updateLine(golfball.getPosition(), mousePosition);
 	
 		if(golfball.getVelocity().isZero()) {
-			System.out.println(VectorComputation.getInstance().getDistanceXZ(golfball.getPosition(), hole.getBoundingBox().getCenter(new Vector3())) + " " + golfball.getPosition() + " " + hole.getBoundingBox().getCenter(new Vector3()));
+//			System.out.println(VectorComputation.getInstance().getDistanceXZ(golfball.getPosition(), hole.getBoundingBox().getCenter(new Vector3())) + " " + golfball.getPosition() + " " + hole.getBoundingBox().getCenter(new Vector3()));
 		
 		}
 		
@@ -214,21 +214,52 @@ public class GameScreen3D extends AbstractScreen {
 	 * Initialize all ostacles with position and add them to the obstacle list
 	 */
 	private void initObstacles() {
-		Obstacle box = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
+		Obstacle box = new ObstacleBox(0, 0, 0, 200f, 1f, 200f);
 		obstacleList.add(box);					
 		
-		collisionBox = new ObstacleBox(0, 0, 0, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
+		for(int i = -20; i <= 20; i = i + 10) {
+			collisionBox = new ObstacleBox(-90, 0, i, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
 	
-		
-		collisionBox = new ObstacleBox(0, 0, 10, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
+		for(int i = -20; i <= 10; i = i + 10) {
+			collisionBox = new ObstacleBox(-50, 0, i, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
 
-		collisionBox = new ObstacleBox(0, 0, -10, 10f, 10f, 10f);
-		collisionBox.setColor(Color.BLUE);
-		obstacleList.add(collisionBox);
+		for(int i = -10; i <= 20; i = i + 10) {
+			collisionBox = new ObstacleBox(-30, 0, i, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
+		
+		for(int i = -20; i <= 10; i = i + 10) {
+			collisionBox = new ObstacleBox(-10, 0, i, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
+		
+		
+		for(int i = -20; i <= 30; i = i + 10) {
+			collisionBox = new ObstacleBox(10, 0, i, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
+		
+		for(int i = -90; i <= 10; i = i + 10) {
+			collisionBox = new ObstacleBox(i, 0, -30, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		
+			collisionBox = new ObstacleBox(i, 0, 30, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
+		
+
+		
 	}
 	
 	
@@ -289,6 +320,7 @@ public class GameScreen3D extends AbstractScreen {
 	}
 	
 	public void addObstacles(Collection<Obstacle> obstacles) {
+		pathIndicator.clear();
 		pathIndicator.addAll(obstacles);
 	}
 

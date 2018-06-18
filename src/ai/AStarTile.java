@@ -39,6 +39,9 @@ public class AStarTile {
 				+ VectorComputation.getInstance().getDistance(position, parent.getPosition()); // Travelled Distance.
 		float costToGoal = VectorComputation.getInstance().getDistance(position, goalPosition); // Smart heuristic.
 		cost = costToTile + costToGoal; // Sum.
+		if(parent.getPosition().x - position.x != 0 && parent.getPosition().z - position.z != 0) {
+			cost = (float) (cost*150);
+		}
 	}
 
 	public AStarTile getParent() {

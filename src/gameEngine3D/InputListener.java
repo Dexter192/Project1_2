@@ -36,7 +36,7 @@ public class InputListener implements InputProcessor {
 			directionVector.y = 0;
 //		ball.setVelocity(directionVector.scl(stength));
 				Collection<Obstacle> obstaclePath = gameScreen3D.getAi().makeMove();
-				ball.setVelocity(new Vector3(0,0,0));
+//				ball.setVelocity(new Vector3(0,0,0));
 				gameScreen3D.addObstacles(obstaclePath);
 		}
 		initialize = false;

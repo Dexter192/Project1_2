@@ -41,7 +41,7 @@ public class Golfball {
 				VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
 						| VertexAttributes.Usage.TextureCoordinates);
 
-		position = new Vector3(20, radius * 2, 0);
+		position = new Vector3(0, radius * 2, -20);
 
 		ballInstance = new ModelInstance(ballModel);
 		ballInstance.transform.translate(position);
