@@ -7,7 +7,7 @@ public class DifferentialEquationSolver {
 		private float mass;
 		private float g = 9.81f;
 		private Physics boardFunction;
-		private float frictionConstant = 1; // TODO implement proper friction
+		private float frictionConstant = 5; // TODO implement proper friction
 		private Vector3 position;
 		private DifferentialEquationSolver ode;
 		
@@ -21,7 +21,8 @@ public class DifferentialEquationSolver {
 		public Vector3[] rungeKutterMethod(Vector3[] initial, Vector3 pos) {
 
 			position = pos;
-			float deltaTime = 0.21f;
+//			float deltaTime = 0.21f;
+			float deltaTime = Gdx.graphics.getDeltaTime();
 			Vector3[] k1 =  calc(0,initial);
 			scl(k1,deltaTime);
 			

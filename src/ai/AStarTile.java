@@ -9,6 +9,7 @@ public class AStarTile {
 	private Vector3 position;
 	private Vector3 goalPosition;
 	private AStarTile parent; // Previous tile.
+	private int strokeCount = 1;
 
 	/**
 	 * Constructor for the initial position
@@ -26,6 +27,7 @@ public class AStarTile {
 		this.parent = parent;
 		this.position = position;
 		this.goalPosition = goalPosition;
+		this.strokeCount = parent.getStrokeCount();
 		computeCost();
 	}
 
@@ -39,9 +41,6 @@ public class AStarTile {
 				+ VectorComputation.getInstance().getDistance(position, parent.getPosition()); // Travelled Distance.
 		float costToGoal = VectorComputation.getInstance().getDistance(position, goalPosition); // Smart heuristic.
 		cost = costToTile + costToGoal; // Sum.
-		if(parent.getPosition().x - position.x != 0 && parent.getPosition().z - position.z != 0) {
-			cost = (float) (cost*150);
-		}
 	}
 
 	public AStarTile getParent() {
@@ -57,10 +56,24 @@ public class AStarTile {
 	}
 
 	public float getTotalCost() {
+		if (AStar.strokeHeuristic && this.parent != null) {
+			computeCost();
+			if(this.getParent().getStrokeCount() != strokeCount) {
+				cost = cost * strokeCount;
+			}
+		}
 		return cost;
 	}
 
 	public Vector3 getPosition() {
 		return position;
+	}
+
+	public void setStrokes(int strokeCount) {
+		this.strokeCount = strokeCount;
+	}
+	
+	public int getStrokeCount() {
+		return strokeCount;
 	}
 }

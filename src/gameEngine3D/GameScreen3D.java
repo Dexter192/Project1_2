@@ -10,13 +10,20 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -58,7 +65,91 @@ public class GameScreen3D extends AbstractScreen {
 	public static BoundingBox courseDimensions;
 	private AStar aStar;
 	private boolean findPath = true;
+	private Mesh m;
+
+	private final Matrix3 normalMatrix = new Matrix3();
+
+	private static final float[] lightPosition = { 5, 35, 5 };
+	private static final float[] ambientColor = { 0.2f, 0.2f, 0.2f, 1.0f };
+	private static final float[] diffuseColor = { 0.5f, 0.5f, 0.5f, 1.0f };
+	private static final float[] specularColor = { 0.7f, 0.7f, 0.7f, 1.0f };
 	
+	private static final float[] fogColor = { 0.2f, 0.1f, 0.6f, 1.0f };
+	
+	private Matrix4 model = new Matrix4();
+	private Matrix4 modelView = new Matrix4();
+	private static Matrix4 matrix = new Matrix4().idt();
+
+//	private static String vertexShader = "attribute vec4 a_position;    \n" + 
+//            "attribute vec4 a_color;\n" +
+//            "attribute vec2 a_texCoord0;\n" + 
+//            "uniform mat4 u_projTrans;\n" + 
+//            "varying vec4 v_color;" + 
+//            "varying vec2 v_texCoords;" + 
+//            "void main()                  \n" + 
+//            "{                            \n" + 
+//            "   v_color = vec4(1, 0, 1, 1); \n" + 
+//            "   v_texCoords = a_texCoord0; \n" + 
+//            "   gl_Position =  u_projTrans * a_position;  \n"      + 
+//            "}                            \n" ;
+//	private static String fragmentShader = "#ifdef GL_ES\n" +
+//              "precision mediump float;\n" + 
+//              "#endif\n" + 
+//              "varying vec4 v_color;\n" + 
+//              "varying vec2 v_texCoords;\n" + 
+//              "uniform sampler2D u_texture;\n" + 
+//              "void main()                                  \n" + 
+//              "{                                            \n" + 
+//              "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" +
+//              "}";
+//	
+	private final static String vertexShader =
+	        "attribute vec4 a_position; \n" +
+	        "attribute vec3 a_normal; \n" +
+	        "attribute vec2 a_texCoord; \n" +
+	        "attribute vec4 a_color; \n" +
+
+	        "uniform mat4 u_MVPMatrix; \n" +
+	        "uniform mat3 u_normalMatrix; \n" +
+
+	        "uniform vec3 u_lightPosition; \n" +
+
+	        "varying float intensity; \n" +
+	        "varying vec2 texCoords; \n" +
+	        "varying vec4 v_color; \n" +
+
+	        "void main() { \n" +
+	        "    vec3 normal = normalize(u_normalMatrix * a_normal); \n" +
+	        "    vec3 light = normalize(u_lightPosition); \n" +
+	        "    intensity = max( dot(normal, light) , 0.0); \n" +
+
+	        "    v_color = a_color; \n" +
+	        "    texCoords = a_texCoord; \n" +
+
+	        "    gl_Position = u_MVPMatrix * a_position; \n" +
+	        "}";
+
+	private final static String fragmentShader =
+	        "#ifdef GL_ES \n" +
+	        "precision mediump float; \n" +
+	        "#endif \n" +
+
+	        "uniform vec4 u_ambientColor; \n" +
+	        "uniform vec4 u_diffuseColor; \n" +
+	        "uniform vec4 u_specularColor; \n" +
+
+	        "uniform sampler2D u_texture; \n" +
+	        "varying vec2 texCoords; \n" +
+	        "varying vec4 v_color; \n" +
+
+	        "varying float intensity; \n" +
+
+	        "void main() { \n" +
+	        "    gl_FragColor = v_color * intensity * texture2D(u_texture, texCoords); \n" +
+	        "}";
+	
+	private static ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
+	private Texture texture;
 	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 	private Set<Obstacle> pathIndicator = new HashSet<Obstacle>();
@@ -74,6 +165,10 @@ public class GameScreen3D extends AbstractScreen {
 		modelBatch = new ModelBatch();
 		collisionDetector = new CollisionDetector();
 
+		ShaderProgram.pedantic = false;
+		
+		shader = new ShaderProgram(vertexShader, fragmentShader);
+		
 		// initialize camera
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(0f, 50f, 0f);
@@ -97,6 +192,7 @@ public class GameScreen3D extends AbstractScreen {
 
 		obstacleList.add(hole);
 		
+		m = createFullScreenQuad();
 		
 		// inizialize hit indicator line
 		indicatorLine = new LineIndicator();
@@ -161,6 +257,31 @@ public class GameScreen3D extends AbstractScreen {
 		
 		}
 		
+//		matrix.rotate(new Vector3(0,1,0), 15);
+//		shader.begin();
+//		shader.setUniformMatrix("u_projTrans", matrix);
+//		shader.setUniformi("u_texture", 0);
+//		m.render(shader, GL20.GL_TRIANGLES);
+//		shader.end();
+	    
+	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	    
+		texture.bind();
+	    shader.begin();
+
+	    shader.setUniformMatrix("u_MVPMatrix", camera.combined);
+	    shader.setUniformMatrix("u_normalMatrix", normalMatrix.set(modelView).inv().transpose());
+
+	    shader.setUniform3fv("u_lightPosition", lightPosition, 0, 3);
+	    shader.setUniform4fv("u_ambientColor", ambientColor, 0, 4);
+	    shader.setUniform4fv("u_diffuseColor", diffuseColor, 0, 4);
+	    shader.setUniform4fv("u_specularColor", specularColor, 0, 4);
+
+	    shader.setUniformi("u_texture", 0);
+
+	    m.render(shader, GL20.GL_TRIANGLES);
+
+	    shader.end();
 //		collisionBox.rotate(new Vector3(0,0,1), 1);
 		
 		for (Obstacle o : pathIndicator) {
@@ -170,6 +291,7 @@ public class GameScreen3D extends AbstractScreen {
 			modelBatch.render(o.getInstance());
 			collisionDetector.detectCollision(golfball, o);
 		}		
+		
 	}
 
 	/**
@@ -188,11 +310,6 @@ public class GameScreen3D extends AbstractScreen {
 		// ask pietro
 		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			if(findPath) {
-			findPath = false;
-			modelBatch.end();
-			aStar.findPathToHole();
-			}
 			camera.rotateAround(golfball.getPosition(), new Vector3(0, 1, 0), -2f);
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
@@ -347,6 +464,62 @@ public class GameScreen3D extends AbstractScreen {
 	public void hide() {
 	}
 
+	
+	public Mesh createFullScreenQuad() {
+	    // position, normal, color, texture
+		texture = new Texture(Gdx.files.internal("img/GrassTexture.jpg"));
+	    int vertexSize = 3 + 3 + 1 + 2;  
+
+	    Splines spline = new Splines(32, 32, vertexSize, "img/4k.jpg");
+
+
+
+	    Mesh mesh = new Mesh(true, spline.vertices.length / 3, spline.indices.length,
+	            new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+	            new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+	            new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
+	            new VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE));
+
+	    mesh.setVertices(spline.vertices);
+	    mesh.setIndices(spline.indices);
+
+		return mesh;
+//		  float[] verts = new float[20];
+//		  int i = 0;
+//
+//		  verts[i++] = -1f; // x1
+//		  verts[i++] = -1; // y1
+//		  verts[i++] = 0;
+//		  verts[i++] = 0f; // u1
+//		  verts[i++] = 0f; // v1
+//
+//		  verts[i++] = 1f; // x2
+//		  verts[i++] = -1; // y2
+//		  verts[i++] = 0;
+//		  verts[i++] = 1f; // u2
+//		  verts[i++] = 0f; // v2
+//
+//		  verts[i++] = 1f; // x3
+//		  verts[i++] = 1f; // y2
+//		  verts[i++] = 0;
+//		  verts[i++] = 1f; // u3
+//		  verts[i++] = 1f; // v3
+//
+//		  verts[i++] = -1; // x4
+//		  verts[i++] = 1f; // y4
+//		  verts[i++] = 0;
+//		  verts[i++] = 0f; // u4
+//		  verts[i++] = 1f; // v4
+//
+//		  Mesh mesh = new Mesh( true, 4, 0,  // static mesh with 4 vertices and no indices
+//		    new VertexAttribute( Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE ),
+//		    new VertexAttribute( Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE+"0" ) );
+//
+//		  mesh.setVertices( verts );
+//		  
+//		  return mesh;
+		}
+	
 	/**
 	 * returns world coordinates, relative to the screen coordinates, where the
 	 * mouse is currently at. It computes the intersection from the mouse location

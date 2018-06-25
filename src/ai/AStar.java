@@ -41,7 +41,7 @@ public class AStar
 	private Golfball golfBall;
 	private GameScreen3D gameScreen;
 	private GeneticHitStrength geneticHitStrength;
-	
+	public static boolean strokeHeuristic = true;
 
 		public AStar(GameScreen3D gamescreen) {
 	
@@ -77,7 +77,7 @@ public class AStar
 		startPosition = new Vector3(straightPath.get(0).getPosition());
 		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());
 		
-		System.out.println(startPosition + " " + goalPosition);
+//		System.out.println(startPosition + " " + goalPosition);
 		
 		Vector3 velocityVector = new Vector3(geneticHitStrength.getHitStrength(golfBall.getPosition(), goalPosition));
 		
@@ -172,8 +172,6 @@ public class AStar
 		openList.remove(expandTile);
 	}
 	
-	//TODO: PLEASE NAME YOUR METHODS PROPERLY... UNLESS I´VE WRITTEN THE CODE I HAVE NO IDEA WHAT HELPERA DOES... 
-	// Also the method expandarea is now obsolete and can be squeezed into the find path method.
 	// Generates 3x3x3 grid and thus creates the given tile's neighbours.
 	private HashSet<AStarTile> expandArea(AStarTile expandTile) {
 		Vector3 expandPosition = expandTile.getPosition(); // Current coordinates.
@@ -199,13 +197,27 @@ public class AStar
 					newPosition.y = expandPosition.y; //+ (y *stepSize);
 					newPosition.z = expandPosition.z + (z *stepSize);
 					AStarTile temp = new AStarTile(expandTile, newPosition, holePosition); //
+					strokeHeuristic(temp);
 					neighbours.add(temp);
 				}
 //			}
 		}
 		return neighbours;
 	}
+
 	
+	private void strokeHeuristic(AStarTile temp) {
+		if (strokeHeuristic && temp.getParent() != null && temp.getParent().getParent() != null) {
+			Vector3 grandparentPos = new Vector3(temp.getParent().getParent().getPosition());
+			Vector3 parentPos = new Vector3(temp.getParent().getPosition());
+			Vector3 tempPos = new Vector3(temp.getPosition());
+			grandparentPos.sub(parentPos);
+			parentPos.sub(tempPos);
+			if (!grandparentPos.idt(parentPos)) {
+				temp.setStrokes((temp.getParent().getStrokeCount()+1));
+			}
+		}
+	}
 	
 	// Inspects neighbours' validity and object intersection status.
 	private void addTiles(HashSet<AStarTile> neighbours) {
@@ -296,7 +308,7 @@ public class AStar
 			minObstacleSize = Math.min(minObstacleSize, o.getBoundingBox().getDepth());
 			stepSize = Math.min(minObstacleSize, stepSize);			
 		}
-		stepSize = (float) (stepSize*0.99);
+//		stepSize = (float) (stepSize*0.99);
 //		return stepSize;
 		return golfBall.getRadius();
 	}

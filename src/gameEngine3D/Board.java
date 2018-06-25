@@ -1,11 +1,15 @@
 package gameEngine3D;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 
 /**
@@ -27,7 +31,7 @@ public class Board {
 	private Model boardModel;
 	private ModelInstance boardInstance;
 	private ModelBuilder modelBuilder;
-
+	private MeshPart meshPart;
 	/**
 	 * Build a Rectangle at position 0,0,0 with a specified width, height and depth
 	 * 
@@ -39,15 +43,20 @@ public class Board {
 	 *            the depth of the board
 	 */
 	public Board(float width, float height, float depth) {
-
 		modelBuilder = new ModelBuilder();
+	
+		Mesh m = new Mesh(true, 100, 100, VertexAttribute.Position());
+		meshPart = new MeshPart("1", m, 1, 1, GL20.GL_TRIANGLES);
+		
+				
 
 		boardModel = modelBuilder.createBox(width, height, depth,
 				new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
 		boardInstance = new ModelInstance(boardModel);
 
 	}
-
+	
+    
 	/**
 	 * 
 	 * @return The Model of the board
