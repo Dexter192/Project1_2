@@ -62,8 +62,8 @@ public abstract class Obstacle {
 	 * Set the position of the ModelInstance
 	 * @param position the position of the ModelInstance
 	 */
-	public void setPosition(Vector3 position) {
-		modelInstance.transform.translate(position);
+	public void setPosition(Vector3 pos) {
+		modelInstance.transform.translate(pos);
 	}
 	
 	/**

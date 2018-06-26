@@ -26,7 +26,6 @@ public class Golfball {
 	private ModelInstance ballInstance;
 	private ModelBuilder modelBuilder;
 	private BoundingBox boundingBox;
-	private boolean moveWithKeys = true;
 	private Vector3 position;
 	private float mass;
 	private Vector3[] veloAccel = {new Vector3(0,0,0), new Vector3(0,0,0)};
@@ -35,6 +34,7 @@ public class Golfball {
 	private static float radius = 1;
 	private int index;
 	private int score =0;
+	private Vector3 initialPosition;
 	public Golfball() {
 		mass = 5;
 		modelBuilder = new ModelBuilder();
@@ -45,7 +45,7 @@ public class Golfball {
 
 
 		position = new Vector3(-10, radius * 2, 10);
-
+		this.initialPosition = this.position;
 		ballInstance = new ModelInstance(ballModel);
 		ballInstance.transform.translate(position);
 		getBoundingBox();
@@ -60,7 +60,7 @@ public class Golfball {
 
 
 		this.position = new Vector3(a,radius*2,b);
-
+		this.initialPosition = this.position;
 		ballInstance = new ModelInstance(ballModel);
 		ballInstance.transform.translate(position);
 		getBoundingBox();
@@ -111,10 +111,11 @@ public class Golfball {
 		// Transform the ballposition by the directionvector
 		
 		//position.add(directionVector);
-		position.add(veloAccel[0]); 
+		
 
 		//ballInstance.transform.translate(veloAccel[0]);
-		ballInstance.transform.setTranslation(position);
+			position.add(veloAccel[0]); 
+			ballInstance.transform.setTranslation(position);
 
 		Vector3 min = new Vector3(-radius, -radius, -radius);
 		Vector3 max = new Vector3( radius,  radius,  radius);
@@ -122,42 +123,23 @@ public class Golfball {
 
 //		veloAccel[0].scl(0.95f);
 		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0) {
+
 			veloAccel = ode.rungeKutterMethod(veloAccel, position);
 		}
-		moveWithKeys();
-	}
-
-	
-	private void moveWithKeys() {
-		if(moveWithKeys) {
-			if (Gdx.input.isKeyPressed(Keys.Q)) {
-				position.add(new Vector3(0.1f, 0, 0));
-			}
-			if (Gdx.input.isKeyPressed(Keys.E)) {
-				position.add(new Vector3(-0.1f, 0, 0));
-			}
-			if (Gdx.input.isKeyPressed(Keys.D)) {
-				position.add(new Vector3(0, 0, 0.1f));
-			}
-			if (Gdx.input.isKeyPressed(Keys.A)) {
-				position.add(new Vector3(0, 0, -0.1f));
-			}
-		}
-		///* CHECK ME PLEZ \/\/\/ *///
-
-		///* CHECK ME PLEZ /\/\/\ *///
+		System.out.println(this.isMoving());
 
 	}
+
 		
 	
 	private void ignoreMinimalVelocity() {
-		if (Math.abs(veloAccel[0].x) <= 0.01) {
+		if (Math.abs(veloAccel[0].x) <= 0.001) {
 			veloAccel[0].x = 0;
 		}
-		if (Math.abs(veloAccel[0].z) <= 0.01) {
+		if (Math.abs(veloAccel[0].z) <= 0.001) {
 			veloAccel[0].z = 0;
 		}
-		if(Math.abs(veloAccel[0].y) <= 0.01) {
+		if(Math.abs(veloAccel[0].y) <= 0.001) {
 			veloAccel[0].y = 0;
 		}
 	}
@@ -167,11 +149,17 @@ public class Golfball {
 		return veloAccel[0];
 	}
 
-	
+	public void setInitialPosition(Vector3 initialPos) {
+		this.initialPosition = initialPos;
+	}
 	public void setVelocity(Vector3 directionVector) {
+		//if(!isMoving()) initialPosition = this.getPosition();
 		veloAccel[0] = directionVector;
 	}
-
+	public boolean isMoving () {
+		if(veloAccel[0].x == 0 && veloAccel[0].y == 0 && veloAccel[0].z == 0) return false;
+		else return true;
+	}
 	
 	public void addVelocity(Vector3 directionVector) {
 		veloAccel[0].add(directionVector);
@@ -186,7 +174,12 @@ public class Golfball {
 	public void setPosition(Vector3 newPosition) {
 		this.position = newPosition;
 	}
-
+	public void setBack() {
+		this.position = this.initialPosition;
+	}
+	public Vector3 getInitialPosition() {
+		return initialPosition;
+	}
 	
 	/**
 	 * TODO: Implement propper bouncing of

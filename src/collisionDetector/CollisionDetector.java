@@ -172,7 +172,8 @@ public class CollisionDetector {
 
 		// TODO: Absorb force when colliding
 		ball.bounceOff(reflectionAxis);
-		ball.setPosition(ballPosition);
+		//ball.setPosition(ballPosition);
+		//changed so that setback meth works, check if this harms any functionality
 		ball.update();
 	}
 }

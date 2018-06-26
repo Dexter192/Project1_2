@@ -38,8 +38,10 @@ public class InputListenerMP implements InputProcessor {
 			
 			if (!initialize && g.getVelocity().isZero()) {
 				directionVector.y = 0;
+				g.setInitialPosition(g.getPosition());
 				g.setVelocity(directionVector.scl(strength));
 				g.incrementScore();
+			
 			}
 			initialize = false;
 		

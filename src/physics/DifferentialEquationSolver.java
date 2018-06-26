@@ -50,8 +50,8 @@ public class DifferentialEquationSolver {
 			result[1] = add(initial[1],k[1].scl(1/8f));
 			
 			
-			System.out.println(" end acceleration x: " + result[1].toString());
-			System.out.println(" end velocoty x " + result[0].toString());
+			//System.out.println(" end acceleration x: " + result[1].toString());
+			//System.out.println(" end velocity x " + result[0].toString());
 			return result;
 		}
 		

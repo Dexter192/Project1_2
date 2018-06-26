@@ -44,9 +44,10 @@ import physics.Physics;
 
 public class GameScreenMultiPlayer extends AbstractScreen{
 		//For different functionalities
-		private boolean ballCollisionAllowed = true;
-		private boolean teamMode = true;
-		private boolean elasticBand = true;
+		private boolean ballCollisionAllowed = true;  // other golfballs are treated as obstacles
+		private boolean teamMode = true; // teams of  2
+		private boolean elasticBand = true; // elastic effect NEEDS WORK
+		private boolean defaultgame = false; // basic distance checks
 		private float maxAllowedDistance = 20;
 		private ArrayList<ElasticBand> elastics;
 		//For the view
@@ -179,7 +180,6 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			
 			Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
 			camController.update();
 			modelBatch.begin(camera);
 			stage.draw();
@@ -187,11 +187,15 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 				modelBatch.render(golfball.get(i).getBallInstance());
 			
 			modelBatch.render(indicatorLine.getInstance());	
-			for(ElasticBand l : elastics) modelBatch.render(l.getInstance());
+			if(teamMode) {
+			for(ElasticBand l : elastics) modelBatch.render(l.getInstance());}
 			for(Hole h : holes) modelBatch.render(h.getInstance());
 			
-			for(int i = 0; i < golfball.size(); i++) 
+			for(int i = 0; i < golfball.size(); i++) {
 				golfball.get(i).update();
+				//System.out.println(golfball.get(i).getInitialPosition());
+				//System.out.println("POS"+ golfball.get(i).getPosition());
+			}
 			updateCameraPosition();
 			modelBatch.end();
 			
@@ -200,8 +204,9 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			indicatorLine.updateLine(golfball.get(index).getPosition(), mousePosition);
 
 			for(ElasticBand l : elastics) {
-				l.updateLine();
-		}
+				if(defaultgame){ l.updateLineDefaultGame();}
+				else { l.updateLine();}
+			}
 
 			//Collisiondetection
 			for (Obstacle o : obstacleList) {
@@ -279,6 +284,7 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 				int b = (int)(Math.random() * ((49 - (-49)) + 1)) + (-49);
 				golfball.add(new Golfball(a,b));
 				golfball.get(i).setColour(i);
+				golfball.get(i).setInitialPosition(golfball.get(i).getPosition());
 				int c = (int)(Math.random() * ((49 - (-49)) + 1)) + (-49);
 				int d = (int)(Math.random() * ((49 - (-49)) + 1)) + (-49);
 				while(calculateDistance(new Vector3(a,0,b),new Vector3(c,0,d)) > (maxAllowedDistance-1)) {
@@ -286,6 +292,7 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 					d = (int)(Math.random() * ((49 - (-49)) + 1)) + (-49);
 				}
 				golfball.add(new Golfball(c,d));
+				golfball.get(i+1).setInitialPosition(golfball.get(i+1).getPosition());
 				golfball.get(i+1).setColour(i+1);
 			}
 		}
@@ -322,13 +329,13 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 		private void initObstacles() {
 			Obstacle board = new ObstacleBox(0, 0, 0, 100f, 1f, 100f);
 			obstacleList.add(board);					
-			/*for(int i = 0; i < 10;i++) {
+			for(int i = 0; i < 10;i++) {
 				int a = (int)(Math.random() * ((49 - (-49)) + 1)) + (-49);
 				int b = (int)(Math.random() * ((49 - (-49)) + 1)) + (-49);
 			collisionBox = new ObstacleBox(a, 0, b, 10f, 10f, 10f);
 			collisionBox.setColor(Color.DARK_GRAY);
 			obstacleList.add(collisionBox);
-			}*/
+			}
 
 		
 		}
@@ -340,9 +347,7 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 		 */
 		public void OnBoard(Golfball g) {
 			if(!courseDimensions.contains(g.getBoundingBox())) {
-				g.setPosition(new Vector3(-10,g.getRadius() * 2, -10));//for the lack of a better position
-				//if(teamMode) g.setPosition(newPosition); change so that falling of the board doesnt mean a game over
-				
+				g.setPosition(g.getInitialPosition());			
 				g.setVelocity(new Vector3(0,0,0));
 			}
 		}
