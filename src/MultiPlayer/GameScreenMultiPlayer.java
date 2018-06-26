@@ -44,10 +44,10 @@ import physics.Physics;
 
 public class GameScreenMultiPlayer extends AbstractScreen{
 		//For different functionalities
-		private boolean ballCollisionAllowed = true;  // other golfballs are treated as obstacles
-		private boolean teamMode = true; // teams of  2
+		private boolean ballCollisionAllowed = true;  // other golf balls are treated as obstacles
+		private boolean teamMode = true; // when true, teams of 2. When false, every man for themselves
 		private boolean elasticBand = true; // elastic effect NEEDS WORK
-		private boolean defaultgame = false; // basic distance checks
+		private boolean defaultgame = false; // basic distance checks and reset to initial position once violated
 		private float maxAllowedDistance = 20;
 		private ArrayList<ElasticBand> elastics;
 		//For the view
@@ -62,10 +62,9 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 		private ArrayList<Hole> holes;
 		private CollisionDetector collisionDetector;
 		private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
-		public float hitStrength = 0.5f;
+		public float hitStrength = 0.4f;
 		private String player; 
 		private ArrayList<Integer> finished = new ArrayList<>();
-		
 		public int players = 0;
 		public int index = 0;
 		private Obstacle collisionBox;
@@ -124,21 +123,16 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			//Initialise Players
 			golfball = new ArrayList<>();
 			numberOfPlayers();
-			try        
-			{
-				while(players == 0)
-			    Thread.sleep(1000);
+			try {
+				while(players == 0) Thread.sleep(1000);
 			} 
-			catch(InterruptedException ex) 
-			{
+			catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
 			if(teamMode) makeGolfBallsTeamMode(players);
 			else makeGolfBalls(players);
 			player = "Player : " + (index) + " score: " + golfball.get(index).getScore();
 			
-
-	
 			collisionDetector = new CollisionDetector(this);
 			initObstacles();
 			calculateCouseDimensions(obstacleList);
@@ -154,7 +148,7 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			ode = new DifferentialEquationSolver(physics, golfball.get(0).getMass());
 			golfball.get(0).setODE(ode);
 			
-			// inizialize hit indicator line
+			// initialise hit indicator line
 			indicatorLine = new LineIndicator();
 			if(teamMode) {
 				elastics = new ArrayList<>();
@@ -162,7 +156,7 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 					elastics.add(new ElasticBand(maxAllowedDistance,golfball.get(i),golfball.get(i+1), elasticBand));
 				}
 			}
-			// initialize input
+			// initialise input
 			inputMultiplexer = new InputMultiplexer();
 			inputMultiplexer.addProcessor(stage);
 			inputMultiplexer.addProcessor(new InputListenerMP(this, golfball));
@@ -183,19 +177,13 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			camController.update();
 			modelBatch.begin(camera);
 			stage.draw();
-			for(int i = 0; i < golfball.size();i++)
-				modelBatch.render(golfball.get(i).getBallInstance());
-			
+			for(Golfball g:golfball) modelBatch.render(g.getBallInstance());
 			modelBatch.render(indicatorLine.getInstance());	
 			if(teamMode) {
-			for(ElasticBand l : elastics) modelBatch.render(l.getInstance());}
-			for(Hole h : holes) modelBatch.render(h.getInstance());
+				for(ElasticBand l : elastics) modelBatch.render(l.getInstance());}
+				for(Hole h : holes) modelBatch.render(h.getInstance());
+				for(Golfball g: golfball)	g.update();
 			
-			for(int i = 0; i < golfball.size(); i++) {
-				golfball.get(i).update();
-				//System.out.println(golfball.get(i).getInitialPosition());
-				//System.out.println("POS"+ golfball.get(i).getPosition());
-			}
 			updateCameraPosition();
 			modelBatch.end();
 			
@@ -204,11 +192,11 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			indicatorLine.updateLine(golfball.get(index).getPosition(), mousePosition);
 
 			for(ElasticBand l : elastics) {
-				if(defaultgame){ l.updateLineDefaultGame();}
-				else { l.updateLine();}
+				if(defaultgame) l.updateLineDefaultGame();
+				else l.updateLine();
 			}
 
-			//Collisiondetection
+			//Collision detection
 			for (Obstacle o : obstacleList) {
 				modelBatch.render(o.getInstance());
 				for(Golfball g : golfball) {
@@ -319,7 +307,6 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			if (Gdx.input.isKeyPressed(Keys.UP)) camera.translate(new Vector3(0,1,0));
 			
 			camera.lookAt(golfball.get(index).getPosition());
-			//camera.translate(golfball.get(index).getVelocity());
 			camera.translate(new Vector3(0,0,0));
 			camera.update(); 
 		}
@@ -341,9 +328,6 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 		}
 		/**
 		 * Calculate the bounding box of the whole course. 
-		 * The resulting boundingbox will be used for the A*-path finding, to avoid searching areas out of the course
-		 * 
-		 * @param obstacleList The list of all obstacles in the course
 		 */
 		public void OnBoard(Golfball g) {
 			if(!courseDimensions.contains(g.getBoundingBox())) {
@@ -419,7 +403,7 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 			Plane plane = new Plane();
 			plane.set(0, 1, 0, 0);// the xz plane with direction z facing screen
 
-			plane.d = 0;// ***** the depth in 3d for the coordinates
+			plane.d = 0;
 
 			Vector3 worldCoords = new Vector3();
 			Intersector.intersectRayPlane(ray, plane, worldCoords);

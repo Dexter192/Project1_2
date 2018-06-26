@@ -1,7 +1,6 @@
 package gameEngine3D;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Attribute;
@@ -103,45 +102,26 @@ public class Golfball {
 
 	/**
 	 * Updates the ball. Primarily its position.
-	 * TODO: Add ode as a param
 	 */
-	public void update() 
-	{
+	public void update() {
 		ignoreMinimalVelocity();
-		// Transform the ballposition by the directionvector
-		
-		//position.add(directionVector);
-		
-
-		//ballInstance.transform.translate(veloAccel[0]);
-			position.add(veloAccel[0]); 
-			ballInstance.transform.setTranslation(position);
+		position.add(veloAccel[0]); 
+		ballInstance.transform.setTranslation(position);
 
 		Vector3 min = new Vector3(-radius, -radius, -radius);
 		Vector3 max = new Vector3( radius,  radius,  radius);
 		boundingBox = boundingBox.set(min.add(position), max.add(position));
 
-//		veloAccel[0].scl(0.95f);
-		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0) {
-
-			veloAccel = ode.rungeKutterMethod(veloAccel, position);
-		}
-		System.out.println(this.isMoving());
+		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0)	veloAccel = ode.rungeKutterMethod(veloAccel, position);
 
 	}
 
 		
 	
 	private void ignoreMinimalVelocity() {
-		if (Math.abs(veloAccel[0].x) <= 0.001) {
-			veloAccel[0].x = 0;
-		}
-		if (Math.abs(veloAccel[0].z) <= 0.001) {
-			veloAccel[0].z = 0;
-		}
-		if(Math.abs(veloAccel[0].y) <= 0.001) {
-			veloAccel[0].y = 0;
-		}
+		if (Math.abs(veloAccel[0].x) <= 0.001) veloAccel[0].x = 0;
+		if (Math.abs(veloAccel[0].z) <= 0.001) veloAccel[0].z = 0;
+		if(Math.abs(veloAccel[0].y) <= 0.001) veloAccel[0].y = 0;
 	}
 
 	
@@ -153,7 +133,6 @@ public class Golfball {
 		this.initialPosition = initialPos;
 	}
 	public void setVelocity(Vector3 directionVector) {
-		//if(!isMoving()) initialPosition = this.getPosition();
 		veloAccel[0] = directionVector;
 	}
 	public boolean isMoving () {
@@ -181,9 +160,7 @@ public class Golfball {
 		return initialPosition;
 	}
 	
-	/**
-	 * TODO: Implement propper bouncing of
-	 */
+
 	public void bounceOff(Vector3 axis) {
 		veloAccel[0].scl(axis);
 	}
@@ -216,13 +193,11 @@ public class Golfball {
 	public int getScore() {
 		return score;
 	}
-	public void setODE(DifferentialEquationSolver input)
-	{
+	public void setODE(DifferentialEquationSolver input){
 		ode = input;
 	}
 	
-	public DifferentialEquationSolver getODE()
-	{
+	public DifferentialEquationSolver getODE(){
 		return ode;
 	}
 }

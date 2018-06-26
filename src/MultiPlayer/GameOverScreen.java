@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import gameEngine3D.Golfball;
@@ -17,7 +16,6 @@ import menu.AbstractScreen;
 
 public class GameOverScreen extends AbstractScreen {
 	private Stage stage;
-	private Skin skin;
 	private ArrayList<Golfball> golfballs;
 	private LabelStyle textStyle;
 	private BitmapFont font;
@@ -27,10 +25,8 @@ public class GameOverScreen extends AbstractScreen {
 	private Texture txtrBg;
 	private Image bg;
 	private boolean teammode;
-	private int players ;
 	private ArrayList<Golfball> teams;
 	public GameOverScreen(ArrayList<Golfball> golfballs, boolean teammode) {
-		this.players = golfballs.size();
 		this.teammode= teammode;
 		if(teammode) this.teams = makeTeamModeScores(golfballs);
 		this.golfballs = bubbleSort(golfballs);
@@ -38,12 +34,10 @@ public class GameOverScreen extends AbstractScreen {
 	}
 	@Override
 	public void buildStage() {
-		// TODO Auto-generated method stub
 		
 		 bg = new Image(txtrBg);
 		addActor(bg);
 		modelBatch = new SpriteBatch();
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
 	     textStyle = new LabelStyle();
 	     font = new BitmapFont();
 	     textStyle.font = font;
@@ -80,7 +74,7 @@ public class GameOverScreen extends AbstractScreen {
 		stage.draw();
 		modelBatch.end();
 	}
-	
+	//make leader board
 	public int compare(Golfball ball1, Golfball ball2) {
 		int a = ball1.getScore();
 		int b = ball2.getScore();
@@ -105,11 +99,7 @@ public class GameOverScreen extends AbstractScreen {
 		}
 		return list;
 	}
-	/**
-	 * This is based on the assumption, that the team size = 2
-	 * @param list
-	 * @return
-	 */
+
 	public ArrayList<Golfball> makeTeamModeScores(ArrayList<Golfball> list){
 		ArrayList<Golfball> result = new ArrayList<>();
 		for(int i = 0; i < list.size(); i+=2) {

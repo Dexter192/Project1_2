@@ -14,51 +14,35 @@ public class CollisionDetector {
 	private static boolean inHole = false;
 	private GameScreenMultiPlayer gameScreen;
 	public CollisionDetector() {
-
 	}
 	public CollisionDetector(GameScreenMultiPlayer gsmp) {
 		this.gameScreen = gsmp;
 	}
 	
 	public boolean detectCollision(Golfball ball, Obstacle obstacle) {
-		boolean intersects = false;
-		
+		boolean intersects = false;	
 		BoundingBox ballBoundingBox = ball.getBoundingBox();
-
 		BoundingBox obstacleBoundingBox = obstacle.getBoundingBox();
-
-//		System.out.println(obstacleBoundingBox); 
-		
 		if (obstacle instanceof Hole) {
 			if (determineHoleIntersection(ball, (Hole) obstacle)) {
 				inHole = true;
 				handleHoleCollision(ball, (Hole) obstacle);
 			}
-			else {				
-				inHole = false;
-			}
+			else inHole = false;
 		}
-		else if (determineIntersection(ballBoundingBox, obstacleBoundingBox) && !inHole) {
-			handleCollision(ball, obstacleBoundingBox);
-		}
+		else if (determineIntersection(ballBoundingBox, obstacleBoundingBox) && !inHole) handleCollision(ball, obstacleBoundingBox);
+		
 		return intersects;
 	}
 	public boolean detectCollision(Golfball ball, Golfball ball2) {
 		boolean intersects = false;
+		if(determineIntersection(ball.getBoundingBox(), ball2.getBoundingBox())) handleCollisionBall(ball, ball2);
 		
-		BoundingBox ballBoundingBox = ball.getBoundingBox();
-
-		BoundingBox obstacleBoundingBox = ball2.getBoundingBox();
-
-		if(determineIntersection(ballBoundingBox, obstacleBoundingBox)) {
-			handleCollisionBall(ball, ball2);
-		}
 		return intersects;
 	}
 
 
 	private void handleCollisionBall(Golfball ball, Golfball ball2) {
-		// TODO Auto-generated method stub
 		Vector3 oldVeloBall1 = ball.getVelocity();
 		Vector3 oldVeloBall2 = ball2.getVelocity();
 		float a = ((ball.getMass()-ball2.getMass())*oldVeloBall1.x + 2* ball2.getMass() * oldVeloBall2.x) / (ball.getMass() + ball2.getMass());
