@@ -66,7 +66,8 @@ public class GameScreen3D extends AbstractScreen {
 	private AStar aStar;
 	private boolean findPath = true;
 	private Mesh m;
-
+	private Physics physics; 
+	
 	private final Matrix3 normalMatrix = new Matrix3();
 
 	private static final float[] lightPosition = { 5, 35, 5 };
@@ -165,9 +166,9 @@ public class GameScreen3D extends AbstractScreen {
 		modelBatch = new ModelBatch();
 		collisionDetector = new CollisionDetector();
 
-		ShaderProgram.pedantic = false;
+		//ShaderProgram.pedantic = false;
 		
-		shader = new ShaderProgram(vertexShader, fragmentShader);
+		//shader = new ShaderProgram(vertexShader, fragmentShader);
 		
 		// initialize camera
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -184,7 +185,7 @@ public class GameScreen3D extends AbstractScreen {
 		golfball = new Golfball(1);
 		float[] a = { 0.01f,0 };
 		float[] b = { 0.01f,0 };
-		Physics physics = new Physics(a, b);
+		physics = new Physics(a, b);
 		
 		hole = new Hole(-70, 0.1f, 0, golfball.getRadius()*2);
 		ode = new DifferentialEquationSolver(physics, golfball.getMass());
@@ -192,7 +193,7 @@ public class GameScreen3D extends AbstractScreen {
 
 		obstacleList.add(hole);
 		
-		m = createFullScreenQuad();
+		//m = createFullScreenQuad();
 		
 		// inizialize hit indicator line
 		indicatorLine = new LineIndicator();
@@ -264,7 +265,7 @@ public class GameScreen3D extends AbstractScreen {
 //		m.render(shader, GL20.GL_TRIANGLES);
 //		shader.end();
 	    
-	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	   /* Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 	    
 		texture.bind();
 	    shader.begin();
@@ -281,7 +282,7 @@ public class GameScreen3D extends AbstractScreen {
 
 	    m.render(shader, GL20.GL_TRIANGLES);
 
-	    shader.end();
+	    shader.end();*/
 //		collisionBox.rotate(new Vector3(0,0,1), 1);
 		
 		for (Obstacle o : pathIndicator) {
@@ -465,12 +466,12 @@ public class GameScreen3D extends AbstractScreen {
 	}
 
 	
-	public Mesh createFullScreenQuad() {
+	/*public Mesh createFullScreenQuad() {
 	    // position, normal, color, texture
 		texture = new Texture(Gdx.files.internal("img/GrassTexture.jpg"));
 	    int vertexSize = 3 + 3 + 1 + 2;  
 
-	    Splines spline = new Splines(32, 32, vertexSize, "img/4k.jpg");
+	    Splines spline = new Splines(32, 32, vertexSize, physics, "img/4k.jpg");
 
 
 
@@ -494,7 +495,7 @@ public class GameScreen3D extends AbstractScreen {
 //		  verts[i++] = 0f; // v1
 //
 //		  verts[i++] = 1f; // x2
-//		  verts[i++] = -1; // y2
+//		  verts[i++] = -1; /s/ y2
 //		  verts[i++] = 0;
 //		  verts[i++] = 1f; // u2
 //		  verts[i++] = 0f; // v2
@@ -518,7 +519,7 @@ public class GameScreen3D extends AbstractScreen {
 //		  mesh.setVertices( verts );
 //		  
 //		  return mesh;
-		}
+		}*/
 	
 	/**
 	 * returns world coordinates, relative to the screen coordinates, where the

@@ -45,8 +45,8 @@ public class Board {
 	public Board(float width, float height, float depth) {
 		modelBuilder = new ModelBuilder();
 	
-		Mesh m = new Mesh(true, 100, 100, VertexAttribute.Position());
-		meshPart = new MeshPart("1", m, 1, 1, GL20.GL_TRIANGLES);
+		//Mesh m = new Mesh(true, 100, 100, VertexAttribute.Position());
+		//meshPart = new MeshPart("1", m, 1, 1, GL20.GL_TRIANGLES);
 		
 				
 
