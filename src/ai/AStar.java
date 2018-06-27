@@ -57,7 +57,7 @@ public class AStar
 		pathToHole = new ArrayList<>();
 		gameScreen = gamescreen;
 		geneticHitStrength = new GeneticHitStrength();
-		this.stepSize = computeStepsize();
+		this.stepSize = 0.25f;//computeStepsize();
 		goalPosition = new Vector3(0,0,0);
 		startPosition = new Vector3(0,0,0);
 	}
@@ -68,17 +68,19 @@ public class AStar
 
 		gameScreen.pause();
 		float delta = Gdx.graphics.getDeltaTime();
-
+		float starttime = System.nanoTime();
 		if(!pathToHole.isEmpty()) {			
 			geneticHitStrength.updateStrengthPerUnit(startPosition, goalPosition, golfBall.getPosition());
 		}
 		findPathToHole();
 		List<AStarTile> straightPath = computeStraightPathFromPosition();
-		
+		float endTime = System.nanoTime();
+		float time = endTime-starttime;
+		System.out.println(time);
 		Collection<Obstacle> obstacleList = buildPathIllustration();
-		
+		if(straightPath.size() != 0) {
 		startPosition = new Vector3(straightPath.get(0).getPosition());
-		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());
+		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());}
 		
 //		System.out.println(startPosition + " " + goalPosition);
 		
@@ -204,6 +206,7 @@ public class AStar
 					AStarTile temp = new AStarTile(expandTile, newPosition, holePosition); //
 					strokeHeuristic(temp);
 					neighbours.add(temp);
+					//System.out.println("Stepsize " + stepSize);
 				}
 //			}
 		}
