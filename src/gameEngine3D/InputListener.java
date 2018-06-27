@@ -1,9 +1,11 @@
 package gameEngine3D;
 
-import com.badlogic.gdx.Input.Keys;
+import java.util.Collection;
+
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 
+import Obstacles.Obstacle;
 import physics.DifferentialEquationSolver;
 import physics.VectorComputation;
 
@@ -17,7 +19,6 @@ public class InputListener implements InputProcessor {
 		this.gameScreen3D = gameScreen3D;
 		this.lineIndicator = lineIndicator;
 	}
-
 	// TODO: Hitting has to be fixed. Currently clicking behind the ball applies a
 	// way bigger force, than beneath. That is because of the camera angle. We
 	// should take that into account
@@ -34,8 +35,15 @@ public class InputListener implements InputProcessor {
 
 		if (!initialize && ball.getVelocity().isZero()) {
 			directionVector.y = 0;
+
  	ball.setVelocity(directionVector.scl(stength));
 //			gameScreen3D.getAi().makeMove();
+
+//		ball.setVelocity(directionVector.scl(stength));
+				Collection<Obstacle> obstaclePath = gameScreen3D.getAi().makeMove();
+//				ball.setVelocity(new Vector3(0,0,0));
+				gameScreen3D.addObstacles(obstaclePath);
+
 		}
 		initialize = false;
 		return false;

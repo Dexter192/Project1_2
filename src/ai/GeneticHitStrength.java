@@ -46,7 +46,7 @@ public class GeneticHitStrength {
 			s.close(); //
 			return Float.parseFloat(strength);
 		} catch (FileNotFoundException e) {
-			return (float) 0.001;
+			return (float) 0.01;
 		}
 	}
 

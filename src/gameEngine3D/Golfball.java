@@ -45,6 +45,7 @@ public class Golfball {
 
 		position = new Vector3(-10, radius * 2, 10);
 		this.initialPosition = this.position;
+
 		ballInstance = new ModelInstance(ballModel);
 		ballInstance.transform.translate(position);
 		getBoundingBox();

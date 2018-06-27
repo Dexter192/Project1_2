@@ -30,8 +30,11 @@ public class CollisionDetector {
 			}
 			else inHole = false;
 		}
+
 		else if (determineIntersection(ballBoundingBox, obstacleBoundingBox) && !inHole) handleCollision(ball, obstacleBoundingBox);
 		
+
+
 		return intersects;
 	}
 	public boolean detectCollision(Golfball ball, Golfball ball2) {
@@ -126,32 +129,32 @@ public class CollisionDetector {
 		// ballPosition.z = obstacleMin.z - ball.getRadius() - 0.05f;
 		// }
 
-		boolean collisionX1 = ballMin.x-0.05f < obstacleMax.x && ballMax.x+0.05f > obstacleMax.x;
+		boolean collisionX1 = ballMin.x-0.1f < obstacleMax.x && ballMax.x+0.1f > obstacleMax.x;
 						
 		// Collision with the x sides of an obstacle
 		if (collisionX1) {
 			reflectionAxis = new Vector3(-1, 1, 1);
-			ballPosition.x = obstacleMax.x + ball.getRadius() + 0.05f;
-		} else if (ballMax.x+0.05f > obstacleMin.x && ballMin.x-0.05f < obstacleMin.x) {
+			ballPosition.x = obstacleMax.x + ball.getRadius() + 0.1f;
+		} else if (ballMax.x+0.1f > obstacleMin.x && ballMin.x-0.1f < obstacleMin.x) {
 			reflectionAxis = new Vector3(-1, 1, 1);
-			ballPosition.x = obstacleMin.x - ball.getRadius() - 0.05f;
+			ballPosition.x = obstacleMin.x - ball.getRadius() - 0.1f;
 		}
 		// Collisions with the y side of an obstacle
-		else if (ballMin.y+0.05f < obstacleMax.y && ballMax.y-0.05f > obstacleMax.y) {
+		else if (ballMin.y+0.1f < obstacleMax.y && ballMax.y-0.1f > obstacleMax.y) {
 			reflectionAxis = new Vector3(1, -1, 1);
-			ballPosition.y = obstacleMax.y + ball.getRadius() + 0.05f;
-		} else if (ballMax.y-0.05f > obstacleMin.y && ballMin.y+0.05f < obstacleMin.y) {
+			ballPosition.y = obstacleMax.y + ball.getRadius() + 0.1f;
+		} else if (ballMax.y-0.1f > obstacleMin.y && ballMin.y+0.1f < obstacleMin.y) {
 			reflectionAxis = new Vector3(1, -1, -1);
-			ballPosition.y = obstacleMin.y - ball.getRadius() - 0.05f;
+			ballPosition.y = obstacleMin.y - ball.getRadius() - 0.1f;
 		}
 		
 		// Collisions with the z sides of an obstacle
-		else if (ballMin.z-0.05f < obstacleMax.z && ballMax.z+0.05f > obstacleMax.z) {
+		else if (ballMin.z-0.1f < obstacleMax.z && ballMax.z+0.1f > obstacleMax.z) {
 			reflectionAxis = new Vector3(1, 1, -1);
-			ballPosition.z = obstacleMax.z + ball.getRadius() + 0.05f;
-		} else if (ballMax.z+0.05f > obstacleMin.z && ballMin.z-0.05f < obstacleMin.z) {
+			ballPosition.z = obstacleMax.z + ball.getRadius() + 0.1f;
+		} else if (ballMax.z+0.1f > obstacleMin.z && ballMin.z-0.1f < obstacleMin.z) {
 			reflectionAxis = new Vector3(1, 1, -1);
-			ballPosition.z = obstacleMin.z - ball.getRadius() - 0.05f;
+			ballPosition.z = obstacleMin.z - ball.getRadius() - 0.1f;
 		}
 
 		// TODO: Absorb force when colliding

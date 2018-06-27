@@ -35,8 +35,24 @@ public class ObstacleBox extends Obstacle {
 		modelInstance.transform.translate(position);
 	}
 
+	public ObstacleBox(float posX, float posY, float posZ, float width, float height, float depth, Color color) {
+		super(posX, posY, posZ, height);
+		this.height = height;
+		this.width = width;
+		this.depth = depth;
+		
+		buildModel();
+		modelInstance = new ModelInstance(model);
+		modelInstance.transform.translate(position);
+		super.setColor(color);
+	}
+	
 	@Override
 	public void buildModel() {
+		float r = (int) (Math.random()*255);
+		float g = (int) (Math.random()*255);
+		float b = (int) (Math.random()*255);
+		
 		super.model = modelBuilder.createBox(width, height, depth, 
 	            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
 	            Usage.Position | Usage.Normal);	
