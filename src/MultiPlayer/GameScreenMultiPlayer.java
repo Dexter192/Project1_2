@@ -46,8 +46,8 @@ public class GameScreenMultiPlayer extends AbstractScreen{
 		//For different functionalities
 		private boolean ballCollisionAllowed = true;  // other golf balls are treated as obstacles
 		private boolean teamMode = true; // when true, teams of 2. When false, every man for themselves
-		private boolean elasticBand = true; // elastic effect NEEDS WORK
-		private boolean defaultgame = false; // basic distance checks and reset to initial position once violated
+		private boolean elasticBand = false; // elastic effect NEEDS WORK
+		private boolean defaultgame = true; // basic distance checks and reset to initial position once violated
 		private float maxAllowedDistance = 20;
 		private ArrayList<ElasticBand> elastics;
 		//For the view
