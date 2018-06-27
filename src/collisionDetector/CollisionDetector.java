@@ -7,7 +7,6 @@ import MultiPlayer.GameScreenMultiPlayer;
 import Obstacles.Hole;
 import Obstacles.Obstacle;
 import gameEngine3D.Golfball;
-import physics.DifferentialEquationSolver;
 import physics.VectorComputation;
 
 public class CollisionDetector {
@@ -115,21 +114,6 @@ public class CollisionDetector {
 		Vector3 ballPosition = ball.getPosition();
 		Vector3 reflectionAxis = new Vector3(1, 1, 1);
 
-		// TODO: Corner collision. Think this is a good approach but may not work as
-		// intended
-		// if(ballMin.x < obstacleMax.x && ballMax.x > obstacleMax.x && ballMin.z <
-		// obstacleMax.z && ballMax.z > obstacleMax.z) {
-		// reflectionAxis = new Vector3(-1,1,-1);
-		// ballPosition.x = obstacleMax.x + ball.getRadius() + 0.05f;
-		// ballPosition.z = obstacleMax.z + ball.getRadius() + 0.05f;
-		// }
-		// else if(ballMax.x > obstacleMin.x && ballMin.x < obstacleMin.x && ballMax.z >
-		// obstacleMin.z && ballMin.z < obstacleMin.z) {
-		// reflectionAxis = new Vector3(-1,1,-1);
-		// ballPosition.x = obstacleMin.x - ball.getRadius() - 0.05f;
-		// ballPosition.z = obstacleMin.z - ball.getRadius() - 0.05f;
-		// }
-
 		boolean collisionX1 = ballMin.x-0.1f < obstacleMax.x && ballMax.x+0.1f > obstacleMax.x;
 						
 		// Collision with the x sides of an obstacle
@@ -158,10 +142,7 @@ public class CollisionDetector {
 			ballPosition.z = obstacleMin.z - ball.getRadius() - 0.1f;
 		}
 
-		// TODO: Absorb force when colliding
 		ball.bounceOff(reflectionAxis);
-		//ball.setPosition(ballPosition);
-		//changed so that setback meth works, check if this harms any functionality
 		ball.update();
 	}
 }

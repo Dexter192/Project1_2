@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -18,19 +17,16 @@ import Obstacles.Obstacle;
 import collisionDetector.CollisionDetector;
 import gameEngine3D.GameScreen3D;
 import gameEngine3D.Golfball;
-import physics.VectorComputation;
 
 
 public class AStar 
 {
 	 
 	private HashSet<AStarTile> openList; // Viable area, needs to be evaluated.
-	private HashSet<AStarTile> closedList; // Cleared area.
-	private ArrayList<AStarTile> pathList; 
+	private HashSet<AStarTile> closedList; // Cleared area. 
 	private AStarTile lastTile; // Final tile in the path.
 		
 	private List<AStarTile> pathToHole;
-	private BoundingBox courseDimensions;
 	private Vector3 holePosition;
 	private Vector3 startPosition;
 	private Vector3 goalPosition;
@@ -46,7 +42,6 @@ public class AStar
 		public AStar(GameScreen3D gamescreen) {
 	
 		this.golfBall = gamescreen.getGolfball();
-		courseDimensions = gamescreen.getCouserDimensions();
 		holePosition = gamescreen.getHole().getBoundingBox().getCenter(new Vector3());
 		obstacleList = gamescreen.getAllObstacles();
 		
@@ -57,7 +52,7 @@ public class AStar
 		pathToHole = new ArrayList<>();
 		gameScreen = gamescreen;
 		geneticHitStrength = new GeneticHitStrength();
-		this.stepSize = 0.25f;//computeStepsize();
+		this.stepSize = golfBall.getRadius();
 		goalPosition = new Vector3(0,0,0);
 		startPosition = new Vector3(0,0,0);
 	}
@@ -67,7 +62,6 @@ public class AStar
 	public Collection<Obstacle> makeMove() {
 
 		gameScreen.pause();
-		float delta = Gdx.graphics.getDeltaTime();
 		float starttime = System.nanoTime();
 		if(!pathToHole.isEmpty()) {			
 			geneticHitStrength.updateStrengthPerUnit(startPosition, goalPosition, golfBall.getPosition());
@@ -81,8 +75,6 @@ public class AStar
 		if(straightPath.size() != 0) {
 		startPosition = new Vector3(straightPath.get(0).getPosition());
 		goalPosition = new Vector3(straightPath.get(straightPath.size()-1).getPosition());}
-		
-//		System.out.println(startPosition + " " + goalPosition);
 		
 		Vector3 velocityVector = new Vector3(geneticHitStrength.getHitStrength(golfBall.getPosition(), goalPosition));
 		
@@ -123,7 +115,7 @@ public class AStar
 			cheapestElement = findCheapestElement(); // Checks openList and finds the best valued tile.
 			aStarStep(cheapestElement); // Uses the "best valued tile" to the expand the openlist, rinse and repeat.
 		}
-		//float endTime = System.currentTimeMillis();
+		
 		if (hasFoundPath) {
 			AStarTile temp = lastTile;
 			pathToHole.add(temp);
@@ -181,11 +173,7 @@ public class AStar
 	
 	// Generates 3x3x3 grid and thus creates the given tile's neighbours.
 	private HashSet<AStarTile> expandArea(AStarTile expandTile) {
-		Vector3 expandPosition = expandTile.getPosition(); // Current coordinates.
-		// TODO: see, if we still are in the feasible region ///* LIKE CHECK THIS TILE ISNT IN closedList? *///
-
-//		System.out.println("Remaining Distance: " + VectorComputation.getInstance().getDistance(holePosition, expandTile.getPosition())); // From this tile to the goal.
-		
+		Vector3 expandPosition = expandTile.getPosition(); // Current coordinates.		
 		
 		// Build a "Box" around the current position by computing the centre positions of the touching boxes.
 		// The for loop is for the y positions. We build a square below the position of 9 tiles, one above and one at the same y level with 8 tiles. ///* ...WHAT? *///
@@ -305,22 +293,6 @@ public class AStar
 		return false;
 	}
 	
-	private float computeStepsize() {
-		float stepSize = gameScreen.getGolfball().getRadius()*2;
-		Set<Obstacle> obstacleList = gameScreen.getAllObstacles();
-		Iterator<Obstacle> it = obstacleList.iterator();
-	
-		while(it.hasNext()) {
-			Obstacle o = it.next();
-			float minObstacleSize = Math.min(o.getBoundingBox().getWidth(), o.getBoundingBox().getHeight());
-			minObstacleSize = Math.min(minObstacleSize, o.getBoundingBox().getDepth());
-			stepSize = Math.min(minObstacleSize, stepSize);			
-		}
-//		stepSize = (float) (stepSize*0.99);
-//		return stepSize;
-		return golfBall.getRadius();
-	}
-
 	private List<AStarTile> computeStraightPathFromPosition() {
 		List<AStarTile> straightPath = new ArrayList<>();
 		if(pathToHole.size() != 0) {

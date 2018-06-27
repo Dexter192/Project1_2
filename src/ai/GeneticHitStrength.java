@@ -2,11 +2,8 @@ package ai;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
 import com.badlogic.gdx.math.Vector3;
@@ -63,10 +60,7 @@ public class GeneticHitStrength {
 	public void updateStrengthPerUnit(Vector3 startPosition, Vector3 goalPosition, Vector3 actualPosition) {
 
 		float supposedDist = VectorComputation.getInstance().getDistanceXZ(startPosition, goalPosition);
-		float actualDist = VectorComputation.getInstance().getDistanceXZ(startPosition, actualPosition);
-		
-		
-		//TODO: This is wrong. It has to include the direction which we were going. 
+		float actualDist = VectorComputation.getInstance().getDistanceXZ(startPosition, actualPosition); 
 		
 		if(supposedDist < actualDist) {
 			strengthPerUnit = (float) (strengthPerUnit - actualDist/1000);

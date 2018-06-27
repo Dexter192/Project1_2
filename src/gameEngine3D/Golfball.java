@@ -116,8 +116,6 @@ public class Golfball {
 		if(Math.abs(veloAccel[0].x)>0 || Math.abs(veloAccel[0].z)>0)	veloAccel = ode.rungeKutterMethod(veloAccel, position);
 
 	}
-
-		
 	
 	private void ignoreMinimalVelocity() {
 		if (Math.abs(veloAccel[0].x) <= 0.001) veloAccel[0].x = 0;

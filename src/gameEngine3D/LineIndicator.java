@@ -16,8 +16,6 @@ public class LineIndicator {
 	private Model lineModel;
 	private ModelBuilder modelBuilder;
 
-	// TODO: Build a line between the golfball and the mouse position. Find out how
-	// to draw a 3d Line :D
 	public LineIndicator() {
 		buildModel();
 	}
@@ -39,8 +37,6 @@ public class LineIndicator {
 
 		float lineLength = VectorComputation.getInstance().getDistanceXZ(golfballPosition, mousePosition);
 		Color lineColor = computeLineColor(lineLength);
-		// There must be a more efficient way, than disposing and redeclaring the
-		// line...
 		modelBuilder.begin();
 		MeshPartBuilder builder = modelBuilder.part("line", 1, 3, new Material());
 		builder.setColor(lineColor);
@@ -67,8 +63,6 @@ public class LineIndicator {
 	 * @return the color of the line
 	 */
 	public Color computeLineColor(float lineLength) {
-		// TODO: find a proper computation for the line color. But first make the camera
-		// follow the ball, s.t. we have a consistent distance -- fix the hitting, then fix the colour
 		Color lineColor = new Color();
 		lineColor.b = 0;
 		lineColor.g = (lineLength >= 255) ? 255 : (int)255-lineLength; 

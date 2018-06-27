@@ -44,7 +44,6 @@ public abstract class Obstacle {
 		modelBuilder = new ModelBuilder();
 		modelInstance = new ModelInstance(model);
 		modelInstance.transform.translate(position);
-//		getBoundingBox();
 	}
 	
 	/**
