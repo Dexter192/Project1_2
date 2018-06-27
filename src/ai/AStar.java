@@ -320,6 +320,7 @@ public class AStar
 
 	private List<AStarTile> computeStraightPathFromPosition() {
 		List<AStarTile> straightPath = new ArrayList<>();
+		if(pathToHole.size() != 0) {
 		Vector3 temp = new Vector3(pathToHole.get(0).getPosition());
 		Vector3 direction = temp.sub(pathToHole.get(1).getPosition());
 
@@ -340,7 +341,8 @@ public class AStar
 				break;
 			}
 		}
-		
+		}
+		else System.out.println("ERROR");
 		return straightPath;
 	}
 	

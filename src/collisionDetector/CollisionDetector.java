@@ -98,6 +98,7 @@ public class CollisionDetector {
 		if(hole.getIndex() == ball.getIndex()) {
 			//ball.setPosition(hole.getCenter());
 			ball.setVelocity(new Vector3(0,0,0));
+			if(gameScreen != null)
 			gameScreen.removeBall(ball.getIndex());
 		}
 	}

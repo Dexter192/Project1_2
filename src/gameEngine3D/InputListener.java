@@ -19,9 +19,7 @@ public class InputListener implements InputProcessor {
 		this.gameScreen3D = gameScreen3D;
 		this.lineIndicator = lineIndicator;
 	}
-	// TODO: Hitting has to be fixed. Currently clicking behind the ball applies a
-	// way bigger force, than beneath. That is because of the camera angle. We
-	// should take that into account
+
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		Vector3 mousePosition = gameScreen3D.getWorldCoords();
@@ -36,14 +34,14 @@ public class InputListener implements InputProcessor {
 		if (!initialize && ball.getVelocity().isZero()) {
 			directionVector.y = 0;
 
- 	ball.setVelocity(directionVector.scl(stength));
-//			gameScreen3D.getAi().makeMove();
+ 	//ball.setVelocity(directionVector.scl(stength));
+		
 
 //		ball.setVelocity(directionVector.scl(stength));
 				Collection<Obstacle> obstaclePath = gameScreen3D.getAi().makeMove();
 //				ball.setVelocity(new Vector3(0,0,0));
 				gameScreen3D.addObstacles(obstaclePath);
-
+				gameScreen3D.getAi().makeMove();
 		}
 		initialize = false;
 		return false;

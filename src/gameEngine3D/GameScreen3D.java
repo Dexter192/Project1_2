@@ -339,7 +339,6 @@ public class GameScreen3D extends AbstractScreen {
 	private void initObstacles() {
 		Obstacle box = new ObstacleBox(0, 0, 0, 200f, 1f, 200f);
 		obstacleList.add(box);					
-		
 		for(int i = -20; i <= 20; i = i + 10) {
 			collisionBox = new ObstacleBox(-90, 0, i, 10f, 10f, 10f);
 			collisionBox.setColor(Color.BLUE);
@@ -380,8 +379,32 @@ public class GameScreen3D extends AbstractScreen {
 			collisionBox.setColor(Color.BLUE);
 			obstacleList.add(collisionBox);	
 		}
-		
+		/*
+		//hole inside box
+		for(int i = -90; i <= -60; i = i + 10) {
+			collisionBox = new ObstacleBox(i, 0, 20, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
 
+		for(int i = -20; i <= 20; i = i + 10) {
+			collisionBox = new ObstacleBox(-90, 0, i, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
+		
+		for(int i = -90; i <= -60; i = i + 10) {
+			collisionBox = new ObstacleBox(i, 0, -20, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}
+		
+		
+		for(int i = -20; i <= 20; i = i + 10) {
+			collisionBox = new ObstacleBox(-60, 0, i, 10f, 10f, 10f);
+			collisionBox.setColor(Color.BLUE);
+			obstacleList.add(collisionBox);	
+		}*/
 		
 	}
 	
