@@ -14,7 +14,10 @@ public class DifferentialEquationSolver {
 			boardFunction = physics;
 			this.mass = mass;
 		}
-		
+		public Vector3 nextPos(Vector3[] veloAccel, Vector3 pos) {
+			pos.add(veloAccel[0]);
+			return pos;
+		}
 		
 		public Vector3[] rungeKutterMethod(Vector3[] initial, Vector3 pos) {
 
@@ -22,7 +25,7 @@ public class DifferentialEquationSolver {
 //			float deltaTime = 0.21f;
 
 			float deltaTime = Gdx.graphics.getDeltaTime();
-			Vector3[] k1 =  calc(0,initial);
+			Vector3[] k1 =  calc(deltaTime,initial);
 			scl(k1,deltaTime);
 			
 			float newt = (deltaTime/3);
@@ -90,6 +93,11 @@ public class DifferentialEquationSolver {
 			for(int i = 0; i < matrix.length; i++) {
 				matrix[i].scl(scalar);
 			}
+			return matrix;
+		}
+		private Vector3 scl (Vector3 matrix, float scalar) {
+				matrix.scl(scalar);
+			
 			return matrix;
 		}
 }

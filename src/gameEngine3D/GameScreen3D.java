@@ -55,7 +55,8 @@ public class GameScreen3D extends AbstractScreen {
 	public LineIndicator[] axis = new LineIndicator[3];
 	public static BoundingBox courseDimensions;
 	private AStar aStar;
-
+	private Obstacle board;
+	
 	private Set<Obstacle> obstacleList = new HashSet<Obstacle>();
 	private Set<Obstacle> pathIndicator = new HashSet<Obstacle>();
 
@@ -107,7 +108,8 @@ public class GameScreen3D extends AbstractScreen {
 		}
 		
 		calculateCouseDimensions(obstacleList);
-
+		board = new ObstacleBox(0, 0, 0, 200f, 1f, 200f);
+		
 		aStar = new AStar(this);
 	}
 
@@ -147,7 +149,7 @@ public class GameScreen3D extends AbstractScreen {
 
 		Vector3 mousePosition = getWorldCoords();
 		indicatorLine.updateLine(golfball.getPosition(), mousePosition);
-	
+		modelBatch.render(board.getInstance());
 		for (Obstacle o : pathIndicator) {
 			modelBatch.render(o.getInstance());
 		}
@@ -192,8 +194,6 @@ public class GameScreen3D extends AbstractScreen {
 	 * Initialize all ostacles with position and add them to the obstacle list
 	 */
 	private void initObstacles() {
-		Obstacle box = new ObstacleBox(0, 0, 0, 200f, 1f, 200f);
-		obstacleList.add(box);					
 		for(int i = -20; i <= 20; i = i + 10) {
 			collisionBox = new ObstacleBox(-90, 0, i, 10f, 10f, 10f);
 			collisionBox.setColor(Color.BLUE);

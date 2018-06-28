@@ -51,8 +51,8 @@ public class AStar
 		obstacleList = gamescreen.getAllObstacles();
 		pathToHole = new ArrayList<>();
 		gameScreen = gamescreen;
-		geneticHitStrength = new GeneticHitStrength();
-		this.stepSize = golfBall.getRadius();
+		geneticHitStrength = new GeneticHitStrength(gameScreen.getDifferentialEquationSolver());
+		this.stepSize = 1;//golfBall.getRadius();
 		goalPosition = new Vector3(0,0,0);
 		startPosition = new Vector3(0,0,0);
 	}
@@ -70,7 +70,6 @@ public class AStar
 		List<AStarTile> straightPath = computeStraightPathFromPosition();
 		float endTime = System.nanoTime();
 		float time = endTime-starttime;
-		System.out.println(time);
 		Collection<Obstacle> obstacleList = buildPathIllustration();
 		if(straightPath.size() != 0) {
 		startPosition = new Vector3(straightPath.get(0).getPosition());
@@ -228,6 +227,7 @@ public class AStar
 			boolean intersectsWithObstacle = false;
 			// Then check if this bounding box intersects with any other obstacles.
 			for (Obstacle o : obstacleList) {
+				
 				// Only add positions, which dont intersect with an obstacle.
 				if (collisionDetector.determineIntersection(boundingBox, o.getBoundingBox())) {
 					if (o instanceof Hole) {// Then check if said obstacle is the hole (goal).
@@ -236,6 +236,7 @@ public class AStar
 						lastTile.setPosition(holePosition);
 					}
 					else {
+//						v.getParent().addCost();
 						intersectsWithObstacle = true;
 						break;
 					}
@@ -261,8 +262,8 @@ public class AStar
 	 *         position from the parameter
 	 */
 	private BoundingBox buildBoundingBoxAroundPosition(Vector3 position) {
-		Vector3 min = new Vector3(position.x - stepSize/2, position.y - stepSize/2, position.z - stepSize/2);
-		Vector3 max = new Vector3(position.x + stepSize/2, position.y + stepSize/2, position.z + stepSize/2);
+		Vector3 min = new Vector3(position.x - stepSize*2, position.y - stepSize*2, position.z - stepSize*2);
+		Vector3 max = new Vector3(position.x + stepSize*2, position.y + stepSize*2, position.z + stepSize*2);
 		return new BoundingBox(min, max);
 	}
 	

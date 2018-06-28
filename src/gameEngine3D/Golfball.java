@@ -30,7 +30,7 @@ public class Golfball {
 	private Vector3[] veloAccel = {new Vector3(0,0,0), new Vector3(0,0,0)};
 	// Note that veloAccel[0] is the direction vector	
 	private static DifferentialEquationSolver ode;
-	private static float radius = 1;
+	private static float radius = 0.5f;
 	private int index;
 	private int score =0;
 	private Vector3 initialPosition;

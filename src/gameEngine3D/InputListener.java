@@ -34,7 +34,8 @@ public class InputListener implements InputProcessor {
 
 				Collection<Obstacle> obstaclePath = gameScreen3D.getAi().makeMove();
 				gameScreen3D.addObstacles(obstaclePath);
-				gameScreen3D.getAi().makeMove();
+				
+//				gameScreen3D.getAi().makeMove();
 		}
 		initialize = false;
 		return false;

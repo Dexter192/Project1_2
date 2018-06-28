@@ -10,7 +10,8 @@ public class AStarTile {
 	private Vector3 goalPosition;
 	private AStarTile parent; // Previous tile.
 	private int strokeCount = 1;
-
+	private int adjacent = 1;
+	
 	/**
 	 * Constructor for the initial position
 	 * 
@@ -42,6 +43,10 @@ public class AStarTile {
 		float costToGoal = VectorComputation.getInstance().getDistance(position, goalPosition); // Smart heuristic.
 		cost = costToTile + costToGoal; // Sum.
 	}
+	
+	public void addCost() {
+		adjacent = 1000000000;
+	}
 
 	public AStarTile getParent() {
 		return parent;
@@ -62,6 +67,7 @@ public class AStarTile {
 				cost = cost * strokeCount;
 			}
 		}
+		cost = cost * adjacent;
 		return cost;
 	}
 
