@@ -32,11 +32,13 @@ public class ElasticBand {
 	public void updateLine( ) {
 		this.update();
 		if(calculateDistance(ball1.getPosition(),ball2.getPosition()) > maxAllowedDistance) {
+			maxAllowedDistance++;
 			if(elasticity&& !done ) {
 				Vector3 temp = addVelocity(ball1.getVelocity().scl(-1f),ball2.getVelocity().scl(-0.5f));
 				Vector3 temp2 = addVelocity(ball2.getVelocity().scl(-1f),ball1.getVelocity().scl(-0.5f));
 				ball1.setVelocity(temp);
 				ball2.setVelocity(temp2);
+				
 				done = true; 
 			}
 			else{
@@ -44,8 +46,11 @@ public class ElasticBand {
 				if(isMoving(ball2.getVelocity())) ball2.setVelocity(ball2.getVelocity().scl(-0.1f));
 			}
 		}
-		else  
+		else  {
+			if(done) maxAllowedDistance--;
 			done = false;
+			//maxAllowedDistance--;
+		}
 	}
 	//Update for default game
 	public void updateLineDefaultGame() {
