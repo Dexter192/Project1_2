@@ -40,8 +40,11 @@ public class Physics {
 		return ans;
 	}
 
+	//to switch between the height function and splines comment the one you do not want and uncomment the one you want
 	
-	/*public float getHeight(double x, double y) {
+	//height from height function
+	///*
+	public float getHeight(double x, double y) {
 		float height = 0;
 		for (int i = 0; i < array1.length; i++) 
 			height += array1[i] * (Math.pow(x, array1.length - 1 - i));
@@ -50,9 +53,11 @@ public class Physics {
 			height += array2[j] * (Math.pow(y, array2.length - 1 - j));
 		
 		return height;
-	}*/
+	}
+	//*/
 	
-	///*
+	//height from splines
+	/*
 	public float getHeight(double x, double y) {
 		int tmp = (int) (x/diff);
 		float x0 = tmp*diff;
@@ -72,5 +77,5 @@ public class Physics {
 		
 		return height;
 	}
-	//*/
+	*/
 }

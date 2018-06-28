@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import gameEngine3D.Golfball;
-import physics.DifferentialEquationSolver;
 
 public class InputListenerMP implements InputProcessor {
 

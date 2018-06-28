@@ -48,11 +48,7 @@ public class ObstacleBox extends Obstacle {
 	}
 	
 	@Override
-	public void buildModel() {
-		float r = (int) (Math.random()*255);
-		float g = (int) (Math.random()*255);
-		float b = (int) (Math.random()*255);
-		
+	public void buildModel() {		
 		super.model = modelBuilder.createBox(width, height, depth, 
 	            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
 	            Usage.Position | Usage.Normal);	

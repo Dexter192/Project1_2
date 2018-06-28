@@ -47,9 +47,9 @@ public class ElasticBand {
 			}
 		}
 		else  {
+
 			if(done) maxAllowedDistance--;
 			done = false;
-			//maxAllowedDistance--;
 		}
 	}
 	//Update for default game

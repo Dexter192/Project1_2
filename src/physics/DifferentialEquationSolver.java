@@ -7,10 +7,8 @@ public class DifferentialEquationSolver {
 		private float mass;
 		private float g = 9.81f;
 		private Physics boardFunction;
-		private float frictionConstant = 5; // TODO implement proper friction
+		private float frictionConstant = 5;
 		private Vector3 position;
-		private DifferentialEquationSolver ode;
-		
 		
 		public DifferentialEquationSolver(Physics physics, float mass) {
 			boardFunction = physics;
